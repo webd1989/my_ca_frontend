@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+a{ cursor: pointer;}
+#dob input{ border: 0px !important; width: 100% !important;}
+#lease_expiration input{ border: 0px !important; width: 100% !important;}
+#cose_date input{ border: 0px !important; width: 100% !important;}
+.input-group-text{ padding: 5px 5px !important;}
+.custom_btn{cursor: pointer;
+    background: #0d4eba;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+.stickyHeader {
+    position: fixed;
+    width: 100%;
+    }
+    .deal-close-datepicker{ width: 140px !important; border: 0px !important;}
+    .deal-close-datepicker {
+        width: 114px !important;
+        border: 0px !important;
+    }

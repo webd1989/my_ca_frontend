@@ -1,0 +1,230 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title d-flex align-items-center justify-content-between">
+                    <div class="breadcrumb-info">
+                        <h2 class="font-18 text-capitalize d-flex align-items-center mb-0">Deals ({{this.userData.name}}) {{totalDeal}} | Revenue ${{totalAmt}}</h2>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="has-search">
+                            <span class="far fa-search form-control-feedback"></span>
+                            <input type="text" name="search_key" id="search_key" (keyup)="searchData()" class="form-control" placeholder="Search Deals">
+                        </div>
+                        <a href="javascript:;" (click)="setHeading()" class="btn btn-primary text-uppercase text-center font-12" type="button" data-bs-toggle="modal" data-bs-target="#createTemplate"><i class="far fa-plus me-1"></i> Add Deal</a>
+                    </div>
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Select Funnel</label>
+                                <select (change)="getList()" name="f_funnel" id="f_funnel" class="form-select">
+                                    <option value="">Select</option>
+                                    <option value="Buyers Pipeline">Buyers Pipeline</option>
+                                    <option value="Sellers Pipeline">Sellers Pipeline</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Filter by Stage</label>
+                                <select (change)="getList()" name="f_stage" id="f_stage" class="form-select">
+                                    <option value="">Select</option>
+                                    <option value="Discovery">Discovery</option>
+                                    <option value="Landing">Landing</option>
+                                    <option value="Showing">Showing</option>
+                                    <option value="Offer Made">Offer Made</option>
+                                    <option value="Offer Accepted">Offer Accepted</option>
+                                    <option value="Lost">Lost</option>
+                                    <option value="Won">Won</option>
+                                    <option value="Inspection">Inspection</option>
+                                    <option value="Long Team">Long Team</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Filter by Source</label>
+                                <select (change)="getList()" name="f_source" id="f_source" class="form-select">
+                                    <option value="">Select</option>
+                                    <option value="Website">Website</option>
+                                    <option value="Advertising">Advertising</option>
+                                    <option value="Blog">Blog</option>
+                                    <option value="Organic Search">Organic Search</option>
+                                    <option value="Social">Social</option>
+                                    <option value="Refferal">Refferal</option>
+                                    <option value="Outbond">Outbond</option>
+                                    <option value="Inbond">Inbond</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Instagram">Instagram</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap text-start">S.NO</th>
+                                        <th class="text-uppercase whitespace-nowrap">DEAL OWNER</th>
+                                        <th class="text-uppercase whitespace-nowrap">DEAL NAME</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACCOUNT NAME</th>
+                                        <th class="text-uppercase whitespace-nowrap">STAGE</th>
+                                        <th class="text-uppercase whitespace-nowrap">REVENUE</th>
+                                        <th class="text-uppercase whitespace-nowrap">CLOSE DATE</th>
+                                        <!-- <th class="text-uppercase whitespace-nowrap">Status</th> -->
+                                        <th class="text-uppercase whitespace-nowrap">Created Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap text-start">{{i+1}}</td>
+                                        <td class="whitespace-nowrap">{{user.owner_name}}</td>
+                                        
+                                        <td class="whitespace-nowrap">{{user.deal_name}}</td>
+                                        <td class="whitespace-nowrap">{{user.account_name}}</td>
+                                        <td class="whitespace-nowrap">{{user.stage}}</td>
+                                        <td class="whitespace-nowrap">{{user.revenue}}</td>
+                                        <td class="whitespace-nowrap">{{user.cose_date}}</td>
+                                        <!-- <td>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'2')" *ngIf="user.status == 1" class="btn btn-sm btn-outline-success text-uppercase text-center font-12 me-2">Active</a>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'1')" *ngIf="user.status == 2" class="btn btn-sm btn-outline-danger text-uppercase text-center font-12 me-2">Inactive</a>
+                                        </td> -->
+                                        <td class="text-capitalize whitespace-nowrap">{{user.created_date}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">
+                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="9"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="createTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{heading}}</h4>
+                    <p class="font-14 font-weight-400 mb-0">Information about the account</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    <form>
+                        <h3 class="font-14"><span class="text-main">1.</span> Account Details</h3>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Account Owner</label>
+                            <select name="" id="" class="form-select">
+                                <option value="{{this.userData.name}}">{{this.userData.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Accounts</label>
+                            <select name="company_id" id="company_id" class="form-select">
+                                <option *ngFor="let account of accounts" value="{{account.id}}">{{account.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Deal Name<span class="requried ms-1">*</span></label>
+                            <input type="text" name="deal_name" id="deal_name" class="form-control" placeholder="">
+                            <input type="hidden" id="r_id">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Revenue</label>
+                            <input type="text" name="revenue" id="revenue" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Close Date</label>
+                            <ngx-datepicker name="cose_date" id="cose_date" [options]="options" class="form-control" [(ngModel)]="deal_close_date"></ngx-datepicker>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Funnel</label>
+                            <select name="funnel" id="funnel" class="form-select">
+                                <option value="Buyers Pipeline">Buyers Pipeline</option>
+                                <option value="Sellers Pipeline">Sellers Pipeline</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Stage</label>
+                            <select name="stage" id="stage" class="form-select">
+                                <option value="Discovery">Discovery</option>
+                                <option value="Landing">Landing</option>
+                                <option value="Showing">Showing</option>
+                                <option value="Offer Made">Offer Made</option>
+                                <option value="Offer Accepted">Offer Accepted</option>
+                                <option value="Lost">Lost</option>
+                                <option value="Won">Won</option>
+                                <option value="Inspection">Inspection</option>
+                                <option value="Long Team">Long Team</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Source</label>
+                            <select name="source" id="source" class="form-select">
+                                <option value="Website">Website</option>
+                                <option value="Advertising">Advertising</option>
+                                <option value="Blog">Blog</option>
+                                <option value="Organic Search">Organic Search</option>
+                                <option value="Social">Social</option>
+                                <option value="Refferal">Refferal</option>
+                                <option value="Outbond">Outbond</option>
+                                <option value="Inbond">Inbond</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Instagram">Instagram</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Description</label>
+                            <textarea name="description" id="description" class="form-control"></textarea>
+                        </div>
+                      
+                    </form>
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="Create()" id="addUserBtn" class="btn btn-primary btn-sm text-uppercase">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->

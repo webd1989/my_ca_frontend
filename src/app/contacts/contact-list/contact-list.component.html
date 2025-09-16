@@ -1,0 +1,166 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title d-flex align-items-center justify-content-between">
+                    <div class="breadcrumb-info">
+                        <h2 class="font-18 text-capitalize d-flex align-items-center mb-0">Customers</h2>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="has-search">
+                            <input type="text" name="search_key" id="search_key" (keyup)="searchData()" class="form-control" placeholder="Search User">
+                        </div>
+                        <a href="javascript:;" (click)="setHeading()" class="btn btn-primary text-uppercase text-center font-12" type="button" data-bs-toggle="modal" data-bs-target="#createTemplate"><i class="far fa-plus me-1"></i> Create Contact</a>
+                    </div>
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap text-start">S.NO</th>
+                                        <th class="text-uppercase whitespace-nowrap">Name</th>
+                                        <th class="text-uppercase whitespace-nowrap">Email</th>
+                                        <th class="text-uppercase whitespace-nowrap">Phone</th>
+                                        <th class="text-uppercase whitespace-nowrap">Address</th>
+                                        <th class="text-uppercase whitespace-nowrap">City</th>
+                                        <th class="text-uppercase whitespace-nowrap">GSTIN NO</th>
+                                        <!-- <th class="text-uppercase whitespace-nowrap">Status</th> -->
+                                        <th class="text-uppercase whitespace-nowrap">Created Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap text-start">{{user.id}}</td>
+                                        <td class="whitespace-nowrap">{{user.name}}</td>
+                                        <td class="whitespace-nowrap">{{user.email}}</td>
+                                        <td class="whitespace-nowrap">{{user.phone}}</td>
+                                        <td class="whitespace-nowrap">{{user.address}}</td>
+                                        <td class="whitespace-nowrap">{{user.city}}</td>
+                                        <td class="whitespace-nowrap">{{user.gst_no}}</td>
+                                        <!-- <td>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'2')" *ngIf="user.status == 1" class="btn btn-sm btn-outline-success text-uppercase text-center font-12 me-2">Active</a>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'1')" *ngIf="user.status == 2" class="btn btn-sm btn-outline-danger text-uppercase text-center font-12 me-2">Inactive</a>
+                                        </td> -->
+                                        <td class="text-capitalize whitespace-nowrap">{{user.created_date}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">
+                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="createTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{heading}}</h4>
+                    <p class="font-14 font-weight-400 mb-0">Information about the contact</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                   
+                        <h3 class="font-14"><span class="text-main">1.</span> Account Details</h3>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Contact Name<span class="requried ms-1">*</span></label>
+                                    <input (keyup)="removeError('name')"  type="text" name="name" id="name" class="form-control" placeholder="">
+                                    <input type="hidden" id="r_id">
+                                    <span style="font-size: 10px; color: red;">(Mandatory Field)</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone number</label>
+                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Email</label>
+                                        <input type="text" name="email" id="email" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">GST NO</label>
+                                        <input type="text" name="gst_no" id="gst_no" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                </div>
+
+                        
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Address</label>
+                                            <input type="text" name="address" id="address" class="form-control" placeholder="">
+                                        </div>
+                                    </div>
+                                    
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group mb-3">
+                                                <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">City</label>
+                                                <input type="text" name="city" id="city" class="form-control" placeholder="">
+                                            </div>
+                                        </div>
+                                        
+                                        </div>
+                        
+                        
+                        
+                        
+
+                    
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="Create()" id="addUserBtn" class="btn btn-primary btn-sm text-uppercase">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->

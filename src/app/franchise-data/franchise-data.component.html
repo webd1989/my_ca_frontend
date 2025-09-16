@@ -1,0 +1,147 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <!-- Top Bar :: Start -->
+           <app-header></app-header>
+            <!-- Top Bar :: End -->
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+                <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-body p-20">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="mb-20">
+                                <div class="card border-radius-10 mb-10 main-bg-color">
+                                    <div class="card-body p-20">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="me-3">
+                                                <i class="fas fa-user-circle text-main font-18"></i>
+                                            </div>
+                                            <div class="w-100">
+                                                
+                                                <h6 class="edit-text text-black font-18 mb-0 mt-2">{{contactData?.name}}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="text-capitalize text-muted font-13 font-weight-400 mb-1">Phone: {{contactData?.phone}}</p>
+                                            <p class="text-muted font-13 font-weight-400 mb-1">Email: {{contactData?.email}}</p>
+                                            <p class="edit-text font-15 font-weight-400 mb-2">Address: {{contactData?.address}}</p>
+
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-20">
+                                <div class="card border-radius-10 mb-10 main-bg-color">
+                                    <div class="card-body p-20">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="w-100">
+                                                <h6 class="edit-text text-black mb-0 mt-2"> <i class="fas fa-bars text-main font-18"></i> Total Quantity: {{totalQty}}</h6>
+
+                                                <hr>
+
+                                                <h6 class="edit-text text-black mb-0 mt-2"> <i class="fas fa-bars text-main font-18"></i> Total Amount: {{totalAmt}}</h6>
+
+                                                <hr>
+
+                                                <h6 class="edit-text text-black mb-0 mt-2"> <i class="fas fa-bars text-main font-18"></i> Total Advance: {{totalAdvance}}</h6>
+
+                                                <hr>
+
+                                                <h6 class="edit-text text-black mb-0 mt-2"> <i class="fas fa-bars text-main font-18"></i> Total Remaining Amount: {{totalRemainingAmt}}</h6>
+
+                                                <hr>
+
+                                                <h6 class="edit-text text-black mb-0 mt-2"> <i class="fas fa-bars text-main font-18"></i> Total Transport: {{totalTransport}}</h6>
+
+                                                <hr>
+
+                                                <h6 class="edit-text text-black mb-0 mt-2"> <i class="fas fa-bars text-main font-18"></i> Total Raw Material: {{totalRawMaterial}}</h6>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="mb-20">
+                                <div class="card border-radius-10 mb-4 main-bg-color">
+                                    <div class="page-card-body p-3">
+                                        <div class="table-responsive">
+                                                <table class="table table-bordered table-striped position-relative">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-uppercase whitespace-nowrap">Customer</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Phone</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Address</th>
+                                                            <th class="text-uppercase whitespace-nowrap">City</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Qty</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Staff</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Cart</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Only Delivery</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Del Date</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Del Time</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Amount</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Advance</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Remaining</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Transport</th>
+                                                            <th class="text-uppercase whitespace-nowrap">Raw Material</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr *ngFor="let user of bookings | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i" lass="odd" lass="odd">
+                                                            <td class="whitespace-nowrap" [style]="user.row_style"><a routerLink="/customer/{{user.number}}">{{user.name}}</a></td>
+                                                            <td class="whitespace-nowrap" [style]="user.row_style"><a routerLink="/customer/{{user.number}}">{{user.number}}</a></td>
+                                                            <td class="whitespace-nowrap" [style]="user.row_style">{{user.address}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.city}}</td>
+                                                            <td class="whitespace-nowrap" [style]="user.row_style">{{user.qty}}</td>
+                                                            <td style="color:#3064B5" class="whitespace-nowrap" [style]="user.row_style">{{user.staff}}</td>
+                                        <td style="color: #8BD64A;" class="whitespace-nowrap" [style]="user.row_style">{{user.cart_apply}}</td>
+                                        <td style="color: #C192C9;" class="whitespace-nowrap" [style]="user.row_style">{{user.only_delivery_apply}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.order_date}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.delivery_time}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.total_payment}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.advance}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.remaining_amount}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.tranport_amout}}</td>
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{user.raw_material}}</td>
+                                                            </tr>
+                                                            <tr *ngIf="bookings.length == 0"><td colspan="20">No Records</td></tr>
+                                    <tr *ngIf="bookings.length > 0"><td colspan="20"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div> 
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            
+
+
+
+
+            <!--Footer :: Start-->
+        </div>
+        <!-- Page Content :: End -->
+        <app-footer></app-footer>
+        <!--Footer :: End-->
+    </div>
+</main>

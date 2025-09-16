@@ -1,0 +1,25 @@
+.active_btn{ background-color: #0d4eba; color: #fff !important;}
+.pagiation{    text-align: center;
+    font-size: 12px;
+}
+    .followupBtn:hover{
+        background: #0d4eba;
+    color: #fff;
+    border-radius: 3px;
+    }
+    .company_detail_left{
+        float: left;
+        width: 71%;
+        font-size: 12px;
+    }
+    .company_detail_right{
+    float: right;
+    width: 27%;
+    }
+    #dob input{ border: 0px !important;}
+.error_validation{border: 2px solid red !important;}
+.no_record{text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 15px;
+    padding: 6px;}

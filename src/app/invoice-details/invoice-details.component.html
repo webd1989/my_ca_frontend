@@ -1,0 +1,140 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title ">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="breadcrumb-info" style="width: 620px;">
+                                <div class="page-card-title">
+                            
+                                    <b>{{invoiceData.customer_name}}</b><br>
+                                    {{invoiceData.customer_address}}<br>
+                                    <b>GSTIN:</b> {{invoiceData.customer_gst}}<br><br>
+                                    <div class="row">
+                                    <div class="col-lg-4 edit-form">
+                                        <b>Bill Date:</b> <input class="form-control" type="text" value="{{invoiceData.bill_date}}" id="bill_date">
+                                    </div>
+                                    <div class="col-lg-4 edit-form">
+                                        <b>Bill No.:</b> <input class="form-control" type="text" value="{{invoiceData.bill_no}}" id="bill_no">
+                                    </div>
+                                    <div class="col-lg-4 edit-form"><b>Ref No.:</b> <input class="form-control" type="text" value="{{invoiceData.ref_no}}" id="ref_no"></div>
+                                    <div class="col-lg-4 edit-form"><b>Shipment No.:</b> <input class="form-control" type="text" value="{{invoiceData.shipment_no}}" id="shipment_no"></div>
+                                    <div class="col-lg-4 edit-form"><b>Work Order No.:</b> <input class="form-control" type="text" value="{{invoiceData.work_order_no}}" id="work_order_no"></div>
+                                    </div>
+                                    
+                                
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="gap-3">
+                                <h4>Bill Amount: {{invoiceData.amount}}</h4><br>
+                                <div class="row">
+
+                                    <div class="col-lg-6 edit-form"><b>Option 1:</b><input class="form-control" type="text" value="{{invoiceData.option_1}}" id="option_1"></div>
+                                    <div class="col-lg-6 edit-form"><b>Value 1:</b><input class="form-control" type="text" value="{{invoiceData.value_1}}" id="value_1"></div>
+
+                                    <div class="col-lg-6 edit-form"><b>Option 2:</b><input class="form-control" type="text" value="{{invoiceData.option_2}}" id="option_2"></div>
+                                    <div class="col-lg-6 edit-form"><b>Value 2:</b><input class="form-control" type="text" value="{{invoiceData.value_2}}" id="value_2"></div>
+
+                                    <div class="col-lg-6 edit-form"><b>Option 3:</b><input class="form-control" type="text" value="{{invoiceData.option_3}}" id="option_3"></div>
+                                    <div class="col-lg-6 edit-form"><b>Value 3:</b><input class="form-control" type="text" value="{{invoiceData.value_3}}" id="value_3"></div>
+
+                                    <div class="col-lg-4 edit-form"><a href="javascript:;" (click)="regenerateBill();" class="btn btn-primary text-uppercase" type="button" >Re-Generate Bill</a></div>
+                                    <div class="col-lg-4 edit-form"><a href="javascript:;" (click)="saveBill();" class="btn btn-primary text-uppercase" type="button" >Save Bill</a></div>
+                                    <div class="col-lg-4 edit-form"><a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" class="btn btn-warning text-uppercase" type="button" >Add Item</a></div>
+                                </div>
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap">S.NO</th>
+                                        <th class="text-uppercase whitespace-nowrap">Cont No.</th>
+                                        <th class="text-uppercase whitespace-nowrap">Size</th>
+                                        <th class="text-uppercase whitespace-nowrap">Do Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">From</th>
+                                        <th class="text-uppercase whitespace-nowrap">To</th>
+                                        <th class="text-uppercase whitespace-nowrap">Ref No.</th>
+                                        <th class="text-uppercase whitespace-nowrap">Freight.</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users; index as i">
+                                        <td class="whitespace-nowrap">{{i+1}}</td>
+                                        <td class="whitespace-nowrap">{{user.con_no}}</td>
+                                        <td class="whitespace-nowrap">{{user.size}}</td>
+                                        <td class="whitespace-nowrap">{{user.do_date}}</td>
+                                        <td class="whitespace-nowrap">{{user.from}}</td>
+                                        <td class="whitespace-nowrap">{{user.to}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">{{user.ref_no}}</td>
+                                        <td class="p-0"><input style="width: 95px;" class="border-0"  [id]="'freight_'+user.id" value="{{user.freight}}" (blur)="SetData('freight',user.id)" type="text"></td>
+                                        <td class="text-capitalize whitespace-nowrap">
+                                           
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+<div class="modal fade" id="createTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div style="padding: 7px 11px;" class="modal-header border-0 text-bg-light align-items-center">
+                <div class="d-flex justify-content-between w-100 me-3">
+                    <h4 class="modal-title font-16">Add Item Invoice</h4>
+                </div>
+                <button type="button" id="closeBtn" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    
+                    <div class="input-group mb-3">
+                        <span class="input-group-text font-12">Container No</span>
+                        <input type="text" class="form-control" id="container_no">
+                    </div>
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button  id="copyBtn" (click)="AddItemInvoice()" type="button" class="btn btn-primary btn-sm text-uppercase" >Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+

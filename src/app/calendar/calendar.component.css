@@ -1,0 +1,41 @@
+
+.active_btn{ background-color: #F8871E; color: #fff !important;}
+.filter_input{ width: 9%; }
+.p-0{padding: 0px !important;}
+.border-0{  padding: 7px 3px; width: 100%;}
+.border-100{ padding: 7px 3px; width: 100%; border: 1px solid #ccc;}
+.border-0:focus{ border: 1px solid #000;}
+.add_btn{background: #093;
+    color: #fff;
+    padding: 2px;
+    padding-left: 5px;
+    border-radius: 3px;}
+    .del_btn{background: #f00;
+        color: #fff;
+        padding: 2px;
+        padding-left: 5px;
+        border-radius: 3px;}
+        .yellow{ background-color: yellow;}
+        .sky{ background-color: skyblue;}
+        .green{ background-color: green; color: #fff;}
+        .copy_btn{background:blue;
+            color: #fff;
+            padding: 2px;
+            padding-left: 5px;
+            border-radius: 3px;}
+
+            /* JUST COMMON TABLE STYLES... */
+table { border-collapse: collapse; width: 100%; }
+th, td { background: #fff; padding: 8px 16px; }
+
+
+.tableFixHead {
+  overflow: auto;
+  height: 600px;
+}
+
+.tableFixHead thead th {
+  position: sticky;
+  top: -1px; border: 1px solid #eceef6;
+}
+.active_report{ background-color: #F8871E; color: white;}

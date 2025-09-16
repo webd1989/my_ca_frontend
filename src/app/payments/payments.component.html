@@ -1,0 +1,164 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title d-flex align-items-center justify-content-between">
+                    <div class="breadcrumb-info">
+                        <h2 class="font-18 text-capitalize d-flex align-items-center mb-0">Payments</h2>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="has-search">
+                            <select id="is_paid" class="form-select filter-p">
+                                <option value="">Status</option>
+                                <option value="1">Paid</option>
+                                <option value="2">Unpaid</option>
+                            </select>
+                        </div>
+                        <div class="has-search">
+                            <input type="text" name="bill_no" id="bill_no" class="form-control filter-p" placeholder="Bill No">
+                        </div>
+                        <div>
+                            <ngx-datepicker [(ngModel)]="bill_date" id="bill_date" [options]="options" class="form-control filter-p"></ngx-datepicker>
+                        </div>
+                        <div class="has-search">
+                            <select name="customer_name" id="customer_name" class="form-select filter-p">
+                                <option value="">Party Name</option>
+                                <option *ngFor="let customer of customers" value="{{customer.customer_name}}">{{customer.customer_name}}</option>
+                            </select>
+                        </div>
+                        <div class="has-search">
+                            <input type="text" name="customer_gst" id="customer_gst" class="form-control filter-p" placeholder="Party GST">
+                        </div>
+                        <div class="has-search">
+                            <input type="text" name="courier_no" id="courier_no" class="form-control filter-p" placeholder="Courier Receipt No">
+                        </div>
+                        <div class="has-search">
+                            <input type="text" name="amount" id="amount" class="form-control filter-p" placeholder="Amount">
+                        </div>
+                        <div class="has-search">
+                            <ngx-datepicker [(ngModel)]="rec_date" id="rec_date" [options]="options2" class="form-control filter-p"></ngx-datepicker>
+                        </div>
+                        <div class="has-search">
+                            <select id="payment_mode" class="form-select filter-p">
+                                <option value="">Payment Mode</option>
+                                <option value="NEFT">NEFT</option>
+                                <option value="UPI">UPI</option>
+                                <option value="CASH">CASH</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="RTGS">RTGS</option>
+                                <option value="A/C Deposit">A/C Deposit</option>
+                            </select>
+                        </div>
+                        <div class="has-search">
+                            <!-- <a (click)="generateInvoice();" id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a> -->
+                            <a (click)="searchData();" id="" style="margin-left: 10px;" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
+                            <a (click)="reset();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="Reset"><i class="fas fa-retweet"></i></a>
+                            <a (click)="GeneratePdf();" style="margin-left: 10px;"  class="btn btn-warning btn-sm text-uppercase" title="PDF"><i class="fas fa-file"></i></a>
+                            <a (click)="GenerateCSV();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="PDF"><i class="fa fa-file-excel"></i></a>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap" colspan="8"></th>
+                                        <th class="text-uppercase whitespace-nowrap">{{totalAmt}}</th>
+                                        <th class="text-uppercase whitespace-nowrap">{{totalDeduction}}</th>
+                                        <th class="text-uppercase whitespace-nowrap">{{totalTds}}</th>
+                                        <th class="text-uppercase whitespace-nowrap">{{totalSettlement}}</th>
+                                        <th class="text-uppercase whitespace-nowrap">{{totalRecAmt}}</th>
+                                        <th class="text-uppercase whitespace-nowrap" colspan="4"></th>
+                                        
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap">S.NO</th>
+                                        <th class="text-uppercase whitespace-nowrap">Status</th>
+                                        <th class="text-uppercase whitespace-nowrap">Bill No.</th>
+                                        <th class="text-uppercase whitespace-nowrap">Bill Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">Party Name</th>
+                                        <th class="text-uppercase whitespace-nowrap">GST City/State</th>
+                                        <th class="text-uppercase whitespace-nowrap">GST</th>
+                                        <th class="text-uppercase whitespace-nowrap">Courier Receipt No</th>
+                                        <th class="text-uppercase whitespace-nowrap">Amount</th>
+                                        <th class="text-uppercase whitespace-nowrap">Deductions</th>
+                                        <th class="text-uppercase whitespace-nowrap">TDS Amt</th>
+                                        <th class="text-uppercase whitespace-nowrap">Settlement</th>
+                                        <th class="text-uppercase whitespace-nowrap">REC Amt</th>
+                                        <th class="text-uppercase whitespace-nowrap">Balance Amt</th>
+                                        <th class="text-uppercase whitespace-nowrap">Payment Mode</th>
+                                        <th class="text-uppercase whitespace-nowrap">Rec Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">Ref No</th>
+                                        
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap" [style]="user.row_style">{{i+1}}</td>
+                                        <td class="check_colum" >
+                                            <select style="width:100px;" [id]="'is_paid_'+user.id" (change)="SetData('is_paid',user.id)" class="form-select">
+                                                <option [attr.selected]="user.is_paid == 1 ? true : null" value="1">Paid</option>
+                                                <option [attr.selected]="user.is_paid == 2 ? true : null"  value="2">Unpaid</option>
+                                            </select>
+                                        </td>
+                                
+                                        <td class="whitespace-nowrap">{{user.bill_no}}</td>
+                                        <td class="whitespace-nowrap">{{user.display_date2}}</td>
+                                        <td class="whitespace-nowrap">{{user.customer_name}}</td>
+                                        <td class="whitespace-nowrap">{{user.gst_city}}</td>
+                                        <td class="whitespace-nowrap">{{user.customer_gst}}</td>
+                                        <td class="whitespace-nowrap"><input style="width: 150px;" [id]="'courier_no_'+user.id" (blur)="SetData('courier_no',user.id)" value="{{user.courier_no}}" class="form-control" type="text"></td>
+                                        <td class="whitespace-nowrap">{{user.amount}}</td>
+                                        <td class="whitespace-nowrap"><input style="width:80px;" [id]="'deduction_'+user.id" (blur)="SetData('deduction',user.id)" value="{{user.deduction}}" class="form-control" type="text"></td>
+                                        <td class="whitespace-nowrap"><input style="width:80px;" [id]="'tds_amt_'+user.id" (blur)="SetData('tds_amt',user.id)" value="{{user.tds_amt}}" class="form-control" type="text"></td>
+                                        <td class="whitespace-nowrap"><input style="width:80px;" [id]="'settlement_'+user.id" (blur)="SetData('settlement',user.id)" value="{{user.settlement}}" class="form-control" type="text"></td>
+                                        <td class="whitespace-nowrap">{{user.rec_amt}}</td>
+                                        <td class="whitespace-nowrap"></td>
+                                        <td class="whitespace-nowrap">
+                                            <select style="width:100px;" [id]="'payment_mode_'+user.id" (change)="SetData('payment_mode',user.id)" class="form-select">
+                                                <option [attr.selected]="user.payment_mode == '' ? true : null" value="">Select</option>
+                                                <option [attr.selected]="user.payment_mode == 'NEFT' ? true : null" value="NEFT">NEFT</option>
+                                                <option [attr.selected]="user.payment_mode == 'UPI' ? true : null"  value="UPI">UPI</option>
+                                                <option [attr.selected]="user.payment_mode == 'CASH' ? true : null"  value="CASH">CASH</option>
+                                                <option [attr.selected]="user.payment_mode == 'Cheque' ? true : null"  value="Cheque">Cheque</option>
+                                                <option [attr.selected]="user.payment_mode == 'A/C Deposit' ? true : null"  value="A/C Deposit">A/C Deposit</option>
+                                                <option [attr.selected]="user.payment_mode == 'RTGS' ? true : null" value="RTGS">RTGS</option>
+                                            </select>
+                                        </td>
+                                        <td class="whitespace-nowrap">
+                                            <input style="width:105px;" [id]="'rec_date_'+user.id" (blur)="SetData('rec_date',user.id)" value="{{user.rec_date}}" class="form-control" type="text">
+                                        </td>
+                                        <!-- <td class="whitespace-nowrap">
+                                            <input style="width:80px;" [id]="'remark_2_'+user.id" (blur)="SetData('remark_2',user.id)" value="{{user.remark_2}}" class="form-control" type="text">
+                                        </td> -->
+                                        <td class="whitespace-nowrap">{{user.ref_no}}</td>
+                                        
+                                        
+                                    </tr>
+                                    <tr><td colspan="18"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+

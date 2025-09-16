@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+}
+
+/* Variables Define :: Start  */
+
+:root {
+  --primary-color: rgb(0 71 189) ;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray: #585858;
+  --color-light-gray: #a2a2a2;
+  --color-red: #c60001;
+  --font-weight-700: 700;
+}
+
+/* Variables Define :: End  */
+
+body{
+  font-family: 'Poppins', sans-serif;
+} 
+
+p,
+a,
+span,
+ul,
+li,
+ol,
+label,
+button {
+    color: var(--color-black);
+    font-weight: 300;
+}
+
+a{
+  text-decoration: none;
+}
+
+ul, ol{
+  list-style: none;
+  padding-left: 0px;
+}
+button:focus, .btn:focus, input:focus, .page-link:focus{
+  box-shadow: none !important;
+}
+table thead{
+  background-color: #2f3349;
+}
+table thead th{
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-white);
+}
+td, th{
+  padding: 12px !important;
+  text-align: center;
+}
+
+.p-20{
+  padding: 20px;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.whitespace-nowrap{
+  white-space: nowrap;
+}
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.text-black{
+    color: var(--color-black);
+}
+.text-red{
+    color: var(--color-red);
+}
+.text-white{
+    color: var(--color-white);
+}
+.text-main{
+    color: var(--primary-color);
+}
+.bg-white{
+  background-color: var(--color-white);
+}
+.bg-lightblue{
+  background-color: #e4ebf2;
+}
+
+.btn-primary{
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.btn-primary:hover{
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+.form-group{
+  margin-bottom: 20px;
+}
+.form-control{
+  height: 45px;
+  border-radius: 6px;
+}
+/* Font Element :: Start  */
+
+.font-12 {
+  font-size: 12px;
+}
+.font-14 {
+  font-size: 14px;
+}
+.font-15 {
+  font-size: 15px;
+}
+.font-16 {
+  font-size: 16px;
+}
+.font-18 {
+  font-size: 18px;
+}
+.font-20 {
+  font-size: 20px;
+}
+.font-22 {
+  font-size: 22px;
+}
+.font-30 {
+  font-size: 30px;
+}
+.font-weight-300{
+  font-weight: 300;
+}
+.font-weight-400{
+  font-weight: 400;
+}
+.font-weight-600{
+  font-weight: 600;
+}
+.ml-0{
+  margin-left: 0 !important;
+}
+.mt-20{
+  margin-top: 20px;
+}
+.mb-20{
+  margin-bottom: 20px;
+}
+.mt-40{
+  margin-top: 40px;
+}
+.btn{
+  border-radius: 6px;
+}
+/* Font Element :: End */
+
+/* Scrollbar :: Start */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+ 
+::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #6d6d6d; 
+}
+/* Scrollbar :: End */
+
+/* Lonin Area :: Start */
+.account{
+  overflow:hidden;
+}
+.account .left-panel, .account .right-panel{
+  padding-top: 70px ;
+  padding-bottom: 70px ;
+}
+.account .bg-img{
+  background: url(../images/bg/login-left.png) top right repeat;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  opacity: 1;
+  z-index: 999;
+  position: relative;
+  display: flex;
+  padding-left: 60px;
+  background-position: center;
+}
+/*.account .bg-img:before{
+  content: "";
+  position: absolute;
+  right: -70%;
+  top: 0;
+  -webkit-transform: translate(-50%, 0);
+  background-color: rgb(0 71 189);
+  width: 83rem;
+  height: 100vh;
+  border-radius: 50%;
+  -webkit-transition: all 0.3s ease;
+  transform: rotate(90deg);
+}
+.account .bg-img:after{
+  content: "";
+  position: absolute;
+  right: -78%;
+  top: 0;
+  -webkit-transform: translate(-50%, 0);
+  background-color: rgb(0 71 189 / 13%);
+  width: 88rem;
+  height: 100vh;
+  border-radius: 50%;
+  -webkit-transition: all 0.3s ease;
+  transform: rotate(90deg);
+    z-index: -1;
+}*/
+.account .left-panel{
+  display: flex;
+  /* gap: 115px; */
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.account .left-panel .logo-area img{
+  width: 45%;
+}
+.account .left-panel .login-img img{
+  width: 60%;
+}
+.account .left-panel .content .text{
+  font-size: 28px;
+  color: var(--color-white);
+  font-weight: 500;
+}
+.account .right-panel{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 999;
+}
+.account .right-panel .welcome-text{
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+.account .right-panel .form-area{
+  width: 500px;
+  margin: 0px auto;
+}
+.account .right-panel .form-area .form-text p{
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+.account .right-panel .form-area .form-text span{
+  font-size: 14px;
+  margin-bottom: 35px;
+  font-weight: 400;
+  display: inline-block;
+}
+.account .right-panel .form-area .submit-btn{
+  margin-top: 35px;
+}
+.account .right-panel .copyright{
+  z-index: 99;
+}
+/* Lonin Area :: End */
+
+/* Mediaquey :: Start */
+
+  @media (min-width: 991px) {
+    .display-md-block{
+      display: none !important;
+    }
+  }
+  @media (max-width: 991px) {
+    .display-md-none{
+      display: none !important;
+    }
+    .account .right-panel .right-logo{
+      width: 30%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px;
+    }
+  }
+  @media (max-width: 600px) {
+    .account .right-panel .form-area{
+      width: 100%;
+    }
+  } 
+  @media (max-width: 576px) {
+    .account .right-panel .right-logo{
+      width: 60%;
+    }
+  }
+
+/* Mediaquey :: End */

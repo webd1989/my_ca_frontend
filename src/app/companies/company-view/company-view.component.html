@@ -1,0 +1,1105 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <!-- Top Bar :: Start -->
+            <app-header></app-header>
+            <!-- Top Bar :: End -->
+            <!-- main Area :: Start -->
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+                <div class="main-area position-relative">
+                    <div class="page-card-body p-20">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-20">
+                                    <div class="card border-radius-10 mb-10 main-bg-color">
+                                        <div class="card-body p-20">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="me-3">
+                                                    <i class="fas fa-user-circle text-main font-18"></i>
+                                                </div>
+                                                <div class="w-100">
+                                                    <div class="d-flex justify-content-start">
+                                                        <p class="text-capitalize font-14 mb-0 text-muted">Account
+                                                        </p>
+                                                        <div class="dropdown filter-dropdown ms-3">
+                                                            <span class="btn btn-sm btn-primary-light dropdown-toggle font-12" type="button" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="text text-uppercase text-warning font-weight-500 me-1">Qualified</span>
+                                                                <i class="far fa-angle-down font-12"></i>
+                                                            </span>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton23">
+                                                                <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Lead</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Contract</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Qualified</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Disqualified</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Long-Term</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Client</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h6 class="edit-text text-black font-18 mb-0 mt-2">{{userData?.name}}</h6>
+                                                    <p style="font-size: 13px;">{{userData?.city}}, {{userData?.state}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="company_detail_left">
+                                                <b>Industry:</b> {{userData?.industry}} | <b>Equipment Type:</b> {{companyData?.equipment_types}} | <b>Mode:</b> {{companyData?.modes}} | <b>Weekly Volume:</b> 15
+                                                </div>
+                                                <div class="company_detail_right">
+                                                <p class="text-capitalize text-muted font-13 font-weight-400 mb-1">Account Owner</p>
+                                                <p class="edit-text font-13 mb-2">{{accountOnwerName}}</p>
+                                               </div> 
+                                            </div><br><br>
+                                            <div class="mb-3">
+                                                <a *ngIf="userData.website != ''" target="_blank" href="{{userData.website}}">
+                                                    <div style="cursor: pointer;" class="form-group mb-2">
+                                                    <input type="text" style="cursor: pointer;" id="website" value="{{userData.website}}" readonly class="form-control" placeholder="Website"/>
+                                                </div>
+                                              </a>
+
+                                              <div *ngIf="userData.website == ''" style="color: #f00; font-size: 14px;" class="form-group mb-2">
+                                                Website URL not available
+                                            </div>
+
+                                              <a *ngIf="userData.linkedin != ''" target="_blank" href="{{userData.linkedin}}">
+                                                <div style="cursor: pointer;" class="form-group mb-2">
+                                                    <input type="text" style="cursor: pointer;" id="linkedin" value="{{userData.linkedin}}" readonly class="form-control" placeholder="Linkedin"/>
+                                                </div>
+                                            </a>
+
+                                            <div *ngIf="userData.linkedin == ''" style="color: #f00; font-size: 14px;" class="form-group mb-2">
+                                                Linkedin URL not available
+                                            </div>
+                                            </div>
+                                            <div>
+                                                
+                                            <!-- <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="text-center cursor-pointer">
+                                                        <div class="d-flex justify-content-center mb-2">
+                                                            <i class="fas fa-tasks text-main d-flex align-items-center justify-content-center rounded bg-lightblue" style="width:40px;height: 40px;"></i>
+                                                        </div>
+                                                        <p class="text-capitalize font-13 font-weight-600 mb-0">Task ({{total_task}})</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="text-center cursor-pointer">
+                                                        <div class="d-flex justify-content-center mb-2">
+                                                            <i class="fas fa-file-user text-main d-flex align-items-center justify-content-center rounded bg-lightblue" style="width:40px;height: 40px;"></i>
+                                                        </div>
+                                                        <a routerLink="/deals"><p class="text-capitalize font-13 font-weight-600 mb-2">Deal ({{deals.length}})</p></a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="text-center cursor-pointer">
+                                                        <div class="d-flex justify-content-center mb-2">
+                                                            <i class="fas fa-poll-h text-main d-flex align-items-center justify-content-center rounded bg-lightblue" style="width:40px;height: 40px;"></i>
+                                                        </div>
+                                                        <p class="text-capitalize font-13 font-weight-600 mb-2">Document</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="text-center mt-3">
+                                                        <a href="javascript:;" class="btn btn-primary btn-sm text-uppercase w-100" type="button"><i class="far fa-envelope me-1"></i> Send Email</a>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="show_contact_card" class="mb-20">
+                                    <div class="card border-radius-10 mb-10 main-bg-color">
+                                        <div class="card-body p-20">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="me-3">
+                                                    <i class="fas fa-user-circle text-main font-18"></i>
+                                                </div>
+                                                <div class="w-100">
+                                                    
+                                                    <h6 id="selected_contact_name" class="edit-text text-black font-18 mb-0 mt-2">Loading Contact Info....</h6>
+                                                    <p id="selected_contact_email" style="font-size: 13px;"></p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="me-3">
+                                                    <i class="fas fa-home text-main font-18"></i>
+                                                </div>
+                                                <div class="w-100">
+                                                    <p id="selected_contact_address" style="margin-bottom:0px;font-size: 13px;"></p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div style="font-size: 12px;" id="selected_contact_extra_info" class=""></div>
+                                            </div>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-20">
+                                    <div class="card border-radius-10 mb-20 toggle-block main-bg-color">
+                                        <div class="card-header bg-transparent border-0">
+                                            <div class="heading d-flex align-items-center justify-content-between">
+                                                <p class="font-16 font-weight-600 mb-0">Account Info</p>
+                                                <a (click)="accountInfoShowHide();" class="edit-text font-14 font-weight-500 text-main toggle-trigger">
+                                                    <i *ngIf="!accountInfoShow" class="far fa-angle-down"></i>
+                                                    <i *ngIf="accountInfoShow" class="far fa-angle-up"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div id="account_info_div" style="display: none;" class="card-body p-20 pt-0 toggle-able detail-body">
+                                            <div class="mt-2">
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Address</label>
+                                                    <input type="text" id="address" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">City</label>
+                                                    <input type="text" id="city" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">State</label>
+                                                    <input type="text" id="state" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Zip/Postal</label>
+                                                    <input type="text" id="zipcode" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Country</label>
+                                                    <input type="text" id="country" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Phone</label>
+                                                    <input type="text" id="phone" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Phone Extension</label>
+                                                    <input type="text" id="phone_ext" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Email</label>
+                                                    <input type="text" id="email" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Source</label>
+                                                    <input type="text" id="source" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Preferred Communication</label>
+                                                    <input type="text" id="preffered_communication" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Description</label>
+                                                    <input type="text" id="description" readonly class="form-control p-0"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-20">
+                                    <div class="card border-radius-10 mb-20 toggle-block main-bg-color">
+                                        <div class="card-header bg-transparent border-0">
+                                            <div class="heading d-flex align-items-center justify-content-between">
+                                                <p class="font-16 font-weight-600 mb-0">Shipper Info</p>
+                                                <a (click)="showHideShipperInfo();" class="edit-text font-14 font-weight-500 text-main toggle-trigger">
+                                                    <i *ngIf="!shipperInfoShow" class="far fa-angle-down"></i>
+                                                    <i *ngIf="shipperInfoShow" class="far fa-angle-up"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div id="shipper_info_div" style="display: none;" class="card-body p-20 pt-0 toggle-able detail-body">
+                                            <div class="mt-2">
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Industry</label>
+                                                    <input type="text" id="industry" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Annual Revenue</label>
+                                                    <input type="text" id="annual_revenue" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Equipment Types</label>
+                                                    <input type="text" id="equipment_types" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Mode</label>
+                                                    <input type="text" id="modes" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Pain Points</label>
+                                                    <input type="text" id="pain_paints" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Contract and/or spot freight?</label>
+                                                    <input type="text" id="contracted" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Average weekly volume - shipments</label>
+                                                    <input type="text" id="shipment" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Pick and Drop</label>
+                                                    <input type="text" id="pick_drops" readonly class="form-control p-0"/>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label class="text-uppercase font-weight-400 font-12 mb-0 d-block">Special Requirement, FCFS</label>
+                                                    <input type="text" id="special_requirements" readonly class="form-control p-0"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-20">
+                                    <div class="card border-radius-10 mb-4 main-bg-color">
+                                        <div class="card-body p-20">
+                                            <ul class="nav nav-fill detail-tab" id="pills-tab" role="tablist">
+                                                <li class="nav-item li_active" id="overview_btn">
+                                                    <button class="nav-link active font-12 font-weight-600 text-uppercase"  type="button" role="tab" aria-controls="pills-home" (click)="SetOverviewActivityTimeline('overview')" aria-selected="true">Overview</button>
+                                                </li>
+                                                <li class="nav-item li_active_dull" id="activity_timeline_btn">
+                                                    <button class="nav-link font-12 font-weight-600 text-uppercase"  type="button" role="tab" aria-controls="pills-profile" (click)="SetOverviewActivityTimeline('activity_timeline')"  aria-selected="false">Activity Timeline</button>
+                                                </li>
+                                                <li class="nav-item li_active_dull" id="notes_btn">
+                                                    <button class="nav-link font-12 font-weight-600 text-uppercase"  type="button" role="tab" aria-controls="pills-profile" (click)="SetOverviewActivityTimeline('notes')"  aria-selected="false">Notes</button>
+                                                </li>
+                                            </ul>
+                                            <div class="mt-3" *ngIf="activity_timeline_filters">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                         <div class="d-flex mb-2">
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_call'}"  (click)="selectActivityTimelineFilter('f_call')" id="f_call" class="filter_tabs btn btn-primary-light py-1 text-center font-12 me-2" type="button">Call</a>
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_email'}"  (click)="selectActivityTimelineFilter('f_email')" id="f_email" class="filter_tabs btn btn-primary-light py-1 text-center font-12 me-2" type="button">Email</a>
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_text'}"  (click)="selectActivityTimelineFilter('f_text')" id="f_text" class="filter_tabs btn btn-primary-light py-1 text-center font-12 me-2" type="button">Text</a>
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_visit'}"  (click)="selectActivityTimelineFilter('f_visit')" id="f_visit" class="filter_tabs btn btn-primary-light py-1 text-center font-12 me-2" type="button">Visit</a>
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_meeting'}"  (click)="selectActivityTimelineFilter('f_meeting')" id="f_meeting" class="filter_tabs btn btn-primary-light py-1 text-center font-12 me-2" type="button">Meeting</a>
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_notes'}"  (click)="selectActivityTimelineFilter('f_notes')" id="f_notes" class="filter_tabs btn btn-primary-light py-1 text-center font-12 me-2" type="button">Notes</a>
+                                                            <a href="javascript:;" [ngClass]="{'active_btn': f_type === 'f_other'}"  (click)="selectActivityTimelineFilter('f_other')" id="f_other" class="filter_tabs btn btn-primary-light py-1 text-center font-12" type="button">Other</a>
+                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <!-- <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h4 class="font-18 mb-0">Activity Timeline</h4>
+                                                <h5 class="font-16 mb-0"><a href="#">Expand All</a></h5>
+                                            </div>
+                                            <h6 class="font-14 text-muted mb-3">10 Oct, 2023</h6> -->
+                                            <div *ngIf="currentTab == 'Overview'">
+                                                <div  class="mb-3" *ngFor="let activity of activities | paginate: { itemsPerPage: 10, currentPage: p2, totalItems: total2 }; index as i">
+                                                    <h6 class="font-14 text-muted mb-2">{{activity.created_a_time}}</h6>
+                                                    <div class="card border-radius-10 mb-10">
+                                                        <div class="card-body p-3">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="me-3">
+                                                                    <i *ngIf="activity?.type == 'p2_call'" class="fas fa-phone text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_email'" class="fas fa-envelope text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_text'" class="fas fa-text text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_visit'" class="fas fa-user text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_meeting'" class="fas fa-users text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_notes'" class="fas fa-file text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_other'" class="fas fa-bars text-main font-18"></i>
+                                                                </div>
+                                                                <div class="w-100">
+                                                                    <h6 class="edit-text mb-1">
+                                                                    <a href="javascript:;" class="text-muted font-13">{{activity?.task_name}}</a>
+                                                                    </h6>
+                                                                    <p class="text-capitalize font-13 font-weight-500 mb-0">{{activity?.description}}</p>
+    
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <p class="text-capitalize font-12 font-weight-600 mb-0">{{activity.contact_name}}
+                                                                            <span class="text-muted">Contact</span>
+                                                                        </p>
+                                                                        <p class="text-capitalize text-muted font-12 font-weight-400 mb-0">
+                                                                            {{activity.created_a_date}}
+                                                                        </p>
+                                                                    </div>
+    
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div *ngIf="currentTab == 'Activity'">
+                                                <div  class="mb-3" *ngFor="let activity of activities | paginate: { itemsPerPage: 10, currentPage: p2, totalItems: total2 }; index as i">
+                                                    <h6 class="font-14 text-muted mb-2">{{activity.created_a_time}}</h6>
+                                                    <div class="card border-radius-10 mb-10">
+                                                        <div class="card-body p-3">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="me-3">
+                                                                    <i *ngIf="activity?.type == 'p2_call'" class="fas fa-phone text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_email'" class="fas fa-envelope text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_text'" class="fas fa-text text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_visit'" class="fas fa-user text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_meeting'" class="fas fa-users text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_notes'" class="fas fa-file text-main font-18"></i>
+                                                                    <i *ngIf="activity?.type == 'p2_other'" class="fas fa-bars text-main font-18"></i>
+                                                                </div>
+                                                                <div class="w-100">
+                                                                    <h6 class="edit-text mb-1">
+                                                                    <a href="javascript:;" class="text-muted font-13">{{activity?.task_name}}</a>
+                                                                    </h6>
+                                                                    <p class="text-capitalize font-13 font-weight-500 mb-0">{{activity?.description}}</p>
+    
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <p class="text-capitalize font-12 font-weight-600 mb-0">{{activity.contact_name}}
+                                                                            <span class="text-muted">Contact</span>
+                                                                        </p>
+                                                                        <p class="text-capitalize text-muted font-12 font-weight-400 mb-0">
+                                                                            {{activity.created_a_date}}
+                                                                        </p>
+                                                                    </div>
+    
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div *ngIf="currentTab == 'Notes'">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h4 class="font-18 mb-0">Notes ({{total_notes}})</h4>
+                                                    <a href="javascript:;" (click)="setNoteHeading()" class="btn btn-primary text-uppercase text-center font-12" type="button" data-bs-toggle="modal" data-bs-target="#createNote"><i class="far fa-plus me-1"></i> Add Note</a>
+                                                </div>
+                                                <div style="height: 700px; overflow-y: auto;">
+                                                    <div class="mb-20" *ngFor="let note of notes">
+                                                        <div class="card border-radius-10 mb-10">
+                                                            <div class="card-body py-2 px-3"  >
+                                                                <div class="d-flex align-items-center">
+                                                                    
+                                                                    <div class="w-100">
+                                                                        
+                                                                        <h6 class="edit-text mb-1 d-flex justify-content-between">
+                                                                            <p style="font-size: 13px;line-height: 21px;">{{note?.notes}}</p>
+            
+                                                                        <span class="dropdown filter-dropdown">
+                                                                            <span class="dropdown-toggle font-13" type="button" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                <i class="fas fa-ellipsis-v"></i>
+                                                                            </span>
+                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton23">
+                                                                                <a class="dropdown-item pending font-13 text-capitalize"  (click)="getNoteData(note.id)" data-bs-toggle="modal" data-bs-target="#createNote">Edit Note</a>
+                                                                                <a class="dropdown-item pending font-13 text-capitalize"  (click)="DeleteNote(note.id)">Delete Note</a>
+                                                                            </div>
+                                                                        </span>
+                                                                        </h6>
+                                                                        
+                                                                        <div style="float: right;" class="d-flex justify-content-between">
+                                                                            
+                                                                            <p  class="text-capitalize text-muted font-12 font-weight-400 mb-0">{{note.display_date}}</p>
+                                                                        </div> 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="notes.length == 0" class="no_record">No Record</div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-20">
+                                    <div class="card border-radius-10 mb-4 main-bg-color">
+                                        <div class="card-body p-20">
+                                            <ul class="nav nav-fill detail-tab" id="pills-tab" role="tablist">
+                                                <li class="nav-item li_active" id="task_tab_btn">
+                                                    <button class="nav-link active font-12 font-weight-600 text-uppercase"  type="button" role="tab" aria-controls="pills-home" (click)="SetTaskContact('task')" aria-selected="true">Tasks</button>
+                                                </li>
+                                                <li class="nav-item li_active_dull" id="contact_tab_btn">
+                                                    <button class="nav-link font-12 font-weight-600 text-uppercase"  type="button" role="tab" aria-controls="pills-profile" (click)="SetTaskContact('contact')"  aria-selected="false">Contacts</button>
+                                                </li>
+                                            </ul>
+                                            <div *ngIf="task_contact_div" style="margin-top: 20px;">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h4 class="font-18 mb-0">Follow Up Task ({{total_task}})</h4>
+                                                    <a href="javascript:;" (click)="setHeading()" class="btn btn-primary text-uppercase text-center font-12" type="button" data-bs-toggle="modal" data-bs-target="#createTask"><i class="far fa-plus me-1"></i> Add Task</a>
+                                                </div>
+                                                <div class="mb-20" *ngFor="let task of tasks | paginate: { itemsPerPage: 5, currentPage: p, totalItems: total }; index as i">
+                                                    <div class="card border-radius-10 mb-10">
+                                                        <div class="card-body py-2 px-3"  >
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="me-3">
+                                                                    <i *ngIf="task?.type == 'p_call'" class="fas fa-phone text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_email'" class="fas fa-envelope text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_text'" class="fas fa-text text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_visit'" class="fas fa-user text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_meeting'" class="fas fa-users text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_notes'" class="fas fa-file text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_other'" class="fas fa-bars text-main font-18"></i>
+                                                                </div>
+                                                                <div class="w-100">
+                                                                    
+                                                                    <h6 class="edit-text mb-1 d-flex justify-content-between">
+                                                                        <a (click)="selectTask(task)" class="text-black font-14 font-weight-500">{{task?.task_name}}</a>
+        
+                                                                    <span class="dropdown filter-dropdown">
+                                                                        <span class="dropdown-toggle font-13" type="button" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                            <i class="fas fa-ellipsis-v"></i>
+                                                                        </span>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton23">
+                                                                            <a class="dropdown-item pending font-13 text-capitalize"  (click)="getTaskData(task.id)" data-bs-toggle="modal" data-bs-target="#createTask">Edit Task</a>
+                                                                            <a class="dropdown-item pending font-13 text-capitalize"  (click)="Delete(task.id)">Delete Task</a>
+                                                                            <!-- <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Today</a>
+                                                                            <a class="dropdown-item pending font-13 text-capitalize" href="javascript:;">Tomorrow</a> -->
+                                                                        </div>
+                                                                    </span>
+                                                                    </h6>
+                                                                    
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <p class="text-capitalize font-12 font-weight-600 mb-0">{{task.contact_name}}
+                                                                            <span class="text-muted">Contact</span>
+                                                                        </p>
+                                                                        <p class="text-capitalize text-muted font-12 font-weight-400 mb-0">
+                                                                            {{task.task_date}} <br *ngIf="task.start_time">
+                                                                             <span *ngIf="task.start_time">{{task.start_time}} - {{task.end_time}}</span></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="tasks.length > 0" class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div>
+                                                <div class="FollowupTask mb-3">
+                                                    <h2 class="font-16 mb-3">Set a quick follow-up task.</h2>
+                                                    <div>
+                                                        <span class="dropdown filter-dropdown me-2">
+                                                            <span class="btn btn-sm btn-primary-light dropdown-toggle font-12" type="button" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span class="text text-uppercase me-1">{{show_task_type}}</span>
+                                                                <i class="far fa-angle-down font-12"></i>
+                                                            </span>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton23">
+                                                                <a class="dropdown-item pending font-13 text-capitalize" (click)="setTaskType('p_call')" href="javascript:;">Call</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize"(click)="setTaskType('p_email')" href="javascript:;">Email</a>
+                                                                <a class="dropdown-item pending font-13 text-capitalize" (click)="setTaskType('p_text')" href="javascript:;">Text</a>
+                                                            </div>
+                                                        </span>
+                                                        <button (click)="CreateShortTask('1d')" type="button" class="followupBtn">1d</button>
+                                                        <button (click)="CreateShortTask('2d')" type="button" class="followupBtn">2d</button>
+                                                        <button (click)="CreateShortTask('3d')" type="button" class="followupBtn">3d</button>
+                                                        <button (click)="CreateShortTask('5d')" type="button" class="followupBtn">5d</button>
+                                                        <button (click)="CreateShortTask('1w')" type="button" class="followupBtn">1w</button>
+                                                        <button (click)="CreateShortTask('2w')" type="button" class="followupBtn">2w</button>
+                                                        <button (click)="CreateShortTask('4w')" type="button" class="followupBtn">4w</button>
+                                                        <button (click)="CreateShortTask('6w')" type="button" class="followupBtn">6w</button>
+                                                        <button (click)="CreateShortTask('8w')" type="button" class="followupBtn">8w</button>
+                                                        <button (click)="CreateShortTask('12w')" type="button" class="followupBtn">12w</button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <a href="javascript:;" class="btn btn-primary-light text-center font-12" type="button"><i class="far fa-plus me-1"></i> Follow up Sequence</a>
+                                                     <a href="javascript:;" style="margin-left: 10px;" class="btn btn-primary-light text-center font-12" type="button"><i class="far fa-plus me-1"></i> Email Sequence</a>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!task_contact_div" style="margin-top: 20px;">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h4 class="font-18 mb-0">Contacts ({{total_contacts}})</h4>
+                                                    <a href="javascript:;" (click)="setContactHeading()" class="btn btn-primary text-uppercase text-center font-12" type="button" data-bs-toggle="modal" data-bs-target="#createContact"><i class="far fa-plus me-1"></i> Add Contact</a>
+                                                </div>
+                                                <div class="mb-20">
+                                                    <div *ngFor="let contact of contacts | paginate: { itemsPerPage: 5, currentPage: p3, totalItems: total3 }; index as i" class="card border-radius-10 mb-10">
+                                                        <div class="card-body py-2 px-3">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="me-3">
+                                                                    <i class="fas fa-user-circle text-main font-18"></i>
+                                                                </div>
+                                                                <div class="w-100">
+                                                                    <h6 class="edit-text mb-1 d-flex justify-content-between">
+                                                                        <a (click)="getTaskDeatils(contact?.id)" style="cursor: pointer;" class="text-black font-14 font-weight-500">{{contact?.name}}<br>
+                                                                           <span style="font-size: 12px;">{{contact?.email}}</span><br> 
+                                                                           <span style="font-size: 12px;">{{contact?.phone}}</span> 
+                                                                        </a>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="contacts.length > 0" class="pagiation"><pagination-controls (pageChange)="pageChangeEvent3($event)"></pagination-controls></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-20">
+                                    <div class="card border-radius-10 mb-4 main-bg-color">
+                                        <div class="card-body p-20">
+                                            <ul class="nav nav-fill detail-tab" id="pills-tab" role="tablist">
+                                                <li class="nav-item li_active" id="new_activity_btn" role="presentation">
+                                                    <button class="nav-link active font-12 font-weight-600 text-uppercase" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#LoadDetails" type="button" role="tab" aria-controls="pills-home" (click)="SetActivityType('new')" aria-selected="true">New Activity</button>
+                                                </li>
+                                                <li class="nav-item li_active_dull" id="new_complete_task_btn" role="presentation">
+                                                    <button class="nav-link font-12 font-weight-600 text-uppercase" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#Tracking" type="button" role="tab" aria-controls="pills-profile" (click)="SetActivityType('completed')"  aria-selected="false">Complete Task</button>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" id="pills-tabContent">
+                                                <div class="tab-pane fade show active" id="LoadDetails" role="tabpanel" aria-labelledby="pills-home-tab">
+                                                    <div class="mt-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <h4 class="font-14 mb-2">Deal (optional)</h4>
+                                                                <select name="" id="n_deal_id" class="form-select">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let deal of deals" value="{{deal?.id}}">{{deal?.deal_name}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <h4 class="font-14 mb-2">Contact (optional)</h4>
+                                                                <select name="" id="n_contact_id" class="form-select">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let contact of contacts" value="{{contact?.id}}">{{contact?.name}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="col-lg-12">
+                                                            <h4 class="font-14 mb-2">Type *</h4>
+                                                            <div class="table-responsive">
+                                                                 <div class="d-flex mb-2">
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_call'}"  (click)="choosePrefferedCommunicationN('p2_call')" id="p2_call" class="preffered2 btn btn-primary-light py-1 text-center font-12 me-2" type="button">Call</a>
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_email'}"  (click)="choosePrefferedCommunicationN('p2_email')" id="p2_email" class="preffered2 btn btn-primary-light py-1 text-center font-12 me-2" type="button">Email</a>
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_text'}"  (click)="choosePrefferedCommunicationN('p2_text')" id="p2_text" class="preffered2 btn btn-primary-light py-1 text-center font-12 me-2" type="button">Text</a>
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_visit'}"  (click)="choosePrefferedCommunicationN('p2_visit')" id="p2_visit" class="preffered2 btn btn-primary-light py-1 text-center font-12 me-2" type="button">Visit</a>
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_meeting'}"  (click)="choosePrefferedCommunicationN('p2_meeting')" id="p2_meeting" class="preffered2 btn btn-primary-light py-1 text-center font-12 me-2" type="button">Meeting</a>
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_notes'}"  (click)="choosePrefferedCommunicationN('p2_notes')" id="p2_notes" class="preffered2 btn btn-primary-light py-1 text-center font-12 me-2" type="button">Notes</a>
+                                                                    <a href="javascript:;" [ngClass]="{'active_btn': n_type === 'p2_other'}"  (click)="choosePrefferedCommunicationN('p2_other')" id="p2_other" class="preffered2 btn btn-primary-light py-1 text-center font-12" type="button">Other</a>
+                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="form-group">
+                                                            <label class="text-uppercase font-weight-400 font-12 mb-10">Title</label>
+                                                            <input type="text" id="n_task_name" class="form-control" placeholder="">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-uppercase font-weight-400 font-12 mb-10">Description (Optional)</label>
+                                                            <textarea class="form-control" id="n_desciption" rows="6" placeholder="Enter text here..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <h4 class="font-14 mb-2">Result (Optional)</h4>
+                                                                <select name="" id="n_result" class="form-select">
+                                                                    <option value="">Select</option>
+                                                                    <option value="Made Contact">Made Contact</option>
+                                                                    <option value="No Answer">No Answer</option>
+                                                                    <option value="Left Voicemail">Left Voicemail</option>
+                                                                    <option value="Busy">Busy</option>
+                                                                    <option value="Meeting Show">Meeting Show</option>
+                                                                    <option value="Meeting No Show">Meeting No Show</option>
+                                                                    <option value="Meeting Schedule">Meeting Schedule</option>
+                                                                </select>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-6"></div>
+                                                            <div class="col-lg-6" style="text-align: right;">
+                                                                <a  (click)="createActivity()" id="n_log_btn" class="btn btn-primary text-uppercase text-center font-12" type="button">Log Activity</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="tab-pane fade" id="Tracking" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                                    <div class="mt-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <h4 class="font-14 mb-2">Choose Task</h4>
+                                                                <select name="" id="c_task_id" class="form-select">
+                                                                    <option *ngFor="let task of taskList" value="{{task?.id}}">{{task?.task_name}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <h4 class="font-14 mb-2">Deal (optional)</h4>
+                                                                <select name="" id="c_deal_id" class="form-select">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let deal of deals" value="{{deal?.id}}">{{deal?.deal_name}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <h4 class="font-14 mb-2">Contact (optional)</h4>
+                                                                <select name="" id="c_contact_id" class="form-select">
+                                                                    <option value="0">Select</option>
+                                                                    <option *ngFor="let contact of contacts" value="{{contact?.id}}">{{contact?.name}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="form-group">
+                                                            <label class="text-uppercase font-weight-400 font-12 mb-10">Description (Optional)</label>
+                                                            <textarea class="form-control" id="c_desciption" rows="6" placeholder="Enter text here..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <h4 class="font-14 mb-2">Result (Optional)</h4>
+                                                                <select name="" id="c_result" class="form-select">
+                                                                    <option value="">Select</option>
+                                                                    <option value="Made Contact">Made Contact</option>
+                                                                    <option value="No Answer">No Answer</option>
+                                                                    <option value="Left Voicemail">Left Voicemail</option>
+                                                                    <option value="Busy">Busy</option>
+                                                                    <option value="Meeting Show">Meeting Show</option>
+                                                                    <option value="Meeting No Show">Meeting No Show</option>
+                                                                    <option value="Meeting Schedule">Meeting Schedule</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="row">
+                                                            <div class="col-lg-6"></div>
+                                                            <div class="col-lg-6" style="text-align: right;">
+                                                                <a  (click)="createCompleteActivity()" id="c_log_btn" class="btn btn-primary text-uppercase text-center font-12" type="button">Submit</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="createContact">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{contact_heading}}</h4>
+                    <p class="font-14 font-weight-400 mb-0">Information about the contact</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                   
+                        <h3 class="font-14"><span class="text-main">1.</span> Account Details</h3>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Account Owner<span class="requried ms-1">*</span></label>
+                            <select name="" id="" class="form-select">
+                                <option value="{{this.ownerData.name}}">{{this.ownerData.name}}</option>
+                            </select>
+                            <span style="font-size: 10px; color: red;">(Mandatory Field)</span>
+                            
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Accounts<span class="requried ms-1">*</span></label>
+                            <select name="contact_company_id" id="contact_company_id" class="form-select">
+                                <option value="{{userData.id}}">{{userData.name}}</option>
+                            </select>
+                            <span style="font-size: 10px; color: red;">(Mandatory Field)</span>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Contact Name<span class="requried ms-1">*</span></label>
+                            <input (keyup)="removeError('name')"  type="text" name="contact_name" id="contact_name" class="form-control" placeholder="">
+                            <input type="hidden" id="contact_r_id">
+                            <span style="font-size: 10px; color: red;">(Mandatory Field)</span>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone number</label>
+                            <input type="text" name="contact_phone" id="contact_phone" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone Extension</label>
+                            <input type="text" name="contact_phone_ext" id="contact_phone_ext" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Mobile</label>
+                            <input type="text" name="contact_mobile" id="contact_mobile" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Email</label>
+                            <input type="text" name="contact_email" id="contact_email" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Job Title</label>
+                            <input type="text" name="contact_job_title" id="contact_job_title" class="form-control" placeholder="">
+                        </div>
+                        <!-- <h3 class="font-14"><span class="text-main">2.</span> Work Address</h3>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Address</label>
+                            <input type="text" name="address" id="address" class="form-control" placeholder="">
+                        </div> -->
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">City</label>
+                                    <input type="text" name="contact_city" id="contact_city" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">State</label>
+                                    <input type="text" name="contact_state" id="contact_state" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Zip/Postal</label>
+                                    <input type="text" name="contact_zipcode" id="contact_zipcode" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Country</label>
+                            <input type="text" name="contact_country" id="contact_country" class="form-control" placeholder="">
+                        </div>
+                        
+                        <div class="form-group mb-2">
+                            <h4 class="font-14 mb-2">Preferred Communication</h4>
+                            <div class="table-responsive">
+                                <div class="d-flex mb-2 pb-2">
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication_contact === 'p3_call'}"  (click)="choosePrefferedCommunicationContact('p3_call')" id="p3_call" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered_contact" type="button">Call</a>
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication_contact === 'p3_email'}" (click)="choosePrefferedCommunicationContact('p3_email')" id="p3_email" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered_contact" type="button">Email</a>
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication_contact === 'p3_text'}" (click)="choosePrefferedCommunicationContact('p3_text')" id="p3_text" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered_contact" type="button">Text</a>
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication_contact === 'p3_others'}" (click)="choosePrefferedCommunicationContact('p3_others')" id="p3_others" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered_contact" type="button">Others</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="preffered_communication_contact === 'p3_others'" class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Other Preferred Communication</label>
+                            <textarea name="other_preffered_communication" id="other_preffered_communication" class="form-control"></textarea>
+                        </div>
+
+                        <h3 class="font-14"><span class="text-main">3.</span> Additional Info</h3>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Source</label>
+                            <select name="contact_source" id="contact_source" class="form-select">
+                                <option value="Website">Website</option>
+                                <option value="Advertising">Advertising</option>
+                                <option value="Blog">Blog</option>
+                                <option value="Organic Search">Organic Search</option>
+                                <option value="Social">Social</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Linkedin</label>
+                            <input type="text" name="contact_linkedin" id="contact_linkedin" class="form-control" placeholder="">
+                        </div>
+                        <!-- <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Birth Date</label>
+                            <ngx-datepicker name="dob" id="dob" [options]="options" class="form-control" [(ngModel)]="dob_date"></ngx-datepicker>
+                        </div> -->
+
+                    
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeContactBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="CreateContact()" id="createContactBtn" class="btn btn-primary btn-sm text-uppercase">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createNote">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{noteHeading}}</h4>
+                    <p class="font-14 font-weight-400 mb-0">Add some information about Account</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0"> 
+                    <div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Notes</label>
+                                    <textarea style="height: 150px;" name="company_notes" id="company_notes" class="form-control"></textarea>
+                                    <input type="hidden" id="note_id">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeNoteBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm text-uppercase" id="addNoteBtn" (click)="CreateNote()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->
+<!-- CreateTask Edit Modal Starts  -->
+<div class="modal fade" id="createTask">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{heading}}</h4>
+                    <p class="font-14 font-weight-400 mb-0">Add some information about the task</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0"> 
+                    <div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Accounts</label>
+                            <input type="text" value="{{userData?.name}}" readonly class="form-control" placeholder="">
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Deal</label>
+                                    <select name="deal_id" id="deal_id" class="form-select">
+                                        <option value="">Select Deal</option>
+                                        <option *ngFor="let deal of deals" value="{{deal?.id}}">{{deal?.deal_name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Contact</label>
+                                    <select name="contact_id" id="contact_id" class="form-select">
+                                        <option value="">Select Contact</option>
+                                        <option *ngFor="let contact of contacts" value="{{contact?.id}}">{{contact?.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 mb-2">
+                                <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Task Owner</label>
+                                <select class="form-select">
+                                    <option value="{{this.ownerData.name}}">{{this.ownerData.name}}</option>
+                                </select>
+                                <input type="hidden" id="task_id">
+                            </div>
+                            <!-- <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Task Name<span class="requried ms-1">*</span></label>
+                                    <input type="text" name="task_name" id="task_name" class="form-control" placeholder="">
+                                    
+                                </div>
+                            </div> -->
+                            <div class="col-lg-12">
+                                <h4 class="font-14 mb-2">Task Name *</h4>
+                                <div class="table-responsive">
+                                    <div class="d-flex mb-2">
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_call'}"  (click)="choosePrefferedCommunication('p_call')" id="p_call" class="preffered btn btn-primary-light py-1 text-center font-12 me-2" type="button">Call</a>
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_email'}"  (click)="choosePrefferedCommunication('p_email')" id="p_email" class="preffered btn btn-primary-light py-1 text-center font-12 me-2" type="button">Email</a>
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_text'}"  (click)="choosePrefferedCommunication('p_text')" id="p_text" class="preffered btn btn-primary-light py-1 text-center font-12 me-2" type="button">Text</a>
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_visit'}"  (click)="choosePrefferedCommunication('p_visit')" id="p_visit" class="preffered btn btn-primary-light py-1 text-center font-12 me-2" type="button">Visit</a>
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_meeting'}"  (click)="choosePrefferedCommunication('p_meeting')" id="p_meeting" class="preffered btn btn-primary-light py-1 text-center font-12 me-2" type="button">Meeting</a>
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_notes'}"  (click)="choosePrefferedCommunication('p_notes')" id="p_notes" class="preffered btn btn-primary-light py-1 text-center font-12 me-2" type="button">Notes</a>
+                                        <a href="javascript:;" [ngClass]="{'active_btn': type === 'p_other'}"  (click)="choosePrefferedCommunication('p_other')" id="p_other" class="preffered btn btn-primary-light py-1 text-center font-12" type="button">Other</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Notes</label>
+                                    <textarea name="task_notes" id="task_notes" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Date</label>
+                                        <div class="input-group">
+                                            <input type="date" name="task_date" id="task_date" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">Start Time</label>
+                                        <div class="input-group">
+                                            <input type="time" name="start_time" id="start_time" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="text-uppercase font-weight-400 font-12 mb-10 d-block">End Time</label>
+                                        <div class="input-group">
+                                            <input type="time" name="end_time" id="end_time" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm text-uppercase" id="addUserBtn" (click)="Create()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTask Edit Modal Ends  -->
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="contactTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">View</h4>
+                    <p class="font-14 font-weight-400 mb-0">Contact Info</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                   
+                        <h3 class="font-14"><span class="text-main">1.</span> Account Details</h3>
+
+                        <!-- <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Account Owner</label>
+                            <select name="" id="" class="form-select">
+                                <option value="{{this.userData.name}}">{{this.userData.name}}</option>
+                            </select>
+                            
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Accounts</label>
+                            <select name="company_id" id="company_id" class="form-select">
+                                <option *ngFor="let account of accounts" value="{{account.id}}">{{account.name}}</option>
+                            </select>
+                        </div> -->
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Contact Name<span class="requried ms-1">*</span></label>
+                            <input type="text" name="c_name" id="c_name" disabled class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone number</label>
+                            <input type="text" name="c_phone" id="c_phone" disabled class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone Extension</label>
+                            <input type="text" name="c_phone_ext" id="c_phone_ext" disabled class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Mobile</label>
+                            <input type="text" name="c_mobile" id="c_mobile" disabled class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Email</label>
+                            <input type="text" name="c_email" id="c_email" disabled class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Job Title</label>
+                            <input type="text" name="c_job_title" id="c_job_title" disabled class="form-control" placeholder="">
+                        </div>
+                        <h3 class="font-14"><span class="text-main">2.</span> Work Address</h3>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Address</label>
+                            <input type="text" name="c_address" id="c_address" disabled class="form-control" placeholder="">
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">City</label>
+                                    <input type="text" name="c_city" id="c_city" disabled class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">State</label>
+                                    <input type="text" name="c_state" id="c_state" disabled class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Zip/Postal</label>
+                                    <input type="text" name="c_zipcode" id="c_zipcode" disabled class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Country</label>
+                            <input type="text" name="c_country" id="c_country" disabled class="form-control" placeholder="">
+                        </div>
+                        <h3 class="font-14"><span class="text-main">3.</span> Additional Info</h3>
+                        
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Preferred Communication</label>
+                            <input type="text" value="{{preffered_communication}}" disabled class="form-control" placeholder="">
+                        </div>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Source</label>
+                            <input type="text" name="c_source" id="c_source" disabled class="form-control" placeholder="">
+                        </div>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Linkedin</label>
+                            <input type="text" name="c_linkedin" id="c_linkedin" disabled class="form-control" placeholder="">
+                        </div>
+                    
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+               <!--  <button type="button" (click)="Create()" id="addUserBtn" class="btn btn-primary btn-sm text-uppercase">Save</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->

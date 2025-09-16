@@ -1,0 +1,287 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <!-- Top Bar :: Start -->
+           <app-header></app-header>
+            <!-- Top Bar :: End -->
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+                <!-- main Area :: Start -->
+                <div class="main-area position-relative">
+                    <div class="tab-content" id="myTabsContent">
+                        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab2-tab">
+                            <div class="page-card-title d-flex justify-content-end">
+                                <p class="font-16 font-weight-600 text-capitalize mb-0">
+                                    <span class="text-main me-2">Viewing as:</span>
+                                </p>
+                                <div class="dropdown filter-dropdown">
+                                    <span class="dropdown-toggle font-16" type="button" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="text font-weight-600 me-1">{{userData?.name}}</span>
+                                        <i class="far fa-angle-down font-12"></i>
+                                    </span>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton23">
+                                        <a class="dropdown-item pending font-13 text-capitalize" href="#">{{userData?.name}}</a>
+                                        <a class="dropdown-item pending font-13 text-capitalize" href="#">Company Dashboard</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="page-card-body p-20">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <div class="card border-radius-10 mb-4 main-bg-color">
+                                                <div class="card-body p-20">
+                                                    <h2 class="font-18 mb-3 text-capitalize d-flex align-items-center">Today’s Tasks</h2>
+                                                    <div class="mb-3">
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                                            <a type="button" (click)="loadTasks('Today','today_t_btn')" id="today_t_btn" class="btn btn-primary-light text-center font-12 active_report report_t_btns">Today</a>
+                                                            <a type="button" (click)="loadTasks('Tomorrow','tomorrow_t_btn')"id="tomorrow_t_btn" class="btn btn-primary-light text-center font-12 report_t_btns">Tomorrow</a>
+                                                            <a type="button" (click)="loadTasks('Week','week_t_btn')" id="week_t_btn" class="btn btn-primary-light text-center font-12 report_t_btns">Week</a>
+                                                            <a type="button" (click)="loadTasks('Month','month_t_btn')" id="month_t_btn" class="btn btn-primary-light text-center font-12 report_t_btns">Month</a>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngFor="let task of tasks | paginate: { itemsPerPage: 5, currentPage: p, totalItems: total }; index as i" class="border d-flex align-items-center p-3 mb-2">
+                                                        <div class="me-3">
+                                                            <i *ngIf="task?.type == 'p_call'" class="fas fa-phone text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_email'" class="fas fa-envelope text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_text'" class="fas fa-text text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_visit'" class="fas fa-user text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_meeting'" class="fas fa-users text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_notes'" class="fas fa-file text-main font-18"></i>
+                                                                    <i *ngIf="task?.type == 'p_other'" class="fas fa-bars text-main font-18"></i>
+                                                        </div>
+                                                        <div class="w-100">
+                                                            <h6 class="edit-text mb-1">
+                                                            <a  class="text-black font-15 font-weight-500">{{task?.task_name}}</a>
+                                                            </h6>
+                                                            <div class="d-flex justify-content-between">
+                                                                <p class="text-capitalize font-14 text-muted mb-0">{{task.contact_name}}</p>
+                                                                    <p class="text-capitalize text-muted font-12 font-weight-400 mb-0">
+                                                                        {{task.task_date}} <br *ngIf="task.start_time">
+                                                                         <span *ngIf="task.start_time">{{task.start_time}} - {{task.end_time}}</span></p>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <div *ngIf="tasks.length > 0" class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-20">
+                                            <!-- <div class="card border-radius-10 mb-4 main-bg-color">
+                                                <div class="card-body p-20">
+                                                    <div class="d-flex align-items-center">
+                                                        <button type="button" style="cursor: not-allowed; margin-right: 10px; padding: 0px; border: none; background: transparent; color: gold;" disabled=""><i class="fa fa-star font-12" aria-hidden="true"></i>
+                                                        </button>
+                                                        <h4 class="font-18 mb-0 me-2">
+                                                            <a href="#" class="font-weight-500">Lead Nurturing (Contact)</a>
+                                                        </h4>
+                                                        <div class="dropdown filter-dropdown">
+                                                            <span class="dropdown-toggle font-12" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="far fa-angle-down font-12"></i>
+                                                            </span>
+                                                            <div class="dropdown-menu leftDropdown-150" aria-labelledby="dropdownMenuButton23" style="">
+                                                                <a class="dropdown-item pending font-14 text-capitalize" href="javascript:;">Lead Nurturing (Contact)</a>
+                                                                <a class="dropdown-item pending font-14 text-capitalize" href="javascript:;">Lead Nurturing (Account)</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <img src="assets/images/lead-nurturing.jpg" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <div class="card border-radius-10 mb-4 main-bg-color">
+                                                <div class="card-body p-20">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h4 class="font-18 mb-0">My Active Shipper Leads</h4>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered table-striped-2 table-hover position-relative">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Account Owner</th>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Account Name</th>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Website</th>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Description</th>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Email</th>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Phone</th>
+                                                                        <th class="text-uppercase whitespace-nowrap text-start">Age</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start">John</td>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start text-main">Costco</td>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start">Website</td>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start">__</td>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start">Email</td>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start">Phone</td>
+                                                                        <td class="text-capitalize whitespace-nowrap text-start">Age</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <div class="card border-radius-10 mb-4 main-bg-color">
+                                                <div class="card-body p-20">
+                                                    <h2 class="font-18 mb-3 text-capitalize d-flex align-items-center">Activities</h2>
+                                                    <div class="mb-3">
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                                            <a type="button" (click)="loadReport('Today','today_f_btn')" id="today_f_btn" class="btn btn-primary-light text-center font-12 active_report report_f_btns">Today</a>
+                                                            
+                                                            <a type="button" (click)="loadReport('Week','week_f_btn')" id="week_f_btn" class="btn btn-primary-light text-center font-12 report_f_btns">Week</a>
+                                                            <a type="button" (click)="loadReport('Month','month_f_btn')" id="month_f_btn" class="btn btn-primary-light text-center font-12 report_f_btns">Month</a>
+                                                            
+                                                        </div>
+                                                        <div *ngIf="login_user_type == 'Admin'" class="btn-group" style="float: right;" role="group" aria-label="Basic example">
+                                                        <select (change)="loadReportFilter()" id="user_filter" class="form-control">
+                                                            <option value="0">Select All User</option>
+                                                            <option *ngFor="let super_admin of super_admins" value="{{super_admin.id}}">{{super_admin.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                        
+                                                    </div>
+                                                    <div>
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    Total Task Add Today: {{total_task_added}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    Total Task Completed: {{total_task_completed}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    Total Calls Made: {{total_calls_made}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    Total Emails Sent: {{total_email_sent}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    Total Text Sent: {{total_text_sent}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    New Account Added: {{new_account_added}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        <div class="border d-flex align-items-center p-2 mb-2">
+                                                            <div class="w-100">
+                                                                <div class="d-flex justify-content-between report_font_size">
+                                                                    New Contact Added: {{new_contact_added}}
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-20">
+                                            <!-- <div class="card border-radius-10 mb-4 main-bg-color">
+                                                <div class="card-body p-20">
+                                                    <div class="d-flex align-items-center">
+                                                        <button type="button" style="cursor: not-allowed; margin-right: 10px; padding: 0px; border: none; background: transparent; color: gold;" disabled=""><i class="fa fa-star font-12" aria-hidden="true"></i>
+                                                        </button>
+                                                        <div class="d-flex align-items-center">
+                                                            <h4 class="font-18 mb-0 me-2"><a href="client-deal.html" class="font-weight-500">Deals Pipeline</a></h4>
+                                                            <div class="dropdown filter-dropdown">
+                                                                <span class="dropdown-toggle font-12" id="dropdownMenuButton23" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="far fa-angle-down font-12"></i>
+                                                                </span>
+                                                                <div class="dropdown-menu leftDropdown-150" aria-labelledby="dropdownMenuButton23" style="">
+                                                                    <a class="dropdown-item pending font-14 text-capitalize" href="deals-pipeline.html">Deals Pipeline</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <img src="assets/images/deals-pipeline.jpg" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="card border-radius-10 mb-4 main-bg-color">
+                                                <div class="card-body p-20">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li class="mb-3">
+                                                            <div>
+                                                                <h4 class="font-18 mb-0">Activities</h4>
+                                                                <div class="progress my-2">
+                                                                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">30%</div>
+                                                                </div>
+                                                                <p class="font-13 text-center mb-0">You have logged 0 activities on your target of 30 daily.</p>
+                                                            </div>
+                                                        </li>
+                                                        <li class="mb-3">
+                                                            <div>
+                                                                <h4 class="font-18 mb-0">New Deals</h4>
+                                                                <div class="progress my-2">
+                                                                    <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                                                                </div>
+                                                                <p class="font-13 text-center mb-0">You have created 0 new deals on your target of 20 weekly.</p>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div>
+                                                                <h4 class="font-18 mb-0">Won Deals</h4>
+                                                                <div class="progress my-2">
+                                                                    <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                                                                </div>
+                                                                <p class="font-13 text-center mb-0">You have won 0 deals on your target of 3 monthly.</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+                <!-- main Area :: End -->
+            </div>
+
+           
+            <!--Footer :: Start-->
+        </div>
+        <!-- Page Content :: End -->
+        <app-footer></app-footer>
+        <!--Footer :: End-->
+    </div>
+</main>

@@ -1,0 +1,88 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title d-flex align-items-center justify-content-between">
+                    <div class="breadcrumb-info">
+                        <h2 class="font-18 text-capitalize d-flex align-items-center mb-0">Invoices</h2>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="has-search">
+                            <input type="text" name="bill_no" id="bill_no" class="form-control filter-p" placeholder="Bill No">
+                        </div>
+                        <div>
+                            <ngx-datepicker [(ngModel)]="bill_date" id="bill_date" [options]="options" class="form-control filter-p"></ngx-datepicker>
+                        </div>
+                        <div class="has-search">
+                            <input type="text" name="customer_name" id="customer_name" class="form-control filter-p" placeholder="Party Name">
+                        </div>
+                        <div class="has-search">
+                            <input type="text" name="amount" id="amount" class="form-control filter-p" placeholder="Amount">
+                        </div>
+                        <div class="has-search">
+                            <a (click)="searchData();" id="" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
+                            <a (click)="reset();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="Reset"><i class="fas fa-retweet"></i></a>
+                            <a (click)="generateInvoice();"style="margin-left: 10px;"  id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap">S.NO</th>
+                                        <th><input type="checkbox" id="select_all" (change)="selectAllRow($event)"></th>
+                                        <th class="text-uppercase whitespace-nowrap">Bill No.</th>
+                                        <th class="text-uppercase whitespace-nowrap">Customer Name</th>
+                                        <th class="text-uppercase whitespace-nowrap">Amount</th>
+                                        <th class="text-uppercase whitespace-nowrap">Bill Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">Ref No.</th>
+                                        <th class="text-uppercase whitespace-nowrap">Created Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap">{{i+1}}</td>
+                                        <td class="check_colum" ><input class="item_check" type="checkbox" [id]="'invoice_pay_' + user.id" value="{{user?.id}}" (change)="onChangeCategory($event, user.id)"></td>
+                                
+                                        <td class="whitespace-nowrap"><a style="color:blue" routerLink="/invoice-detail/{{user.id}}">{{user.bill_no}}</a></td>
+                                        <td class="whitespace-nowrap">{{user.customer_name}}</td>
+                                        <td class="whitespace-nowrap">{{user.amount}}</td>
+                                        <td class="whitespace-nowrap">{{user.display_date2}}</td>
+                                        <td class="whitespace-nowrap">{{user.ref_no}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">{{user.display_date}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">
+                                            <a href="{{SiteUrl}}storage/pdf/{{user.file_name}}" target="_blank" class="text-capitalize font-12 text-info me-3">
+                                                <i class="far fa-download"></i>
+                                            </a>
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="8"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+

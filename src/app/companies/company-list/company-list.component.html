@@ -1,0 +1,414 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title d-flex align-items-center justify-content-between">
+                    <div class="breadcrumb-info">
+                        <h2 class="font-18 text-capitalize d-flex align-items-center mb-0">Accounts</h2>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="has-search">
+                            <span class="far fa-search form-control-feedback"></span>
+                            <input type="text" name="search_key" id="search_key" (keyup)="searchData()" class="form-control" placeholder="Search User">
+                        </div>
+                        <a target="_blank" href="{{SiteUrl}}storage/csv/company-sample-csv.csv" class="btn btn-primary text-uppercase text-center font-12" type="button">Download Sample CSV</a>
+                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#importAccount" class="btn btn-primary text-uppercase text-center font-12" type="button">Import CSV</a>
+                        <a href="javascript:;" (click)="setHeading()" class="btn btn-primary text-uppercase text-center font-12" type="button" data-bs-toggle="modal" data-bs-target="#createTemplate"><i class="far fa-plus me-1"></i> Add Account</a>
+                    </div>
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap text-start">S.NO</th>
+                                        <th class="text-uppercase whitespace-nowrap">Name</th>
+                                        <th class="text-uppercase whitespace-nowrap">Website</th>
+                                        <th class="text-uppercase whitespace-nowrap">Email</th>
+                                        <th class="text-uppercase whitespace-nowrap">Phone</th>
+                                        <th class="text-uppercase whitespace-nowrap">Source</th>
+                                        <th class="text-uppercase whitespace-nowrap">Status</th>
+                                        
+                                        <th class="text-uppercase whitespace-nowrap">Assigned To</th>
+                                        <th class="text-uppercase whitespace-nowrap">Created Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap text-start">{{i+1}}</td>
+                                        <td class="whitespace-nowrap" *ngIf="login_user_type == 'Admin'"><a style="color:blue" routerLink="/company/{{user.id}}">{{user.name}}</a></td>
+                                        <td class="whitespace-nowrap" *ngIf="login_user_type != 'Admin' && (user.company_status == 2 || user.company_status == 3)"><a style="color:blue" routerLink="/company/{{user.id}}">{{user.name}}</a></td>
+                                        <td class="whitespace-nowrap" *ngIf="login_user_type != 'Admin' && user.company_status == 1">{{user.name}}</td>
+                                        <td class="whitespace-nowrap">{{user.website}}</td>
+                                        <td class="whitespace-nowrap">{{user.email}}</td>
+                                        <td class="whitespace-nowrap">{{user.phone}}</td>
+                                        <td class="whitespace-nowrap">{{user.source}}</td>
+                                        <td *ngIf="user.login_user_type == 'Admin'" class="whitespace-nowrap">
+                                            <select (change)="setStatus(user.id)" [style]="user.border_color" [id]="'company_status_'+user.id" class="form-control">
+                                                <option [selected]="user.company_status == 1" [value]="1">Pending Approval</option>
+                                                <option [selected]="user.company_status == 2" [value]="2">Approved</option>
+                                                <option [selected]="user.company_status == 3" [value]="3">House Account</option>
+                                            </select>
+                                        </td>
+                                        <td *ngIf="user.login_user_type != 'Admin'" class="whitespace-nowrap">
+                                            <span style="color: #f00;" *ngIf="user.company_status == 1"><b>Pending Approval</b></span>
+                                            <span style="color: #093;" *ngIf="user.company_status == 2"><b>Approved</b></span>
+                                            <span style="color: orange;" *ngIf="user.company_status == 3"><b>House Account</b></span>
+                                        </td>
+                                        <!-- <td>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'2')" *ngIf="user.status == 1" class="btn btn-sm btn-outline-success text-uppercase text-center font-12 me-2">Active</a>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'1')" *ngIf="user.status == 2" class="btn btn-sm btn-outline-danger text-uppercase text-center font-12 me-2">Inactive</a>
+                                        </td> -->
+                                        
+                                        <td class="text-capitalize whitespace-nowrap">
+                                            <a *ngIf="user.login_user_type == 'Admin'" href="javascript:;" style="color:blue" (click)="selectCompanyID(user.id)" data-bs-toggle="modal" data-bs-target="#AssignAccount">{{user.owner}}</a>
+                                            <span *ngIf="user.login_user_type != 'Admin'">{{user.owner}}</span>
+                                        </td>
+                                        <td class="text-capitalize whitespace-nowrap">{{user.created_date}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">
+                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="createTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16" id="AccountFormHeading">{{heading}}</h4>
+                    <p class="font-14 font-weight-400 mb-0">Information about the account</p>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    <form>
+                        <h3 class="font-14"><span class="text-main">1.</span> Account Details</h3>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Account Owner<span class="requried ms-1">*</span></label>
+                            <select  name="" id="" class="form-select">
+                                
+                                <option value="{{this.userData.name}}">{{this.userData.name}}</option>
+                            </select>
+                        </div>
+
+                        <div *ngIf="login_user_type == 'Admin'" class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">User<span class="requried ms-1">*</span></label>
+                            <select  name="user_id" id="user_id" class="form-select">
+                                <option value="">Select User</option>
+                                <option *ngFor="let super_admin of super_admins" value="{{super_admin.id}}">{{super_admin.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Account Name<span class="requried ms-1">*</span></label>
+                            <input type="text" (keyup)="removeError('name')" name="name" id="name" class="form-control" placeholder="">
+                            <input type="hidden" id="r_id">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone number</label>
+                            <input type="text" name="phone" id="phone" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Phone Extension</label>
+                            <input type="text" name="phone_ext" id="phone_ext" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Email</label>
+                            <input type="text" name="email" id="email" class="form-control" placeholder="">
+                        </div>
+                        <!-- <h3 class="font-14"><span class="text-main">2.</span> Work Address</h3>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Address</label>
+                            <input type="text" name="address" id="address" class="form-control" placeholder="">
+                        </div> -->
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">City</label>
+                                    <input type="text" name="city" id="city" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">State</label>
+                                    <input type="text" name="state" id="state" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Zip/Postal</label>
+                                    <input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Country</label>
+                            <input type="text" name="country" id="country" class="form-control" placeholder="">
+                        </div>
+                        <h3 class="font-14"><span class="text-main">3.</span> Additional Info</h3>
+                        <div class="form-group mb-2">
+                            <h4 class="font-14 mb-2">Preferred Communication</h4>
+                            <div class="table-responsive">
+                                <div class="d-flex mb-2 pb-2">
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication === 'p_call'}"  (click)="choosePrefferedCommunication('p_call')" id="p_call" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered" type="button">Call</a>
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication === 'p_email'}" (click)="choosePrefferedCommunication('p_email')" id="p_email" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered" type="button">Email</a>
+                                    <a href="javascript:;" [ngClass]="{'active_btn': preffered_communication === 'p_text'}" (click)="choosePrefferedCommunication('p_text')" id="p_text" class="btn btn-primary-light py-1 text-center font-12 me-2 preffered" type="button">Text</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Source</label>
+                            <select name="source" id="source" class="form-select">
+                                <option value="Assigned by company">Assigned by company</option>
+                                <option value="House Account">House Account</option>
+                                <option value="Active Customer">Active Customer</option>
+                                <option value="Referred by customer">Referred by customer</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Website<span class="requried ms-1">*</span></label>
+                            <input type="text" (keyup)="removeError('website')"  name="website" id="website" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Linkedin</label>
+                            <input type="text" name="linkedin" id="linkedin" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="3" placeholder=""></textarea>
+                        </div>
+                        <h3 class="font-14"><span class="text-main">4.</span> Shipper Info</h3>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Industry</label>
+                            <select name="industry" id="industry" class="form-select">
+                                <option value="Aerospace, Aviation and Defense">Aerospace, Aviation and Defense</option>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Arts, Entertainment, and Recreation">Arts, Entertainment, and Recreation</option>
+                                <option value="Automotive">Automotive</option>
+                                <option value="Beverages and Alcohol">Beverages and Alcohol</option>
+                                <option value="Building Materials">Building Materials</option>
+                                <option value="Chemicals and Hazardous Materials">Chemicals and Hazardous Materials</option>
+                                <option value="Construction">Construction</option>
+                                <option value="Consumer Goods">Consumer Goods</option>
+                                <option value="Cosmetics">Cosmetics</option>
+                                <option value="Dairy">Dairy</option>
+                                <option value="Electrical/ electronic Manufacturing ">Electrical/ electronic Manufacturing </option>
+                                <option value="Energy">Energy</option>
+                                <option value="Environmental and Waste Management">Environmental and Waste Management</option>
+                                <option value="Food and Beverages">Food and Beverages</option>
+                                <option value="Food Products">Food Products</option>
+                                <option value="Furniture and Home Goods">Furniture and Home Goods</option>
+                                <option value="Glass, Ceramics & Concrete">Glass, Ceramics & Concrete</option>
+                                <option value="Import & Export">Import & Export</option>
+                                <option value="Logistics and Supply chain">Logistics and Supply chain</option>
+                                <option value="Machinery and Heavy Equipment">Machinery and Heavy Equipment</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Metals and Mining">Metals and Mining</option>
+                                <option value="Mining & metals">Mining & metals</option>
+                                <option value="Oil & energy">Oil & energy</option>
+                                <option value="Paper and Packaging">Paper and Packaging</option>
+                                <option value="Pharmaceuticals and Hospita, Healthcare">Pharmaceuticals and Hospita, Healthcare</option>
+                                <option value="Plastics">Plastics</option>
+                                <option value="Printing">Printing</option>
+                                <option value="Restaurants">Restaurants</option>
+                                <option value="Retail and E-commerce">Retail and E-commerce</option>
+                                <option value="Supermarkets">Supermarkets</option>
+                                <option value="Technology and Electronics">Technology and Electronics</option>
+                                <option value="Textiles and Apparel">Textiles and Apparel</option>
+                                <option value="Transportation / trucking/ railroad">Transportation / trucking/ railroad</option>
+                                <option value="Warehousing">Warehousing</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Annual Revenue ($)</label>
+                            <input type="text" name="annual_revenue" id="annual_revenue" class="form-control" placeholder="">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Equipment Types</label>
+                            <select multiple name="equipment_types" [(ngModel)]="equipmentTypes" id="equipment_types" class="form-select">
+                                <option value="Flatbed">Flatbed</option>
+                                <option value="Hotshot">Hotshot</option>
+                                <option value="Reefer">Reefer</option>
+                                <option value="Specialized">Specialized</option>
+                                <option value="Tanker">Tanker</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Modes</label>
+                            <select multiple name="modes" [(ngModel)]="modes" id="modes" class="form-select">
+                                <option value="Air">Air</option>
+                                <option value="Expected">Expected</option>
+                                <option value="Full Truckload">Full Truckload</option>
+                                <option value="LTL">LTL</option>
+                                <option value="Ocean">Ocean</option>
+                                <option value="Partial">Partial</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Pain Points</label>
+                            <select name="pain_paints" id="pain_paints" multiple [(ngModel)]="pain_paints" class="form-select">
+                                <option value="Communication">Communication</option>
+                                <option value="Honesty & Transparency">Honesty & Transparency</option>
+                                <option value="On Time Pickup">On Time Pickup</option>
+                                <option value="Pricing">Pricing</option>
+                                <option value="Wrong Equipment Types">Wrong Equipment Types</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Contract and/or spot freight?</label>
+                            <select name="contracted" id="contracted" multiple [(ngModel)]="contracted" class="form-select">
+                                <option value="Contract">Contract</option>
+                                <option value="Spot">Spot</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Average Weekly Volume - Shipments</label>
+                            <textarea class="form-control" name="shipment" id="shipment" rows="3" placeholder=""></textarea>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Pick and Drop</label>
+                            <select name="pick_drops" id="pick_drops" multiple [(ngModel)]="pick_drops" class="form-select">
+                                <option value="Appointment">Appointment</option>
+                                <option value="FCFS">FCFS</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Special Requirements</label>
+                            <select name="special_requirements" id="special_requirements" multiple [(ngModel)]="special_requirements" class="form-select">
+                                <option value="Block & Brace">Block & Brace</option>
+                                <option value="Dunnage">Dunnage</option>
+                                <option value="Hazmat">Hazmat</option>
+                                <option value="Oversized">Oversized</option>
+                                <option value="Straps">Straps</option>
+                                <option value="Tarps">Tarps</option>
+                            </select>
+                        </div>
+                    </form>
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="Create()" id="addUserBtn" class="btn btn-primary btn-sm text-uppercase">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->
+<div class="modal fade" id="importAccount">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">Import</h4>
+                </div>
+                <button type="button" id="importClose" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    <form>
+                        <!-- <div *ngIf="login_user_type == 'Admin'" class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Select User</label>
+                            <select  name="import_user_id" id="import_user_id" class="form-select">
+                                <option value="">Select User</option>
+                                <option *ngFor="let super_admin of super_admins" value="{{super_admin.id}}">{{super_admin.name}}</option>
+                            </select>
+                        </div> -->
+                        <div class="form-group mb-2">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Choose CSV File</label>
+                            <input type="file" name="document" id="document" class="form-control" placeholder="">
+                        </div>
+                    </form>
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" (click)="importData()" id="uploadBtn" class="btn btn-primary btn-sm text-uppercase">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->
+<div class="modal fade" id="AssignAccount">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">Assign to</h4>
+                </div>
+                <button type="button" id="closeBtn3" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    <form>
+                        <div class="form-group mb-2">
+                            <div>
+                                <table class="user_accounts">
+                                    <tr>
+                                        <td><input type="checkbox" id="invoice_pay_1" value="1"></td>
+                                        <td>Super Admin</td>
+                                    </tr>
+                                    <tr *ngFor="let user_account of user_accounts">
+                                        <td><input type="checkbox" (change)="onChangeCategory($event, user_account.id)" [id]="'invoice_pay_' + user_account.id" value="{{user_account?.id}}"></td>
+                                        <td align="left">{{user_account?.name}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" (click)="assignTo()" id="uploadBtn" class="btn btn-primary btn-sm text-uppercase">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
