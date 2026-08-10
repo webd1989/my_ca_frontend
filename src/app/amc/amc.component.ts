@@ -11,23 +11,26 @@ import { getYear } from 'date-fns';
 import locale from 'date-fns/locale/en-US';
 
 @Component({
-  selector: 'app-deals',
-  templateUrl: './deals.component.html',
-  styleUrls: ['./deals.component.css']
+  selector: 'app-amc',
+  templateUrl: './amc.component.html',
+  styleUrls: ['./amc.component.css']
 })
-export class DealsComponent implements OnInit,OnDestroy {
+export class AmcComponent implements OnInit,OnDestroy {
 
   users:any;
   accounts:any;
   p: number = 1;
   total: number = 0;
-  totalDeal:number=0;
-  totalAmt: number = 0;
   heading:any = '';
   action:any = '';
   preffered_communication:any='p_call';
   userData:any;
-  deal_close_date = new Date();
+  contactData:any;
+  orignalPcData = '';
+  customers:any = [];
+  
+  dob_date = new Date();
+  lease_expiration_date = new Date();
   options: DatepickerOptions = {
     minYear: getYear(new Date()) - 30, // minimum available and selectable year
     maxYear: getYear(new Date()) + 30, // maximum available and selectable year
@@ -38,7 +41,7 @@ export class DealsComponent implements OnInit,OnDestroy {
     firstCalendarDay: 0, // 0 - Sunday, 1 - Monday
     locale: locale, // date-fns locale
     position: 'bottom',
-    inputClass: 'deal-close-datepicker', // custom input CSS class to be applied
+    inputClass: 'dob-datepicker', // custom input CSS class to be applied
     calendarClass: 'datepicker-default', // custom datepicker calendar CSS class to be applied
     scrollBarColor: '#dfe3e9', // in case you customize you theme, here you define scroll bar color
   };
@@ -55,34 +58,40 @@ export class DealsComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    this.getAllCustomers();
     this.getList();
-    this.GetProfile();
-    this.getCompanies();
   }
   cleanForm(){
-    $('#deal_name').val('');
-    $('#revenue').val('');
-    $('#cose_date').val('');
-    $('#funnel').val('');  
-    $('#stage').val('');  
-    $('#source').val('');  
+    $('#title').val('');
     $('#description').val('');
+    $('#customer_id').val('');
+  }
+  getAllCustomers(){
+    const data = {
+        token: localStorage.getItem('token')
+      };
+      this.appService.postData('customer/list/all',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+          this.customers = r.users;
+        }else{
+          this.toastr.error(r.message,"Error");
+        }
+        
+      },error=>{
+        this.toastr.error("Server Error","Error");
+      });
   }
   Create(){
     $('#addUserBtn').html('Processing...');
     const data = {
       id:$('#r_id').val(),
-      deal_name:$('#deal_name').val(),
-      revenue:$('#revenue').val(),
-      cose_date:this.deal_close_date,
-      funnel:$('#funnel').val(),
-      stage:$('#stage').val(),
-      source:$('#source').val(),
+      title:$('#title').val(),
       description:$('#description').val(),
-      company_id:$('#company_id').val(),
+      customer_id:$('#customer_id').val(),
     };
     if(this.action == 'Add'){
-      this.appService.postData('deal/create',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      this.appService.postData('amc/create',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
         var r:any=res;
         $('#addUserBtn').html('Save');
         if(r.success){
@@ -97,7 +106,7 @@ export class DealsComponent implements OnInit,OnDestroy {
       });
     }
     if(this.action == 'Edit'){
-      this.appService.postData('deal/update',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      this.appService.postData('amc/update',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
         var r:any=res;
         $('#addUserBtn').html('Save');
         if(r.success){
@@ -117,36 +126,23 @@ export class DealsComponent implements OnInit,OnDestroy {
   getList(){
     const data = {
       token: localStorage.getItem('token'),
-      page: this.p,
-      f_funnel: $('#f_funnel').val(),
-      f_stage: $('#f_stage').val(),
-      f_source: $('#f_source').val(),
+      customer_name: $("#customer_name").val(),
+      status: $("#status").val(),
+      page: this.p
     };
     this.getListFromServer(data);
   }
   getListFromServer(form:any){
-    this.appService.postData('deal/list',form).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+    this.appService.postData('amc/list',form).pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;
       this.users = r.users.data;
       this.total = r.users.total;
-      this.totalDeal = r.count;
-      this.totalAmt = r.total_amt;
     },error=>{
-      this.toastr.error("Server Error","Error");
+      //this.toastr.error("Server Error","Error");
     });
   }
 
-  getCompanies(){
-    const data = {
-      token: localStorage.getItem('token')
-    };
-    this.appService.postData('company/list/simply',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
-      var r:any=res;
-      this.accounts = r.users;
-    },error=>{
-      this.toastr.error("Server Error","Error");
-    });
-  }
+  
   /**
    * Write code on Method
    *
@@ -158,15 +154,10 @@ export class DealsComponent implements OnInit,OnDestroy {
   }
   setHeading(){
     this.action = 'Add';
-    this.heading = 'Create an Deal';
-    $('.deal-close-datepicker').val('MM/DD/YY');
+    this.heading = 'Create AMC';
     this.cleanForm();
   }
-  choosePrefferedCommunication(id:string){
-    $('.preffered').removeClass('active_btn');
-    $('#'+id).addClass('active_btn');
-    this.preffered_communication = id;
-  }
+ 
   GetProfile(){
     this.appService.getData('profile/get').pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;
@@ -176,41 +167,29 @@ export class DealsComponent implements OnInit,OnDestroy {
         
       }
     },error =>{
-      Swal.fire(
-        'Error',
-        'Internal server error',
-        'error'
-      )
+      
     });
   }
   getUser(id:number){
-    this.heading = 'Edit Deal';
+    this.heading = 'Edit AMC';
     this.action = 'Edit';
     const data = {
       token: localStorage.getItem('token'),
       id: id
     };
-    this.appService.postData('deal/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+    this.appService.postData('amc/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;
       if(r.success){
+        this.contactData = r.user;
         $('#r_id').val(r.user.id);
-        $('#deal_name').val(r.user.deal_name);
-        $('#revenue').val(r.user.revenue);
-        $('.deal-close-datepicker').val(r.user.cose_date);
-        $('#funnel').val(r.user.funnel);
-        $('#stage').val(r.user.stage);
-        $('#source').val(r.user.source);
+        $('#title').val(r.user.title);
         $('#description').val(r.user.description);
-        $('#company_id').val(r.user.company_id);
+        $('#customer_id').val(r.user.customer_id);
       }else{
         
       }
     },error =>{
-      Swal.fire(
-        'Error',
-        'Internal server error',
-        'error'
-      )
+     
     });
   }
   Delete(userID:string){
@@ -240,7 +219,7 @@ export class DealsComponent implements OnInit,OnDestroy {
   }
   updateStatus(userID:string,status:string){
     const data = {};
-    this.appService.putData('deal/status/update/'+userID+'/'+status,data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+    this.appService.putData('amc/status/update/'+userID+'/'+status,data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;
       this.getList();
     },error=>{
@@ -250,18 +229,19 @@ export class DealsComponent implements OnInit,OnDestroy {
   searchData(){
     const data = {
       token: localStorage.getItem('token'),
-      search_key: $("#search_key").val(),
+      customer_name: $("#customer_name").val(),
+      status: $("#status").val(),
       page: this.p
     };
     this.getListFromServer(data);
   }
   reset(){
+    $("#customer_name").val('');
+    $("#status").val('');
     const data = {
       token: localStorage.getItem('token'),
-      name: '',
-      email: '',
-      phone: '',
-      zipcode: '',
+      customer_name: '',
+      status: '',
       page: this.p
     };
     this.getListFromServer(data);

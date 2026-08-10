@@ -27,6 +27,7 @@ export class ContactListComponent implements OnInit,OnDestroy {
   userData:any;
   contactData:any;
   orignalPcData = '';
+  
   dob_date = new Date();
   lease_expiration_date = new Date();
   options: DatepickerOptions = {
@@ -65,6 +66,8 @@ export class ContactListComponent implements OnInit,OnDestroy {
     $('#address').val('');   
     $('#city').val('');  
     $('#gst_no').val(''); 
+    $('#company').val('');
+    $('#description').val('');
   }
   removeError(id:string){
     $('#'+id).removeClass('error_validation');
@@ -86,6 +89,8 @@ export class ContactListComponent implements OnInit,OnDestroy {
       address:$('#address').val(),
       city:$('#city').val(),
       gst_no:$('#gst_no').val(),
+      company:$('#company').val(),
+      description:$('#description').val(),
     };
     if(this.action == 'Add'){
       this.appService.postData('customer/create',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
@@ -183,6 +188,8 @@ export class ContactListComponent implements OnInit,OnDestroy {
         $('#address').val(r.user.address);
         $('#city').val(r.user.city);
         $('#gst_no').val(r.user.gst_no);
+        $('#company').val(r.user.company);
+        $('#description').val(r.user.description);
       }else{
         
       }

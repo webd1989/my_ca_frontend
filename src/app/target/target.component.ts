@@ -24,7 +24,14 @@ export class TargetComponent implements OnInit,OnDestroy {
   heading:any = '';
   action:any = '';
   selectedRow:any = [];
+  customers:any = [];
+  quantities:any = [];
+  invoiceData:any = [];
   public SiteUrl = environment.documentUrl;
+
+  totalAmount: number = 0;
+  paidAmount: number = 0;
+  remainigAmount: number = 0;
 
   destroy$ = new Subject();
 
@@ -32,7 +39,7 @@ export class TargetComponent implements OnInit,OnDestroy {
   options: DatepickerOptions = {
     minYear: getYear(new Date()) - 30, // minimum available and selectable year
     maxYear: getYear(new Date()) + 30, // maximum available and selectable year
-    placeholder: 'Start Date', // placeholder in case date model is null | undefined, example: 'Please pick a date'
+    placeholder: '', // placeholder in case date model is null | undefined, example: 'Please pick a date'
     format: 'Y-M-dd', // date format to display in input
     formatTitle: 'LLLL yyyy',
     formatDays: 'EEEEE',
@@ -52,9 +59,169 @@ export class TargetComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.complete();
   }
-
   ngOnInit(): void {
+    this.getAllCustomers();
     this.getList();
+    this.newQuantity();  
+  }
+  newQuantity(){   
+    this.addMore();
+  }
+  setBookingNote(data:any){
+    this.invoiceData = data;
+  }
+  addMore(){
+    this.quantities.push({
+      id: 0, 
+      item: '',  
+      qty: 1,
+      hsn:'',
+      price:''
+    });
+  }
+  removeQuantity(i:number) {  
+    this.quantities.splice(i, 1);
+  }
+  setDescription(counter:number){
+    this.quantities[counter].item = $('#item_'+counter).val();
+  }
+  setQty(counter:number){
+    this.quantities[counter].qty = $('#qty_'+counter).val();
+  }
+  setHsn(counter:number){
+    this.quantities[counter].hsn = $('#hsn_'+counter).val();
+  }
+  setPrice(counter:number){
+    this.quantities[counter].price = $('#price_'+counter).val();
+  }
+  setHeading(){
+    this.action = 'Add';
+    this.heading = 'Create Invoice';
+    this.cleanForm();
+  }
+  cleanForm(){
+    $('#r_id').val(0);
+    $('#customer_id').val('');
+    $('#invoice_date').val('');
+    $('#invoice_no').val('');
+    $('#advance').val('');
+    $('#currency').val('INR');
+    $('#notes').val('');
+  }
+  Create(){
+      $('#addUserBtn').html('Processing...');
+      const data = {
+        id:$('#r_id').val(),
+        customer_id:$('#customer_id').val(),
+        invoice_date: $('#invoice_date').val(),
+        invoice_no: $('#invoice_no').val(),
+        advance: $('#advance').val(),
+        currency: $('#currency').val(),
+        notes: $('#notes').val(),
+        items: this.quantities
+      };
+      if(this.action == 'Add'){
+        this.appService.postData('invoice/create',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+          var r:any=res;
+          $('#addUserBtn').html('Save');
+          if(r.success){
+            this.getList();
+            this.cleanForm();
+            this.toastr.success(r.message, 'Success');
+            $('#closeBtn').trigger('click');
+          }else{
+            this.toastr.error(r.message, 'Error');
+          }
+        },error =>{
+        });
+      }
+      if(this.action == 'Edit'){
+        this.appService.postData('invoice/create',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+          var r:any=res;
+          $('#addUserBtn').html('Save');
+          if(r.success){
+            this.getList();
+           this.cleanForm();
+            this.toastr.success(r.message, 'Success');
+            $('#closeBtn').trigger('click');
+          }else{
+            this.toastr.error(r.message, 'Error');
+          }
+        },error =>{
+        });
+      }
+      
+    }
+    getBillNo(){
+    const data = {
+        token: localStorage.getItem('token')
+      };
+      this.appService.postData('bill-no/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+         $('#invoice_no').val(r.newBillNo);
+         $('#invoice_date').val(r.newBillDate);
+        }else{
+          this.toastr.error(r.message,"Error");
+        }
+        
+      },error=>{
+        this.toastr.error("Server Error","Error");
+      });
+  }
+  getCustomerData(){
+    const data = {
+        token: localStorage.getItem('token'),
+        id:$('#customer_id').val()
+      };
+      this.appService.postData('customer/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+         $('#phone').val(r.user.phone);
+         $('#email').val(r.user.email);
+         $('#gst_no').val(r.user.gst_no);
+         $('#address').val(r.user.address);
+         $('#currency').val(r.user.currency);
+        }else{
+          this.toastr.error(r.message,"Error");
+        }
+        
+      },error=>{
+        this.toastr.error("Server Error","Error");
+      });
+  }
+  getAllCustomers(){
+    const data = {
+        token: localStorage.getItem('token')
+      };
+      this.appService.postData('customer/list/all',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+          this.customers = r.users;
+        }else{
+          this.toastr.error(r.message,"Error");
+        }
+        
+      },error=>{
+        this.toastr.error("Server Error","Error");
+      });
+  }
+  generateInvoicePDF(invoice_id:number){
+    const data = {
+        token: localStorage.getItem('token'),
+        invoice_id:invoice_id
+      };
+      this.appService.postData('invoice/pdf/generate',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+          window.open(r.download_url, "_blank");
+        }else{
+          this.toastr.error(r.message,"Error");
+        }
+        
+      },error=>{
+        this.toastr.error("Server Error","Error");
+      });
   }
   generateInvoice(){
     if(this.selectedRow.length > 0){
@@ -93,29 +260,55 @@ export class TargetComponent implements OnInit,OnDestroy {
     }
     console.log(this.selectedRow);
   }
-  onChangeCategory(event:any,rowID:number) {
-    if(event.target.checked){
-      this.selectedRow.push(rowID);
-      //this.invoiceRow.push(invoiceID);
-      console.log(this.selectedRow);
-    }else{
-      const index = this.selectedRow.findIndex(function(selectedRow:any) {
-        return selectedRow == rowID
+  getUser(id:number){
+      this.heading = 'Edit Invoice';
+      this.action = 'Edit';
+      const data = {
+        token: localStorage.getItem('token'),
+        id: id
+      };
+      this.appService.postData('invoice/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+          $('#r_id').val(r.invoiceData.id);
+          $('#customer_id').val(r.invoiceData.customer_id);
+          $('#invoice_no').val(r.invoiceData.bill_no);
+          $('#advance').val(r.invoiceData.advance);
+          $('#currency').val(r.invoiceData.currency);
+          $('#invoice_date').val(r.invoiceData.bill_date);
+          $('#notes').val(r.invoiceData.notes);
+
+          this.quantities = [];
+          r.invoiceData.items.forEach((element:any, index:any) => {
+              this.quantities.push({
+              id: element.id, 
+              item: element.item,  
+              qty: element.qty,
+              hsn:element.hsn,
+              price:element.price
+              });
+          });
+
+          console.log(this.quantities);
+          //this.quantities = r.invoiceData.items;
+
+        }else{
+          
+        }
+      },error =>{
+        Swal.fire(
+          'Error',
+          'Internal server error',
+          'error'
+        )
       });
-      //const index = this.invoiceRow.indexOf(invoiceID);
-      if (index > -1) { // only splice array when item is found
-        this.selectedRow.splice(index, 1); // 2nd parameter means remove one item only
-        console.log(this.selectedRow);
-      }
     }
-  }
   getList(){
     const data = {
       token: localStorage.getItem('token'),
       bill_no: $("#bill_no").val(),
-      bill_date:this.bill_date,
       customer_name: $("#customer_name").val(),
-      amount: $("#amount").val(),
+      invoive_status: $("#invoive_status").val(),
       page: this.p
     };
     this.getListFromServer(data);
@@ -125,6 +318,9 @@ export class TargetComponent implements OnInit,OnDestroy {
       var r:any=res;
       this.users = r.users.data;
       this.total = r.users.total;
+      this.totalAmount = r.totalAmount;
+      this.remainigAmount = r.remainigAmount;
+      this.paidAmount = r.paidAmount;
     },error=>{
       this.toastr.error("Server Error","Error");
     });
@@ -178,9 +374,8 @@ export class TargetComponent implements OnInit,OnDestroy {
     const data = {
       token: localStorage.getItem('token'),
       bill_no: $("#bill_no").val(),
-      bill_date:this.bill_date,
       customer_name: $("#customer_name").val(),
-      amount: $("#amount").val(),
+      invoive_status: $("#invoive_status").val(),
       page: this.p
     };
     this.getListFromServer(data);
@@ -188,7 +383,7 @@ export class TargetComponent implements OnInit,OnDestroy {
   reset(){
     $("#bill_no").val('');
     $("#customer_name").val('');
-    $("#amount").val('');
+    $("#invoive_status").val('');
     const data = {
       token: localStorage.getItem('token'),
       search_key: '',

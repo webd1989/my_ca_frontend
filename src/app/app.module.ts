@@ -10,9 +10,7 @@ import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ProfileComponent } from './profile/profile.component';
-import { CalendarComponent } from './calendar/calendar.component';
 import { UserListComponent } from './users/user-list/user-list.component';
-import { CompanyListComponent } from './companies/company-list/company-list.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -22,18 +20,15 @@ import { CompanySettingsComponent } from './company-settings/company-settings.co
 import { CompanyNotificationsComponent } from './company-notifications/company-notifications.component';
 import { CompanyAuthenticationComponent } from './company-authentication/company-authentication.component';
 import { TabsComponent } from './tabs/tabs.component';
-import { CompanyViewComponent } from './companies/company-view/company-view.component';
-import { DealsComponent } from './deals/deals.component'; // <-- import the module
 import { FormsModule } from '@angular/forms';
 import { DatepickerModule } from 'ng2-datepicker';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { TargetComponent } from './target/target.component';
-import { FranchiseComponent } from './franchise/franchise.component';
-import { FranchiseDataComponent } from './franchise-data/franchise-data.component';
-import { CustomerDataComponent } from './customer-data/customer-data.component';
-import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
-import { PaymentsComponent } from './payments/payments.component';
-import { CreditNotesComponent } from './credit-notes/credit-notes.component';
+import { QuotationsComponent } from './quotations/quotations.component';
+import { ProjectsComponent } from './projects/projects.component';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { AmcComponent } from './amc/amc.component';
+
 
 
 @NgModule({
@@ -45,25 +40,18 @@ import { CreditNotesComponent } from './credit-notes/credit-notes.component';
     LoginComponent,
     ChangePasswordComponent,
     ProfileComponent,
-    CalendarComponent,
     UserListComponent,
-    CompanyListComponent,
     ContactListComponent,
     SidebarComponent,
     CompanySettingsComponent,
     CompanyNotificationsComponent,
     CompanyAuthenticationComponent,
     TabsComponent,
-    CompanyViewComponent,
-    DealsComponent,
     ForgotPasswordComponent,
     TargetComponent,
-    FranchiseComponent,
-    FranchiseDataComponent,
-    CustomerDataComponent,
-    InvoiceDetailsComponent,
-    PaymentsComponent,
-    CreditNotesComponent
+    QuotationsComponent,
+    ProjectsComponent,
+    AmcComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +61,8 @@ import { CreditNotesComponent } from './credit-notes/credit-notes.component';
     BrowserAnimationsModule,
     NgxPaginationModule,
     FormsModule,
-    DatepickerModule
+    DatepickerModule,
+    CanvasJSAngularChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

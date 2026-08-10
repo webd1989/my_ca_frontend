@@ -41,14 +41,33 @@ export class HeaderComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.userType = localStorage.getItem('user_type');
-    /* setInterval(() => {
-      this.GetProfile(); 
-      }, 60000); */
+    setInterval(() => {
+      this.checkLoginTime(); 
+      }, 20000);
+      this.saveLoginTime();
     this.GetProfile();
   }
   logout(){
     localStorage.removeItem("token");
     this.router.navigateByUrl('');
+  }
+  checkLoginTime(){
+    const data = {};
+    this.appService.postData('check/login/time',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      var r:any=res;
+      if(r.success){
+        localStorage.removeItem("token");
+        this.router.navigateByUrl('');
+      }
+    },error =>{
+    });
+  }
+  saveLoginTime(){
+    const data = {};
+    this.appService.postData('save/last/login/time',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      var r:any=res;
+    },error =>{
+    });
   }
   getAllUrsers(){
     const data = {company_id:0};

@@ -7,7 +7,7 @@
 /* Variables Define :: Start  */
 
 :root {
-  --primary-color: #F8871E ;
+  --primary-color: #0047bd ;
   --color-white: #ffffff;
   --color-black: #27262b;
   --color-gray: #585858;
@@ -226,9 +226,6 @@ table thead th{
   font-size: 13px;
   font-weight: 600;
 /*  color: var(--color-white);*/
-}
-td, th{
-  text-align: center;
 }
 td{
   font-size: 13px;
@@ -1001,7 +998,7 @@ li.page-item.active a {
 
 .mainTabss {}
 .mainTabss .nav {
-     background:#F8871E;
+     background:#0047bd;
     --bs-nav-link-color: #fff;
         border-bottom: 0;
             /*padding: 10px 0 0 0;*/
@@ -1009,7 +1006,7 @@ li.page-item.active a {
 .tabsWithCross .nav-link {
       padding:4px 23px 4px 8px;
       color: #fff;
-      border-color: #F8871E;
+      border-color: #0047bd;
 }
 .tabsWithCross i {
      top: 8px;

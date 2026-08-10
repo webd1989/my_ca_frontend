@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-   serviceUrl: 'http://localhost/badri-logistic-backend/api/',
-   documentUrl: 'http://localhost/badri-logistic-backend/',
+   serviceUrl: 'https://webd.mrcrm.in/api/api/',
+   documentUrl: 'https://webd.mrcrm.in/api/',
   
 };
 

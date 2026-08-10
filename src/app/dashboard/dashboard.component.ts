@@ -6,6 +6,8 @@ import {from, noop, of, Subject} from 'rxjs';
 import {map, mergeAll, mergeMap, takeUntil} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -17,22 +19,20 @@ export class DashboardComponent implements OnInit,OnDestroy {
 
   loginUsername:any = '';
   userData:any;
-  p: number = 1;
-  total: number = 0;
-  tasks:any;
-  super_admins:any;
-  selected_user: number = 0;
   login_user_type = localStorage.getItem('user_type');
-  taskFilterType:any = 'Today';
-
-  reportFilterType:any = 'Today';
-  total_task_added: number = 0;
-  total_task_completed: number = 0;
-  total_calls_made: number = 0;
-  total_email_sent: number = 0;
-  total_text_sent: number = 0;
-  new_account_added: number = 0;
-  new_contact_added: number = 0;
+  totalClients: number = 0;
+  totalProjcts: number = 0;
+  topClients:any = [];
+  chartOptions1:any;
+  chartOptions2:any;
+  chartOptions3:any;
+  chartOptions4:any;
+  chartOptions5:any;
+  chart:any;
+  chart2:any;
+  chart3:any;
+  chart4:any;
+  chart5:any;
 
   constructor(
     private appService: ServiceService,
@@ -50,75 +50,166 @@ export class DashboardComponent implements OnInit,OnDestroy {
       this.router.navigateByUrl('/');
     }
     this.GetProfile();
-    this.getTasks();
-    this.getAllUrsers();
-    this.getDashboardOverview();
+    this.yearwiseSaleChart();
+    this.getYearwiseBusiness();
+    this.paidUnpaidChart();
+    this.getPaidUnpaid();
   }
-  pageChangeEvent(event: number){
-    this.p = event;
-    this.getTasks();
+
+
+yearwiseSaleChart(){
+    this.chartOptions1 = {
+      title: {
+        text: ""
+      },
+      theme: "light2",
+      animationEnabled: true,
+      exportEnabled: true,
+      axisY: {
+      includeZero: true,
+      //valueFormatString: "$#,##0k"
+      },
+      data: [{
+      type: "column", //change type to bar, line, area, pie, etc
+      yValueFormatString: "#,###.##' INR'",
+      color: "#0047bd",
+      dataPoints: [
+        { label: "2024", y: 0 },
+        { label: "2025", y: 0 },
+      ]
+      }]
+    }
+    this.chartOptions3 = {
+      title: {
+        text: ""
+      },
+      theme: "light2",
+      animationEnabled: true,
+      exportEnabled: true,
+      axisY: {
+      includeZero: true,
+      //valueFormatString: "$#,##0k"
+      },
+      data: [{
+      type: "column", //change type to bar, line, area, pie, etc
+      yValueFormatString: "'$'#,###.##",
+      color: "#0047bd",
+      dataPoints: [
+        { label: "2024", y: 0 },
+        { label: "2025", y: 0 },
+      ]
+      }]
+    }
+    this.chartOptions5 = {
+      title: {
+        text: ""
+      },
+      theme: "light2",
+      animationEnabled: true,
+      exportEnabled: true,
+      axisY: {
+      includeZero: true,
+      //valueFormatString: "$#,##0k"
+      },
+      data: [{
+      type: "column", //change type to bar, line, area, pie, etc
+      yValueFormatString:  "#,###.##' INR'",
+      color: "orange",
+      dataPoints: []
+      }]
+    }
   }
-  getTasks(){
-    const data = {
-      token: localStorage.getItem('token'),
-      company_id: 0,
-      page: this.p,
-      filter_by:this.taskFilterType
-    };
-    this.appService.postData('task/list',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
-      var r:any=res;
-      this.tasks = r.tasks.data;
-      this.total = r.tasks.total;
-    },error=>{
-      //this.toastr.error("Server Error","Error");
-    });
+  paidUnpaidChart(){
+    this.chartOptions2 = {
+      animationEnabled: true,
+	  title: {
+		text: ""
+	  },
+	  data: [{
+		type: "pie",
+		startAngle: -90,
+		indexLabel: "{name}: {y}",
+		yValueFormatString: "#,###.##' INR'",
+		dataPoints: [
+		  { y: 0, name: "Paid Amount" },
+		  { y: 0, name: "Pending Amount" }
+		]
+	  }]
+    }
+    this.chartOptions4 = {
+      animationEnabled: true,
+	  title: {
+		text: ""
+	  },
+	  data: [{
+		type: "pie",
+		startAngle: -90,
+		indexLabel: "{name}: {y}",
+		yValueFormatString: "'$'#,###.##",
+		dataPoints: [
+		  { y: 0, name: "Paid Amount" },
+		  { y: 0, name: "Pending Amount" }
+		]
+	  }]
+    }
   }
-  getAllUrsers(){
-    const data = {company_id:0};
-    this.appService.postData('all/user/list',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
-      var r:any=res;
-      if(r.success){
-        this.super_admins = r.users;
-      }
-    },error =>{
-    });
+
+getChartInstance(chart: object) {
+    this.chart = chart;
   }
-  loadTasks(type:string,id:string){
-    $('.report_t_btns').removeClass('active_report');
-    $('#'+id).addClass('active_report');
-    this.taskFilterType = type;
-    this.p = 1;
-    this.getTasks();
-}
-  loadReportFilter(){
-    this.selected_user = $('#user_filter').val();
-    this.getDashboardOverview();
+  getChartInstance2(chart: object) {
+    this.chart2 = chart;
   }
-  loadReport(type:string,id:string){
-      $('.report_f_btns').removeClass('active_report');
-      $('#'+id).addClass('active_report');
-      this.reportFilterType = type;
-      this.getDashboardOverview();
+  getChartInstance3(chart: object) {
+    this.chart3 = chart;
   }
-  getDashboardOverview(){
-    const data = {
-      token: localStorage.getItem('token'),
-      type:this.reportFilterType,
-      user_id:this.selected_user
-    };
-    this.appService.postData('dashboard/report/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
-      var r:any=res;
-      this.total_task_added = r.total_task_added;
-      this.total_task_completed = r.total_task_completed;
-      this.total_calls_made = r.total_calls_made;
-      this.total_email_sent = r.total_email_sent;
-      this.total_text_sent = r.total_text_sent;
-      this.new_account_added = r.new_account_added;
-      this.new_contact_added = r.new_contact_added;
-    },error=>{
-      //this.toastr.error("Server Error","Error");
-    });
+  getChartInstance4(chart: object) {
+    this.chart4 = chart;
   }
+  getChartInstance5(chart: object) {
+    this.chart5 = chart;
+  }
+  getYearwiseBusiness(){
+      const data = {
+        token: localStorage.getItem('token'),
+      };
+      this.appService.postData('yearwise-business/get',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+          this.chartOptions1.data[0].dataPoints = r.result;
+          this.chartOptions3.data[0].dataPoints = r.result2;
+          this.chartOptions5.data[0].dataPoints = r.result3;
+       this.chart.render();
+       this.chart3.render();
+       this.chart5.render();
+        }else{
+          
+        }
+      },error =>{
+       
+      });
+    }
+    getPaidUnpaid(){
+      const data = {
+        token: localStorage.getItem('token'),
+      };
+      this.appService.postData('paid-unpaid',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+        var r:any=res;
+        if(r.success){
+          this.topClients = r.result3;
+          this.totalClients = r.totalClients;
+          this.totalProjcts = r.totalProjects;
+          this.chartOptions2.data[0].dataPoints = r.result;
+          this.chartOptions4.data[0].dataPoints = r.result2;
+          this.chart2.render();
+          this.chart4.render();
+        }else{
+          
+        }
+      },error =>{
+       
+      });
+    }
   GetProfile(){
     this.appService.getData('profile/get').pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;

@@ -6,24 +6,17 @@ import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ProfileComponent } from './profile/profile.component';
-import { CalendarComponent } from './calendar/calendar.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import { CompanySettingsComponent } from './company-settings/company-settings.component';
 import { CompanyNotificationsComponent } from './company-notifications/company-notifications.component';
 import { CompanyAuthenticationComponent } from './company-authentication/company-authentication.component';
-import { CompanyListComponent } from './companies/company-list/company-list.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
-import { CompanyViewComponent } from './companies/company-view/company-view.component';
-import { DealsComponent } from './deals/deals.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 import { TargetComponent } from './target/target.component';
-import { FranchiseComponent } from './franchise/franchise.component';
-import { FranchiseDataComponent } from './franchise-data/franchise-data.component';
-import { CustomerDataComponent } from './customer-data/customer-data.component';
-import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
-import { PaymentsComponent } from './payments/payments.component';
-import { CreditNotesComponent } from './credit-notes/credit-notes.component';
+import { QuotationsComponent } from './quotations/quotations.component';
+import { ProjectsComponent } from './projects/projects.component';
+import { AmcComponent } from './amc/amc.component';
 
 const routes: Routes = [
   {
@@ -34,9 +27,6 @@ const routes: Routes = [
   },
   {
     path:'dashboard',component:DashboardComponent
-  },
-  {
-    path:'calendar',component:CalendarComponent
   },
   {
     path:'profile',component:ProfileComponent
@@ -57,37 +47,19 @@ const routes: Routes = [
     path:'company-authentication',component:CompanyAuthenticationComponent
   },
   {
-    path:'companies',component:CompanyListComponent
-  },
-  {
     path:'contacts',component:ContactListComponent
-  },
-  {
-    path:'company/:id',component:CompanyViewComponent
-  },
-  {
-    path:'deals',component:DealsComponent
   },
   {
     path:'invoices',component:TargetComponent
   },
   {
-    path:'franchises',component:FranchiseComponent
+    path:'quotations',component:QuotationsComponent
   },
   {
-    path:'franchise/:id',component:FranchiseDataComponent
+    path:'projects',component:ProjectsComponent
   },
   {
-    path:'customer/:id',component:CustomerDataComponent
-  },
-  {
-    path:'invoice-detail/:id',component:InvoiceDetailsComponent
-  },
-  {
-    path:'payments',component:PaymentsComponent
-  },
-  {
-    path:'credit-notes',component:CreditNotesComponent
+    path:'amc',component:AmcComponent
   }
 ];
 

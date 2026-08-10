@@ -4,7 +4,7 @@
             <nav class="navbar navbar-expand-lg navbar-light ">
                 <div class="container-fluid p-0">
 
-                    <a class="navbar-brand" routerLink="/dashboard" style="width:120px"><img src="assets/images/ls.png" class="img-fluid"></a>
+                    <a class="navbar-brand" routerLink="/dashboard" style="width:120px"><img src="assets/images/web-d-logo.jpg" class="img-fluid"></a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
                     </button>
@@ -18,44 +18,30 @@
                             <li class="nav-item d-menu me-3">
                                 <a class="nav-link font-15 font-weight-400 active" routerLink="/dashboard" ><i class="fas fa-th-list text-main"></i> Dashboard</a>
                             </li>
-                            <li class="nav-item d-menu me-3">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/calendar" ><i class="far fa-calendar-alt text-main"></i> Sales</a>
-                            </li>
                             <li *ngIf="userType=='Admin'" class="nav-item dropdown d-menu me-3">
                                 <a class="nav-link dropdown-toggle font-15 font-weight-400 active" href="javascript:;" data-bs-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle text-main"></i> Users</a>
                                 <ul class="dropdown-menu shadow">
                                     
                                     <li *ngIf="userType=='Admin'"><a class="dropdown-item font-13" routerLink="/users">Users</a></li>
-                                    <!-- <li><a class="dropdown-item font-13" routerLink="/companies">Accounts</a></li>-->
-                                     <li *ngIf="userType=='Admin'"><a class="dropdown-item font-13" routerLink="/contacts">Customers</a></li> 
-                                    <!-- <li><a class="dropdown-item font-13" routerLink="/franchises">Franchise</a></li> -->
-                                    <!-- <li><a class="dropdown-item font-13" routerLink="/deals">Deals</a></li>  -->
+                                     <li *ngIf="userType=='Admin'"><a class="dropdown-item font-13" routerLink="/contacts">Clients</a></li> 
                                 </ul>
                             </li>
-                            <!-- <li class="nav-item dropdown d-menu me-3">
-                                <a class="nav-link dropdown-toggle font-15 font-weight-400 active" href="javascript:;" data-bs-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="false"><i class="fa fa-envelope text-main"></i> Emails</a>
-                                <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item font-13" href="#">Template</a></li>
-                                    <li><a class="dropdown-item font-13" href="#">Sequences</a></li>
-                                    <li><a class="dropdown-item font-13" href="#">Bulk Email</a></li>
-                                </ul>
-                            </li> -->
+                            
                             <li *ngIf="userType=='Admin'" class="nav-item d-menu">
                                 <a class="nav-link font-15 font-weight-400 active" routerLink="/invoices"><i class="fas fa-bars text-main"></i> Invoices</a>
                             </li>
                             <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/credit-notes"><i class="fas fa-bars text-main"></i> Credit Notes</a>
+                                <a class="nav-link font-15 font-weight-400 active" routerLink="/quotations"><i class="fas fa-bars text-main"></i> Quotations</a>
                             </li>
                             <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/payments"><i class="fas fa-bars text-main"></i> Payments</a>
+                                <a class="nav-link font-15 font-weight-400 active" routerLink="/projects"><i class="fas fa-bars text-main"></i> Projects</a>
                             </li>
                             <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" href="javascript:;"><i class="fas fa-file-alt text-main"></i> Report</a>
-                                <!-- <ul class="dropdown-menu shadow">
-                                    <li><a class="dropdown-item font-13" href="add-loads.html"><i class="fas fa-file-alt text-main me-1"></i> Reports</a></li>
-                                    <li><a class="dropdown-item font-13" href="loads.html"><i class="fas fa-poll text-main me-1"></i> Marketing</a></li>
-                                </ul> -->
+                                <a class="nav-link font-15 font-weight-400 active" routerLink="/amc"><i class="fas fa-bars text-main"></i> AMC</a>
                             </li>
+                            
+                           
+                            
                         </ul>
                     </div>
                 </div>
@@ -72,7 +58,7 @@
                         <a href="javascript:;" class="dropdown-item font-13">Hi, <span class="font-weight-400">User Name</span></a>
                     </li>
                     <li><a class="dropdown-item font-13" routerLink="/profile"><i class="far fa-user me-2 text-main"></i> Profile</a></li>
-                    <li><a class="dropdown-item font-13" href="#"><i class="far fa-file-invoice me-2 text-main"></i> Invoice</a></li>
+                    <li><a class="dropdown-item font-13" routerLink="/invoices"><i class="far fa-file-invoice me-2 text-main"></i> Invoice</a></li>
                     <li><a class="dropdown-item font-13" (click)="logout()"><i class="far fa-sign-out me-2 text-main"></i> Logout</a></li>
                 </ul>
             </div>

@@ -8,68 +8,94 @@
                 <app-tabs></app-tabs>
             <!-- main Area :: Start -->
             <div class="main-area position-relative">
-                <div class="page-card-title d-flex align-items-center justify-content-between">
-                    <div class="breadcrumb-info">
-                        <h2 class="font-18 text-capitalize d-flex align-items-center mb-0">Invoices</h2>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="has-search">
+                <div class="page-card-title align-items-center justify-content-between">
+                    <div class="row">
+                        <div class="col-lg-2 col-6 mb-2">
                             <input type="text" name="bill_no" id="bill_no" class="form-control filter-p" placeholder="Bill No">
                         </div>
-                        <div>
-                            <ngx-datepicker [(ngModel)]="bill_date" id="bill_date" [options]="options" class="form-control filter-p"></ngx-datepicker>
+                        <div class="col-lg-2 col-6 mb-2">
+                        <select name="customer_name" id="customer_name" class="form-select">
+                        <option value="">Customer</option>
+                        <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
+                        </select>
                         </div>
-                        <div class="has-search">
-                            <input type="text" name="customer_name" id="customer_name" class="form-control filter-p" placeholder="Party Name">
+                        <div class="col-lg-2 col-6 mb-2">
+<select name="invoive_status" id="invoive_status" class="form-select">
+                        <option value="">Status</option>
+                        <option value="1">Paid</option>
+                        <option value="2">Pending</option>
+                        </select>
                         </div>
-                        <div class="has-search">
-                            <input type="text" name="amount" id="amount" class="form-control filter-p" placeholder="Amount">
-                        </div>
-                        <div class="has-search">
-                            <a (click)="searchData();" id="" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
+                        <div class="col-lg-2 col-6 mb-2">
+<a (click)="searchData();" id="" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
                             <a (click)="reset();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="Reset"><i class="fas fa-retweet"></i></a>
-                            <a (click)="generateInvoice();"style="margin-left: 10px;"  id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a>
+                            <!-- <a (click)="generateInvoice();"style="margin-left: 10px;"  id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a> -->
+                            <a href="javascript:;" (click)="setHeading()"  data-bs-toggle="modal" data-bs-target="#createTemplate"style="margin-left: 10px;"  class="btn btn-warning btn-sm text-uppercase" title="Create Invoice"><i class="fas fa-plus"></i></a>
                         </div>
-                        
                     </div>
+                    
+                  
                 </div>
                 <div class="page-card-body p-3">
                     <div class="table-responsive">
                             <table class="table table-bordered table-striped position-relative">
                                 <thead>
                                     <tr>
+                                        <th class="text-uppercase whitespace-nowrap"></th>
+                                        <th class="text-uppercase whitespace-nowrap"></th>
+                                        <th class="text-uppercase whitespace-nowrap"><span style="color:blue">Total: {{totalAmount}}</span></th>
+                                        <th class="text-uppercase whitespace-nowrap"><span style="color:green">Paid: {{paidAmount}}</span></th>
+                                        <th class="text-uppercase whitespace-nowrap"><span style="color:red">Remaining: {{remainigAmount}}</span></th>
+                                        <th class="text-uppercase whitespace-nowrap"></th>
+                                        <!-- <th class="text-uppercase whitespace-nowrap"></th>
+                                        <th class="text-uppercase whitespace-nowrap"></th> -->
+                                        <!-- <th class="text-uppercase whitespace-nowrap">Created Date</th> -->
+                                        <th class="text-uppercase whitespace-nowrap"></th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
                                         <th class="text-uppercase whitespace-nowrap">S.NO</th>
-                                        <th><input type="checkbox" id="select_all" (change)="selectAllRow($event)"></th>
                                         <th class="text-uppercase whitespace-nowrap">Bill No.</th>
                                         <th class="text-uppercase whitespace-nowrap">Customer Name</th>
-                                        <th class="text-uppercase whitespace-nowrap">Amount</th>
+                                        <!-- <th class="text-uppercase whitespace-nowrap">Sub Total</th>
+                                        <th class="text-uppercase whitespace-nowrap">Advance</th> -->
+                                        <th class="text-uppercase whitespace-nowrap">Total</th>
                                         <th class="text-uppercase whitespace-nowrap">Bill Date</th>
-                                        <th class="text-uppercase whitespace-nowrap">Ref No.</th>
-                                        <th class="text-uppercase whitespace-nowrap">Created Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">Status</th>
+                                        <!-- <th class="text-uppercase whitespace-nowrap">Created Date</th> -->
                                         <th class="text-uppercase whitespace-nowrap">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 10, currentPage: p, totalItems: total }; index as i">
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 50, currentPage: p, totalItems: total }; index as i">
                                         <td class="whitespace-nowrap">{{i+1}}</td>
-                                        <td class="check_colum" ><input class="item_check" type="checkbox" [id]="'invoice_pay_' + user.id" value="{{user?.id}}" (change)="onChangeCategory($event, user.id)"></td>
+                                      
                                 
-                                        <td class="whitespace-nowrap"><a style="color:blue" routerLink="/invoice-detail/{{user.id}}">{{user.bill_no}}</a></td>
-                                        <td class="whitespace-nowrap">{{user.customer_name}}</td>
-                                        <td class="whitespace-nowrap">{{user.amount}}</td>
+                                        <td class="whitespace-nowrap">{{user.bill_no}}</td>
+                                        <td class="whitespace-nowrap"><a title="{{user.company_full}}">{{user.company}}</a></td>
+                                        <!-- <td class="whitespace-nowrap">{{user.amount}}</td>
+                                        <td class="whitespace-nowrap">{{user.advance}}</td> -->
+                                        <td class="whitespace-nowrap">{{user.total_amount}} <a *ngIf="user.notes" data-bs-toggle="modal" data-bs-target="#bookingNotesModel" (click)="setBookingNote(user)" title="Notes"><i class="fas fa-info-circle"></i></a></td>
                                         <td class="whitespace-nowrap">{{user.display_date2}}</td>
-                                        <td class="whitespace-nowrap">{{user.ref_no}}</td>
-                                        <td class="text-capitalize whitespace-nowrap">{{user.display_date}}</td>
+                                        <td>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'2')" *ngIf="user.status == 1" class="btn btn-sm btn-outline-success text-uppercase text-center font-12 me-2">Paid</a>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'1')" *ngIf="user.status == 2" class="btn btn-sm btn-outline-danger text-uppercase text-center font-12 me-2">Pending</a>
+                                        </td>
+                                        <!-- <td class="text-capitalize whitespace-nowrap">{{user.display_date}}</td> -->
                                         <td class="text-capitalize whitespace-nowrap">
-                                            <a href="{{SiteUrl}}storage/pdf/{{user.file_name}}" target="_blank" class="text-capitalize font-12 text-info me-3">
+                                            <a (click)="generateInvoicePDF(user.id)" class="text-capitalize font-12 text-info me-3">
                                                 <i class="far fa-download"></i>
+                                            </a>
+                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3">
+                                                <i class="far fa-edit"></i>
                                             </a>
                                             <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                    <tr><td colspan="8"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+                                    <tr><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
 
                                     
                                 </tbody>
@@ -85,4 +111,143 @@
         <app-footer></app-footer>
     </div>
 </main>
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade"  data-backdrop="static" data-keyboard="false" id="bookingNotesModel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div class="d-flex justify-content-between w-100 me-3">
+                    <h4 class="modal-title font-16">Inoice Notes | {{invoiceData?.cust_data?.company}} | {{invoiceData?.bill_no}}</h4>
+                </div>
+                <button type="button" id="closeBtn2" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="input-group mb-3">
+                               {{invoiceData?.notes}}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="createTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{heading}}</h4>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+                    <div class="row">
+                    <div class="col-lg-3">
+                    <div class="form-group mb-2">
+                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Customers</label>
+                    <select name="customer_id" id="customer_id" class="form-select" (change)="getBillNo()">
+                    <option value="">Select</option>
+                    <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
+                    </select>
+                    <input type="hidden" id="r_id">
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                    <div class="form-group mb-3">
+                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Invoice No</label>
+                     <input type="text" class="form-control" id="invoice_no">
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                    <div class="form-group mb-3">
+                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Invoice Date</label>
+                    <!-- <ngx-datepicker [(ngModel)]="bill_date"  id="bill_date" [options]="options" class="form-control"></ngx-datepicker> -->
+                     <input type="text" class="form-control" placeholder="DD-MM-YY" id="invoice_date">
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                    <div class="form-group mb-3">
+                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Advance Amount</label>
+                     <input type="text" class="form-control" value="0" id="advance">
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Currency</label>
+                        <select name="currency" id="currency" class="form-select" >
+                    <option value="INR">INR</option>
+                    <option value="$">Dollar</option>
+                    </select>
+                    </div>
+                    <div class="col-lg-1">
+                    <div class="form-group mb-3 pt-4">
+                    <a href="javascript:;" (click)="addMore()" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-plus"></i></a>
+                    </div>
+                    </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-11">
+                            <div class="form-group mb-3">
+                            <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Note (Optional)</label>
+                            <textarea class="form-control" id="notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div *ngFor="let quantity of this.quantities; let i=index" class="row">
+                    <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                    <input type="text" class="form-control" value="{{quantity.item}}" [id]="'item_' + i" (keyup)="setDescription(i)" placeholder="Description">
+                    <input type="hidden" value="{{quantity.id}}" [id]="'id_' + i">
+                    </div>
+                    </div>
+                    <div class="col-lg-1">
+                    <div class="form-group mb-3">
+                    <input type="text" class="form-control" value="{{quantity.qty}}" value="{{quantity.qty}}" [id]="'qty_' + i" (keyup)="setQty(i)" placeholder="Qty">
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                    <div class="form-group mb-3">
+                    <input type="text" class="form-control" value="{{quantity.hsn}}" [id]="'hsn_' + i" (keyup)="setHsn(i)" placeholder="HSN">
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                    <div class="form-group mb-3">
+                    <input type="text" class="form-control" value="{{quantity.price}}" [id]="'price_' + i" (keyup)="setPrice(i)" placeholder="Price">
+                    </div>
+                    </div>
+                    <div class="col-lg-1">
+                    <div class="form-group mb-3">
+                    <a href="javascript:;" (click)="removeQuantity(i)" class="btn btn-danger btn-sm text-uppercase"><i class="fas fa-minus"></i></a>
+                    </div>
+                    </div>
+
+                    </div>
+
+                     <!-- {{this.quantities | json}}  -->
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="Create()" id="addUserBtn" class="btn btn-primary btn-sm text-uppercase">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->
 

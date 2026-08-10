@@ -1,0 +1,143 @@
+<main>
+    <div class="main-wrapper">
+        <!-- Page Content :: Start  -->
+        <div id="content">
+            <app-header></app-header>
+
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+            <!-- main Area :: Start -->
+            <div class="main-area position-relative">
+                <div class="page-card-title align-items-center justify-content-between">
+
+                    <div class="row">
+                        <div class="col-lg-2 col-6 mb-2">
+                            <select name="customer_name" id="customer_name" class="form-select">
+                        <option value="">Customer</option>
+                        <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
+                        </select>
+                        </div>
+                        <div class="col-lg-2 col-6 mb-2">
+                        <select name="status" id="status" class="form-select">
+                        <option value="">Status</option>
+                        <option value="1">Active</option>
+                        <option value="2">Inactive</option>
+                        </select>
+                        </div>
+                        
+                        <div class="col-lg-2 col-6 mb-2">
+<a (click)="searchData();" id="" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
+                            <a (click)="reset();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="Reset"><i class="fas fa-retweet"></i></a>
+                            <!-- <a (click)="generateInvoice();"style="margin-left: 10px;"  id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a> -->
+                            <a href="javascript:;" (click)="setHeading()"  data-bs-toggle="modal" data-bs-target="#createTemplate"style="margin-left: 10px;"  class="btn btn-warning btn-sm text-uppercase" title="Create Invoice"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+
+                   
+                    
+                </div>
+                <div class="page-card-body p-3">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-striped position-relative">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase whitespace-nowrap text-start">S.NO</th>
+                                        <th class="text-uppercase whitespace-nowrap">Company</th>
+                                        <th class="text-uppercase whitespace-nowrap">Project</th>
+                                         <th class="text-uppercase whitespace-nowrap">Status</th> 
+                                        <th class="text-uppercase whitespace-nowrap">Created Date</th>
+                                        <th class="text-uppercase whitespace-nowrap">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 50, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap text-start">{{user.id}}</td>
+                                        <td class="whitespace-nowrap"><a title="{{user.company_full}}">{{user.company}}</a></td>
+                                        <td class="whitespace-nowrap"><a title="{{user.title_full}}">{{user.title}}</a></td>
+                                     <td>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'2')" *ngIf="user.status == 1" class="btn btn-sm btn-outline-success text-uppercase text-center font-12 me-2">Active</a>
+                                            <a style="cursor:pointer" (click)="updateStatus(user.id,'1')" *ngIf="user.status == 2" class="btn btn-sm btn-outline-danger text-uppercase text-center font-12 me-2">Inactive</a>
+                                        </td> 
+                                        <td class="text-capitalize whitespace-nowrap">{{user.created_date}}</td>
+                                        <td class="text-capitalize whitespace-nowrap">
+                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
+
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+            <!-- main Area :: End -->
+            </div>
+
+            <!--Footer :: Start-->
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+
+<!-- CreateTemplate Edit Modal Starts  -->
+<div class="modal fade" id="createTemplate">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header border-0 text-bg-light align-items-center">
+                <div></div>
+                <div class="">
+                    <h4 class="modal-title font-16">{{heading}}</h4>
+                </div>
+                <button type="button" class="btn-close font12" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="mt-0">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                    <div class="form-group mb-2">
+                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Customers</label>
+                    <select name="customer_id" id="customer_id" class="form-select">
+                    <option value="">Select</option>
+                    <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
+                    </select>
+                    </div>
+                    </div>
+                            <div class="col-lg-12">
+                                <div class="form-group mb-2">
+                                    <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Project Name<span class="requried ms-1">*</span></label>
+                                    <input  type="text" name="title" id="title" class="form-control" placeholder="">
+                                    <input type="hidden" id="r_id">
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-3">
+                                        <label class="text-uppercase font-weight-400 font-12 mb-1 d-block">Description</label>
+                                        <textarea rows="10" name="description" id="description" class="form-control" placeholder=""></textarea>
+                                    </div>
+                                </div>
+                               
+                                </div>
+                              
+                </form>
+
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center align-items-center">
+                <button type="button" id="closeBtn" class="btn btn-outline-light text-dark btn-sm text-uppercase" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="Create()" id="addUserBtn" class="btn btn-primary btn-sm text-uppercase">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CreateTemplate Edit Modal Ends  -->
