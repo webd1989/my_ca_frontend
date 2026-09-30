@@ -28,6 +28,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   contactData:any;
   orignalPcData = '';
   customers:any = [];
+  documents:any = [];
   
   dob_date = new Date();
   lease_expiration_date = new Date();
@@ -84,14 +85,23 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   }
   Create(){
     $('#addUserBtn').html('Processing...');
-    const data = {
-      id:$('#r_id').val(),
-      title:$('#title').val(),
-      description:$('#description').val(),
-      customer_id:$('#customer_id').val(),
-    };
+
+    var formData = new FormData();
+    formData.append('id',$('#r_id').val() as string);
+    formData.append('title',$('#title').val() as string);
+    formData.append('description',$('#description').val() as string);
+    formData.append('customer_id',$('#customer_id').val() as string);
+
+    var files = $('#documents').prop('files');
+
+    if(files && files.length > 0){
+        for(var i = 0; i < files.length; i++){
+            formData.append('documents[]',files[i]);
+        }
+    }
+
     if(this.action == 'Add'){
-      this.appService.postData('project/create',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      this.appService.postData('project/create',formData).pipe(takeUntil(this.destroy$)).subscribe(res=>{
         var r:any=res;
         $('#addUserBtn').html('Save');
         if(r.success){
@@ -106,7 +116,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
       });
     }
     if(this.action == 'Edit'){
-      this.appService.postData('project/update',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      this.appService.postData('project/update',formData).pipe(takeUntil(this.destroy$)).subscribe(res=>{
         var r:any=res;
         $('#addUserBtn').html('Save');
         if(r.success){
@@ -142,7 +152,18 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     });
   }
 
-  
+  getDocuments(id:number){
+    const data = {
+      token: localStorage.getItem('token'),
+      id: id
+    };
+    this.appService.postData('project/document/list',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
+      var r:any=res;
+      this.documents = r.users;
+    },error=>{
+      //this.toastr.error("Server Error","Error");
+    });
+  }
   /**
    * Write code on Method
    *
@@ -171,6 +192,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
     });
   }
   getUser(id:number){
+    this.getDocuments(id);
     this.heading = 'Edit Project';
     this.action = 'Edit';
     const data = {
@@ -231,6 +253,7 @@ export class ProjectsComponent implements OnInit,OnDestroy {
       token: localStorage.getItem('token'),
       customer_name: $("#customer_name").val(),
       status: $("#status").val(),
+      project_name:$("#f_project_name").val(),
       page: this.p
     };
     this.getListFromServer(data);
@@ -238,9 +261,11 @@ export class ProjectsComponent implements OnInit,OnDestroy {
   reset(){
     $("#customer_name").val('');
     $("#status").val('');
+    $("#f_project_name").val('');
     const data = {
       token: localStorage.getItem('token'),
       customer_name: '',
+      project_name:'',
       status: '',
       page: this.p
     };
