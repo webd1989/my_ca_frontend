@@ -17,6 +17,7 @@ import { TargetComponent } from './target/target.component';
 import { QuotationsComponent } from './quotations/quotations.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { AmcComponent } from './amc/amc.component';
+import { TodosComponent } from './todos/todos.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,9 @@ const routes: Routes = [
   },
   {
     path:'amc',component:AmcComponent
+  },
+  {
+    path:'todos',component:TodosComponent
   }
 ];
 

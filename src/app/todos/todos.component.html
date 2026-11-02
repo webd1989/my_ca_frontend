@@ -1,0 +1,221 @@
+<main>
+    <div class="main-wrapper">
+        <div id="content">
+            <app-header></app-header>
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+                <div class="main-area position-relative">
+
+                    <!-- ===== Quick add ===== -->
+                    <div class="td-quick">
+                        <div class="td-quick-row">
+                            <span class="td-quick-ic"><i class="far fa-plus"></i></span>
+                            <input #quickInput type="text" class="td-quick-input" [(ngModel)]="quick.title" (keyup.enter)="quickAdd()" maxlength="255"
+                                placeholder="What do you need to do? e.g. Call RIFF Film Club for balance payment" aria-label="New task">
+                        </div>
+                        <div class="td-quick-opts">
+                            <div class="td-seg" role="group" aria-label="When">
+                                <button type="button" [class.on]="quick.when=='today'" (click)="quick.when='today'">Today</button>
+                                <button type="button" [class.on]="quick.when=='tomorrow'" (click)="quick.when='tomorrow'">Tomorrow</button>
+                                <button type="button" [class.on]="quick.when=='monday'" (click)="quick.when='monday'">Next Mon</button>
+                                <button type="button" [class.on]="quick.when=='none'" (click)="quick.when='none'">No date</button>
+                                <button type="button" [class.on]="quick.when=='pick'" (click)="quick.when='pick'"><i class="far fa-calendar-alt"></i></button>
+                            </div>
+                            <input *ngIf="quick.when=='pick'" type="date" class="form-control td-mini" [(ngModel)]="quick.date" aria-label="Pick date">
+                            <input *ngIf="quick.when!='none'" type="time" class="form-control td-mini" [(ngModel)]="quick.time" aria-label="Time (optional)" title="Time (optional)">
+                            <button type="button" class="td-flag" [ngClass]="priorityOf(quick.priority).cls" (click)="quick.priority = quick.priority == 3 ? 1 : quick.priority + 1" [title]="'Priority: ' + priorityOf(quick.priority).label">
+                                <i class="fas fa-flag"></i> <span>{{priorityOf(quick.priority).label}}</span>
+                            </button>
+                            <div class="td-quick-actions">
+                                <button type="button" class="btn btn-light" (click)="quickMore()" title="More options: notes, reminder, repeat, client"><i class="far fa-sliders-h"></i><span class="d-none d-md-inline">More</span></button>
+                                <button type="button" class="btn btn-primary" (click)="quickAdd()" [disabled]="quickSaving || !quick.title.trim()" [class.is-busy]="quickSaving">
+                                    <i class="far fa-plus" *ngIf="!quickSaving"></i> Add task
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- notification permission -->
+                    <div class="td-notify" *ngIf="notifyPermission === 'default'">
+                        <i class="far fa-bell"></i>
+                        <div><b>Turn on reminder notifications</b><span>Get a pop-up on your computer even when you are on another tab or app.</span></div>
+                        <button type="button" class="btn btn-warning btn-sm" (click)="enableNotifications()">Enable</button>
+                    </div>
+
+                    <!-- ===== View tabs ===== -->
+                    <div class="td-views">
+                        <button type="button" *ngFor="let v of views" class="td-view" [class.on]="view == v.key" [ngClass]="'v-' + v.key" (click)="setView(v.key)">
+                            <i class="far" [ngClass]="v.icon"></i>
+                            <span>{{v.label}}</span>
+                            <b>{{countFor(v.key)}}</b>
+                        </button>
+                    </div>
+
+                    <!-- ===== Filters ===== -->
+                    <div class="td-filters">
+                        <div class="td-search">
+                            <i class="far fa-search"></i>
+                            <input type="text" class="form-control" [(ngModel)]="search" (ngModelChange)="onSearch()" placeholder="Search tasks...">
+                        </div>
+                        <select class="form-select" [(ngModel)]="priorityFilter" (ngModelChange)="load()" aria-label="Priority">
+                            <option value="">All priorities</option>
+                            <option value="3">High</option>
+                            <option value="2">Medium</option>
+                            <option value="1">Low</option>
+                        </select>
+                        <select class="form-select" [(ngModel)]="categoryFilter" (ngModelChange)="load()" aria-label="Category">
+                            <option value="">All categories</option>
+                            <option *ngFor="let c of categories" [value]="c">{{c}}</option>
+                        </select>
+                        <button type="button" class="btn btn-light btn-icon" *ngIf="hasFilters" (click)="clearFilters()" title="Clear filters"><i class="far fa-times"></i></button>
+                    </div>
+
+                    <!-- ===== List ===== -->
+                    <div class="td-list" [class.td-loading]="loading && !firstLoad">
+                        <div class="td-skeleton" *ngIf="firstLoad">
+                            <div class="sk" *ngFor="let s of [1,2,3,4]"></div>
+                        </div>
+
+                        <div class="td-group" *ngFor="let g of groups">
+                            <div class="td-group-head" [ngClass]="'g-' + g.key">
+                                <i class="far" [ngClass]="g.icon"></i> {{g.label}} <span>{{g.items.length}}</span>
+                            </div>
+
+                            <div class="td-item" *ngFor="let it of g.items; trackBy: trackById"
+                                 [class.done]="it.is_completed == 1" [class.completing]="completing[it.id]" [class.over]="isOverdue(it)"
+                                 [ngClass]="'p' + it.priority" (click)="openEditor(it)">
+                                <button type="button" class="td-check" (click)="toggle(it, $event)" [disabled]="busy[it.id]"
+                                        [attr.aria-label]="it.is_completed == 1 ? 'Mark as not done' : 'Mark as done'" [title]="it.is_completed == 1 ? 'Reopen' : 'Mark as done'">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <div class="td-body">
+                                    <div class="td-title">{{it.title}}</div>
+                                    <div class="td-desc" *ngIf="it.description">{{it.description}}</div>
+                                    <div class="td-meta">
+                                        <span class="td-chip due" [class.over]="isOverdue(it)" [class.today]="!isOverdue(it) && it.due_date && dueLabel(it).startsWith('Today')" *ngIf="it.is_completed != 1">
+                                            <i class="far fa-clock"></i> {{dueLabel(it)}}
+                                        </span>
+                                        <span class="td-chip" *ngIf="it.is_completed == 1 && it.completed_at"><i class="far fa-check-circle"></i> Done {{it.completed_at | date:'d MMM, h:mm a'}}</span>
+                                        <span class="td-chip high" *ngIf="it.priority == 3"><i class="fas fa-flag"></i> High</span>
+                                        <span class="td-chip low" *ngIf="it.priority == 1"><i class="far fa-flag"></i> Low</span>
+                                        <span class="td-chip" *ngIf="reminderLabel(it) && it.is_completed != 1" [title]="'Reminder: ' + reminderLabel(it)"><i class="far fa-bell"></i> <span class="d-none d-sm-inline">{{reminderLabel(it)}}</span></span>
+                                        <span class="td-chip" *ngIf="it.repeat_type && it.repeat_type != 'none'"><i class="far fa-repeat"></i> {{repeatLabel(it.repeat_type)}}</span>
+                                        <span class="td-chip cat" *ngIf="it.category"><i class="far fa-tag"></i> {{it.category}}</span>
+                                        <span class="td-chip" *ngIf="it.customer_name"><i class="far fa-building"></i> {{it.customer_name}}</span>
+                                    </div>
+                                </div>
+                                <div class="td-actions" (click)="$event.stopPropagation()">
+                                    <button type="button" class="td-act" (click)="openEditor(it)" title="Edit"><i class="far fa-pen"></i></button>
+                                    <button type="button" class="td-act" (click)="toggleMenu(it, $event)" title="More" [disabled]="busy[it.id]"><i class="far fa-ellipsis-v"></i></button>
+                                    <div class="td-menu" *ngIf="menuFor === it.id" (click)="$event.stopPropagation()">
+                                        <ng-container *ngIf="it.is_completed != 1">
+                                            <div class="td-menu-lbl">Remind me again</div>
+                                            <button type="button" (click)="snooze(it, 60, $event)"><i class="far fa-snooze"></i> In 1 hour</button>
+                                            <button type="button" (click)="snooze(it, 180, $event)"><i class="far fa-snooze"></i> In 3 hours</button>
+                                            <button type="button" (click)="snoozeTomorrow(it, $event)"><i class="far fa-calendar-day"></i> Tomorrow 10 AM</button>
+                                            <hr>
+                                        </ng-container>
+                                        <button type="button" (click)="toggle(it, $event); menuFor = null"><i class="far" [ngClass]="it.is_completed == 1 ? 'fa-redo-alt' : 'fa-check'"></i> {{it.is_completed == 1 ? 'Reopen' : 'Mark as done'}}</button>
+                                        <button type="button" class="danger" (click)="remove(it, $event)"><i class="far fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- empty states -->
+                        <div class="td-empty" *ngIf="!firstLoad && !items.length">
+                            <div class="td-empty-art"><i class="far" [ngClass]="hasFilters ? 'fa-search' : (view == 'completed' ? 'fa-check-circle' : 'fa-calendar-check')"></i></div>
+                            <ng-container *ngIf="hasFilters">
+                                <b>No tasks match your search</b>
+                                <span>Try a different word or clear the filters.</span>
+                                <button type="button" class="btn btn-light btn-sm mt-2" (click)="clearFilters()">Clear filters</button>
+                            </ng-container>
+                            <ng-container *ngIf="!hasFilters">
+                                <b>{{view == 'completed' ? 'Nothing completed yet' : (view == 'overdue' ? 'Nothing overdue, great job!' : 'All clear!')}}</b>
+                                <span *ngIf="view != 'completed'">Add a task above. Press <kbd>N</kbd> to start typing.</span>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+
+<!-- ===== Task editor ===== -->
+<div class="td-overlay" *ngIf="editorOpen" (click)="closeEditor()">
+    <div class="td-sheet" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+        <div class="td-sheet-head">
+            <span class="ic"><i class="far" [ngClass]="form.id ? 'fa-pen' : 'fa-plus'"></i></span>
+            <h3>{{form.id ? 'Edit task' : 'New task'}}</h3>
+            <button type="button" class="td-x" (click)="closeEditor()" aria-label="Close"><i class="far fa-times"></i></button>
+        </div>
+        <div class="td-sheet-body">
+            <label class="td-lbl">Task <span class="text-danger">*</span></label>
+            <input #titleInput type="text" class="form-control td-title-input" [(ngModel)]="form.title" maxlength="255" placeholder="What do you need to do?" (keyup.enter)="save()">
+
+            <label class="td-lbl">Notes</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="form.description" placeholder="Details, phone number, amount, anything useful..."></textarea>
+
+            <label class="td-lbl">Due date</label>
+            <div class="td-seg wide mb-2">
+                <button type="button" [class.on]="form.due_date && form.due_date === todayStr()" (click)="setDue('today')">Today</button>
+                <button type="button" [class.on]="form.due_date && form.due_date === tomorrowStr()" (click)="setDue('tomorrow')">Tomorrow</button>
+                <button type="button" (click)="setDue('week')">+1 week</button>
+                <button type="button" [class.on]="!form.due_date" (click)="setDue('none')">No date</button>
+            </div>
+            <div class="td-grid2">
+                <div>
+                    <input type="date" class="form-control" [(ngModel)]="form.due_date" (ngModelChange)="onDueDateChange($event)" aria-label="Due date">
+                </div>
+                <div>
+                    <input type="time" class="form-control" [(ngModel)]="form.due_time" [disabled]="!form.due_date" aria-label="Due time (optional)" title="Time (optional)">
+                </div>
+            </div>
+
+            <div class="td-grid2">
+                <div>
+                    <label class="td-lbl"><i class="far fa-bell"></i> Reminder</label>
+                    <select class="form-select" [(ngModel)]="form.remind_before" [disabled]="!form.due_date">
+                        <option *ngFor="let o of reminderOptions" [value]="o.value">{{o.label}}</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="td-lbl"><i class="far fa-repeat"></i> Repeat</label>
+                    <select class="form-select" [(ngModel)]="form.repeat_type" [disabled]="!form.due_date">
+                        <option *ngFor="let o of repeatOptions" [value]="o.value">{{o.label}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="td-preview" *ngIf="reminderPreview"><i class="far fa-alarm-clock"></i> {{reminderPreview}}</div>
+
+            <label class="td-lbl">Priority</label>
+            <div class="td-seg wide prio">
+                <button type="button" *ngFor="let p of priorities" [class.on]="form.priority == p.value" [ngClass]="p.cls" (click)="form.priority = p.value">
+                    <i class="fas fa-flag"></i> {{p.label}}
+                </button>
+            </div>
+
+            <div class="td-grid2">
+                <div>
+                    <label class="td-lbl"><i class="far fa-tag"></i> Category</label>
+                    <input type="text" class="form-control" [(ngModel)]="form.category" list="tdCategories" maxlength="100" placeholder="e.g. Payment">
+                    <datalist id="tdCategories"><option *ngFor="let c of categoryChoices" [value]="c"></option></datalist>
+                </div>
+                <div>
+                    <label class="td-lbl"><i class="far fa-building"></i> Client (optional)</label>
+                    <select class="form-select" [(ngModel)]="form.customer_id">
+                        <option value="">No client</option>
+                        <option *ngFor="let c of customers" [value]="c.id">{{c.company}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="td-sheet-foot">
+            <button type="button" class="btn btn-light" (click)="closeEditor()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving" [class.is-busy]="saving">{{form.id ? 'Save changes' : 'Add task'}}</button>
+        </div>
+    </div>
+</div>

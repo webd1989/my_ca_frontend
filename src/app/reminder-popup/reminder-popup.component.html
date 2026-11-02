@@ -1,0 +1,37 @@
+<div class="rp-stack" *ngIf="popups.length" aria-live="assertive">
+    <div class="rp-head" *ngIf="popups.length > 1">
+        <span><i class="far fa-bell"></i> {{popups.length}} reminders</span>
+        <button type="button" (click)="dismissAll()">Dismiss all</button>
+    </div>
+    <div class="rp-card" *ngFor="let item of popups" [class.p-high]="item.priority == 3" role="alertdialog" [attr.aria-label]="'Reminder: ' + item.title">
+        <div class="rp-top">
+            <span class="rp-ic"><i class="far fa-alarm-clock"></i></span>
+            <div class="rp-meta">
+                <span class="rp-tag">Reminder</span>
+                <span class="rp-due" [class.over]="isOverdue(item)"><i class="far fa-clock"></i> {{dueLabel(item)}}</span>
+            </div>
+            <button type="button" class="rp-x" (click)="close(item)" aria-label="Dismiss"><i class="far fa-times"></i></button>
+        </div>
+        <div class="rp-title">{{item.title}}</div>
+        <div class="rp-desc" *ngIf="item.description">{{item.description}}</div>
+        <div class="rp-chips">
+            <span class="rp-chip high" *ngIf="item.priority == 3"><i class="fas fa-flag"></i> High</span>
+            <span class="rp-chip" *ngIf="item.category"><i class="far fa-tag"></i> {{item.category}}</span>
+            <span class="rp-chip" *ngIf="item.customer_name"><i class="far fa-building"></i> {{item.customer_name}}</span>
+        </div>
+        <div class="rp-actions">
+            <button type="button" class="rp-btn done" (click)="done(item)" [disabled]="busy[item.id]"><i class="far fa-check"></i> Done</button>
+            <div class="rp-snooze">
+                <button type="button" class="rp-btn" (click)="snoozeOpen = snoozeOpen === item.id ? null : item.id" [disabled]="busy[item.id]"><i class="far fa-snooze"></i> Snooze</button>
+                <div class="rp-menu" *ngIf="snoozeOpen === item.id">
+                    <button type="button" (click)="snooze(item, 10)">10 minutes</button>
+                    <button type="button" (click)="snooze(item, 30)">30 minutes</button>
+                    <button type="button" (click)="snooze(item, 60)">1 hour</button>
+                    <button type="button" (click)="snooze(item, 180)">3 hours</button>
+                    <button type="button" (click)="snoozeTomorrow(item)">Tomorrow 10 AM</button>
+                </div>
+            </div>
+            <button type="button" class="rp-btn ghost" (click)="open(item)">Open</button>
+        </div>
+    </div>
+</div>

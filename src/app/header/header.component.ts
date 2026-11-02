@@ -7,10 +7,13 @@ import {map, mergeAll, mergeMap, takeUntil} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
+import { ReminderService } from '../services/reminder.service';
+import { dueLabel, isOverdue } from '../todos/todo-utils';
 
 /* page titles shown in the topbar (route -> [section, title]) */
 const PAGE_TITLES: {[key: string]: [string, string]} = {
   '/dashboard': ['Overview', 'Dashboard'],
+  '/todos': ['Overview', 'To-Do & Reminders'],
   '/invoices': ['Billing', 'Invoices'],
   '/quotations': ['Billing', 'Quotations'],
   '/projects': ['Work', 'Projects'],
@@ -58,14 +61,23 @@ export class HeaderComponent implements OnInit,OnDestroy {
   avatarUrl = '';
   private loginTimer: any;
 
+  /* To-Do reminders (badge + bell) */
+  todoCounts: any = { overdue: 0, today: 0 };
+  todoBadge = 0;
+  todoUpNext: any[] = [];
+  todoDue = dueLabel;
+  isTodoOverdue = isOverdue;
+
   constructor(
     private appService: ServiceService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private reminders: ReminderService
     ) { }
 
   ngOnDestroy(): void {
     clearInterval(this.loginTimer);
+    this.destroy$.next(true);
     document.body.classList.remove('sb-open');
     this.destroy$.complete();
   }
@@ -73,6 +85,13 @@ export class HeaderComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.userType = localStorage.getItem('user_type');
     this.initThemeUi();
+    this.reminders.counts$.pipe(takeUntil(this.destroy$)).subscribe(c => {
+      this.todoCounts = c || { overdue: 0, today: 0 };
+      // badge = open tasks that are overdue or due today
+      this.todoBadge = Number(this.todoCounts.attention) || 0;
+    });
+    this.reminders.upNext$.pipe(takeUntil(this.destroy$)).subscribe(l => this.todoUpNext = l || []);
+    this.reminders.start();
     this.loginTimer = setInterval(() => {
       this.checkLoginTime(); 
       }, 20000);
@@ -108,6 +127,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     document.body.classList.remove('sb-open');
   }
   logout(){
+    this.reminders.stop();
     document.body.classList.remove('sb-open');
     localStorage.removeItem("token");
     this.router.navigateByUrl('');

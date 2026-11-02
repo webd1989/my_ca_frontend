@@ -1,2 +1,33 @@
 .active_btn{ background-color: #0d4eba; color: #fff;}
 .error_validation{border: 2px solid red !important;}
+/* ===== To-Do badge + bell ===== */
+.sb-badge.hot { background: #ef4444 !important; color: #fff !important; box-shadow: 0 0 0 3px rgba(239,68,68,.25); animation: hdPulse 2s ease-in-out infinite; }
+.tb-bell { position: relative; }
+.tb-bell .tb-dot {
+  position: absolute; top: -6px; right: -6px;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 99px; font-size: 10.5px; font-weight: 800; line-height: 20px; text-align: center;
+  background: var(--accent); color: #fff; border: 2px solid var(--bg);
+}
+.tb-bell .tb-dot.hot { background: #ef4444; }
+.tb-bell:has(.tb-dot.hot) i { animation: hdRing 2.4s ease-in-out infinite; transform-origin: 50% 10%; }
+.tb-todo-menu { width: 330px; max-width: calc(100vw - 24px); padding: 8px !important; }
+.tb-todo-head { display: flex; align-items: baseline; justify-content: space-between; padding: 6px 10px 10px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+.tb-todo-head b { font-size: 15px; color: var(--text); }
+.tb-todo-head span { font-size: 12px; color: var(--muted); }
+.tb-todo-head em { font-style: normal; font-weight: 700; margin-left: 6px; }
+.tb-todo-head em.over { color: #ef4444; }
+.tb-todo-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 10px; border-radius: 10px; color: var(--text-2); }
+.tb-todo-item:hover { background: var(--brand-50); }
+.tb-todo-item i { margin-top: 3px; font-size: 12px; color: var(--muted-2); }
+.tb-todo-item i.over { color: #ef4444; }
+.tb-todo-item span { min-width: 0; line-height: 1.3; }
+.tb-todo-item b { display: block; font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+.tb-todo-item small { font-size: 11.5px; color: var(--muted); }
+.tb-todo-item small.over { color: #ef4444; font-weight: 600; }
+.tb-todo-empty { padding: 14px 10px; font-size: 13px; color: var(--muted); text-align: center; }
+.tb-todo-empty i { color: var(--success); margin-right: 4px; }
+.tb-todo-all { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; padding: 9px; border-radius: 10px; background: var(--surface-3); color: var(--brand); font-size: 13px; font-weight: 700; }
+.tb-todo-all:hover { background: var(--brand); color: #fff; }
+@keyframes hdPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(239,68,68,.25); } 50% { box-shadow: 0 0 0 6px rgba(239,68,68,.08); } }
+@keyframes hdRing { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(14deg); } 80% { transform: rotate(-12deg); } 85% { transform: rotate(8deg); } 90% { transform: rotate(-5deg); } }

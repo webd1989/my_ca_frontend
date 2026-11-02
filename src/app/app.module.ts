@@ -30,6 +30,8 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { AmcComponent } from './amc/amc.component';
 import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
 import { SafeUrlPipe } from './pdf-viewer/safe-url.pipe';
+import { TodosComponent } from './todos/todos.component';
+import { ReminderPopupComponent } from './reminder-popup/reminder-popup.component';
 
 
 
@@ -55,7 +57,9 @@ import { SafeUrlPipe } from './pdf-viewer/safe-url.pipe';
     ProjectsComponent,
     AmcComponent,
     PdfViewerComponent,
-    SafeUrlPipe
+    SafeUrlPipe,
+    TodosComponent,
+    ReminderPopupComponent
   ],
   imports: [
     BrowserModule,

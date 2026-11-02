@@ -10,6 +10,10 @@
         <a class="sb-link" routerLink="/dashboard" routerLinkActive="active" (click)="closeMobile()" title="Dashboard">
             <i class="fal fa-th-large"></i><span>Dashboard</span>
         </a>
+        <a class="sb-link" routerLink="/todos" routerLinkActive="active" (click)="closeMobile()" title="To-Do & Reminders">
+            <i class="fal fa-tasks"></i><span>To-Do</span>
+            <span class="sb-badge" *ngIf="todoBadge" [class.hot]="todoCounts.overdue">{{todoBadge}}</span>
+        </a>
 
         <ng-container *ngIf="userType=='Admin'">
             <div class="sb-section">Billing</div>
@@ -74,6 +78,24 @@
 
     <div class="ms-auto d-flex align-items-center gap-2">
         <span class="tb-chip d-none d-md-inline-flex"><i class="far fa-calendar-alt"></i>{{today}}</span>
+        <div class="dropdown">
+            <button type="button" class="tb-icon tb-bell" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" title="To-Do reminders" aria-label="To-Do reminders">
+                <i class="far fa-bell"></i>
+                <span class="tb-dot" *ngIf="todoBadge" [class.hot]="todoCounts.overdue">{{todoBadge > 99 ? '99+' : todoBadge}}</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end tb-todo-menu">
+                <div class="tb-todo-head">
+                    <b>To-Do</b>
+                    <span><em class="over" *ngIf="todoCounts.overdue">{{todoCounts.overdue}} overdue</em> <em *ngIf="todoCounts.today">{{todoCounts.today}} today</em><em *ngIf="!todoBadge">All caught up</em></span>
+                </div>
+                <a class="tb-todo-item" *ngFor="let t of todoUpNext" routerLink="/todos">
+                    <i class="far" [ngClass]="isTodoOverdue(t) ? 'fa-exclamation-circle over' : 'fa-circle'"></i>
+                    <span><b>{{t.title}}</b><small [class.over]="isTodoOverdue(t)">{{todoDue(t)}}</small></span>
+                </a>
+                <div class="tb-todo-empty" *ngIf="!todoUpNext.length"><i class="far fa-calendar-check"></i> Nothing due today</div>
+                <a class="tb-todo-all" routerLink="/todos"><i class="far fa-plus"></i> Add task / open list</a>
+            </div>
+        </div>
         <button type="button" class="tb-icon" (click)="toggleTheme()" [title]="isDark ? 'Light mode' : 'Dark mode'" aria-label="Toggle theme">
             <i class="far" [ngClass]="isDark ? 'fa-sun' : 'fa-moon'"></i>
         </button>
