@@ -6,6 +6,23 @@ import {from, noop, of, Subject} from 'rxjs';
 import {map, mergeAll, mergeMap, takeUntil} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
+
+/* page titles shown in the topbar (route -> [section, title]) */
+const PAGE_TITLES: {[key: string]: [string, string]} = {
+  '/dashboard': ['Overview', 'Dashboard'],
+  '/invoices': ['Billing', 'Invoices'],
+  '/quotations': ['Billing', 'Quotations'],
+  '/projects': ['Work', 'Projects'],
+  '/amc': ['Work', 'Annual Maintenance (AMC)'],
+  '/contacts': ['People', 'Clients'],
+  '/users': ['People', 'Team'],
+  '/profile': ['Account', 'My Profile'],
+  '/change-password': ['Account', 'Change Password'],
+  '/company-settings': ['Account', 'Company Settings'],
+  '/company-notifications': ['Account', 'Notifications'],
+  '/company-authentication': ['Account', 'Two-Factor Authentication'],
+};
 
 @Component({
   selector: 'app-header',
@@ -29,6 +46,18 @@ export class HeaderComponent implements OnInit,OnDestroy {
   preffered_communication:any='p_call';
   login_user_type = localStorage.getItem('user_type');
 
+  /* Aurora theme UI state */
+  collapsed = false;
+  isDark = false;
+  pageTitle = 'Dashboard';
+  pageSection = 'Overview';
+  today = '';
+  displayName = localStorage.getItem('user_name') || 'User';
+  userEmail = localStorage.getItem('user_email') || '';
+  initial = (this.displayName || 'U').trim().charAt(0).toUpperCase();
+  avatarUrl = '';
+  private loginTimer: any;
+
   constructor(
     private appService: ServiceService,
     private router: Router,
@@ -36,18 +65,50 @@ export class HeaderComponent implements OnInit,OnDestroy {
     ) { }
 
   ngOnDestroy(): void {
+    clearInterval(this.loginTimer);
+    document.body.classList.remove('sb-open');
     this.destroy$.complete();
   }
 
   ngOnInit(): void {
     this.userType = localStorage.getItem('user_type');
-    setInterval(() => {
+    this.initThemeUi();
+    this.loginTimer = setInterval(() => {
       this.checkLoginTime(); 
       }, 20000);
       this.saveLoginTime();
     this.GetProfile();
   }
+  /* ---------- Aurora theme helpers ---------- */
+  initThemeUi(){
+    const path = (this.router.url || '').split('?')[0];
+    const t = PAGE_TITLES[path];
+    if(t){ this.pageSection = t[0]; this.pageTitle = t[1]; }
+    this.today = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    this.isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    this.collapsed = localStorage.getItem('erp-sb-collapsed') === '1';
+    document.body.classList.toggle('sb-collapsed', this.collapsed);
+    document.body.classList.remove('sb-open');
+  }
+  toggleTheme(){
+    this.isDark = !this.isDark;
+    const theme = this.isDark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    localStorage.setItem('erp-theme', theme);
+  }
+  toggleCollapse(){
+    this.collapsed = !this.collapsed;
+    localStorage.setItem('erp-sb-collapsed', this.collapsed ? '1' : '0');
+    document.body.classList.toggle('sb-collapsed', this.collapsed);
+  }
+  toggleMobile(){
+    document.body.classList.toggle('sb-open');
+  }
+  closeMobile(){
+    document.body.classList.remove('sb-open');
+  }
   logout(){
+    document.body.classList.remove('sb-open');
     localStorage.removeItem("token");
     this.router.navigateByUrl('');
   }
@@ -165,6 +226,12 @@ export class HeaderComponent implements OnInit,OnDestroy {
       var r:any=res;
       if(r.success){
         this.userData = r.user_date;
+        if(r.user_date.name){
+          this.displayName = r.user_date.name;
+          this.initial = String(r.user_date.name).trim().charAt(0).toUpperCase() || 'U';
+        }
+        if(r.user_date.email){ this.userEmail = r.user_date.email; }
+        this.avatarUrl = r.user_date.photo ? environment.documentUrl + 'storage/profile/' + r.user_date.photo : '';
         if(r.user_date.status == 2){
           localStorage.removeItem("token");
           this.router.navigateByUrl('');

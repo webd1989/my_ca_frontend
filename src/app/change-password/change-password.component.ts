@@ -36,7 +36,7 @@ export class ChangePasswordComponent implements OnInit,OnDestroy {
     };
     this.appService.postData('password/update',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;
-      $('#passwordUpdateBtn').html('Update');
+      $('#passwordUpdateBtn').html('Save Changes');
       if(r.success){
         this.toastr.success(r.message, 'Success');
         localStorage.removeItem("token");

@@ -8,40 +8,32 @@
                 <app-tabs></app-tabs>
             <!-- main Area :: Start -->
             <div class="main-area position-relative">
-                <div class="page-card-title align-items-center justify-content-between">
-
-                    <div class="row">
-                        <div class="col-lg-2 col-6 mb-2">
+                <div class="page-card-title">
+                    <div class="erp-toolbar">
+                        <div class="erp-filter">
                             <select name="customer_name" id="customer_name" class="form-select">
-                        <option value="">Customer</option>
-                        <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
-                        </select>
+                                <option value="">All Customers</option>
+                                <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
+                            </select>
                         </div>
-                        <div class="col-lg-2 col-6 mb-2">
-                            <input type="text" id="f_project_name" placeholder="Project Name" class="form-control">
+                        <div class="erp-filter"><i class="far fa-search"></i><input type="text" id="f_project_name" placeholder="Project name" class="form-control"></div>
+                        <div class="erp-filter">
+                            <select name="status" id="status" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                            </select>
                         </div>
-                        <div class="col-lg-2 col-6 mb-2">
-                        <select name="status" id="status" class="form-select">
-                        <option value="">Status</option>
-                        <option value="1">Active</option>
-                        <option value="2">Inactive</option>
-                        </select>
-                        </div>
-                        
-                        <div class="col-lg-2 col-6 mb-2">
-<a (click)="searchData();" id="" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
-                            <a (click)="reset();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="Reset"><i class="fas fa-retweet"></i></a>
-                            <!-- <a (click)="generateInvoice();"style="margin-left: 10px;"  id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a> -->
-                            <a href="javascript:;" (click)="setHeading()"  data-bs-toggle="modal" data-bs-target="#createTemplate"style="margin-left: 10px;"  class="btn btn-warning btn-sm text-uppercase" title="Create Invoice"><i class="fas fa-plus"></i></a>
+                        <div class="erp-actions">
+                            <a (click)="searchData();" class="btn btn-warning btn-icon" title="Search"><i class="fas fa-search"></i></a>
+                            <a (click)="reset();" class="btn btn-light btn-icon" title="Reset filters"><i class="far fa-redo"></i></a>
+                            <a href="javascript:;" (click)="setHeading()" data-bs-toggle="modal" data-bs-target="#createTemplate" class="btn btn-primary" title="Create Project"><i class="far fa-plus"></i> New Project</a>
                         </div>
                     </div>
-
-                   
-                    
                 </div>
                 <div class="page-card-body p-3">
                     <div class="table-responsive">
-                            <table class="table table-bordered table-striped position-relative">
+                            <table class="table table-cards position-relative">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase whitespace-nowrap text-start">S.NO</th>

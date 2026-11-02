@@ -1,34 +1,55 @@
-<main class="account login-area position-relative">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12">
-				<div class="right-panel">
-					<div class="border rounded p-5">
-						
-					<img src="assets/images/web-d-logo.jpg" width="335" class="img-fluid right-logo d-block mx-auto"/> 
-					<div class="form-area mt-5">
-						<div class="form-text text-center">
-							
-							<span>Enter your details to login to your account</span>
-						</div>
-						<form method="post">
-							<div class="form-group">
-								<input type="text" class="form-control" name="userid" id="username" placeholder="Enter User ID"/>
-							</div>
-							<div class="form-group">
-								<input type="password" class="form-control" name="password" id="password" placeholder="Enter Password"/>
-							</div>
-							
-							<div class="row">
-								<div class="col-xl-12 col-lg-12 d-grid submit-btn">
-									<a (click)="Login()" id="loginBtn" type="button" class="btn btn-primary py-2 text-uppercase">Login</a>
-								</div>
-							</div>
-						</form>
-					</div>
-					</div>
-				</div>
+<main class="auth-page">
+	<!-- Brand panel -->
+	<section class="auth-hero">
+		<span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+		<div>
+			<span class="logo-chip"><img src="assets/images/web-d-logo.jpg" alt="WebD IT Solutions"></span>
+		</div>
+		<div>
+			<h1>Billing, projects &amp; AMC — <span>one smart workspace.</span></h1>
+			<p class="lead-txt">Create GST invoices, send quotations, track projects and maintenance contracts for every client, all from a single dashboard.</p>
+			<div class="auth-feats">
+				<div class="auth-feat"><i class="fal fa-file-invoice-dollar"></i> Invoices &amp; payments</div>
+				<div class="auth-feat"><i class="fal fa-file-signature"></i> Quotations in PDF</div>
+				<div class="auth-feat"><i class="fal fa-briefcase"></i> Project documents</div>
+				<div class="auth-feat"><i class="fal fa-chart-line"></i> Live business reports</div>
 			</div>
 		</div>
-	</div>
+		<div class="hero-foot">© {{year}} WebD IT Solutions</div>
+	</section>
+
+	<!-- Form panel -->
+	<section class="auth-panel">
+		<button type="button" class="tb-icon auth-theme" (click)="toggleTheme()" aria-label="Toggle theme">
+			<i class="far" [ngClass]="isDark ? 'fa-sun' : 'fa-moon'"></i>
+		</button>
+
+		<div class="auth-card">
+			<div class="mobile-logo"><img src="assets/images/web-d-logo.jpg" alt="WebD IT Solutions"></div>
+			<h2>Welcome back</h2>
+			<p class="sub">Sign in to continue to your ERP workspace.</p>
+
+			<form method="post" (submit)="$event.preventDefault(); Login()">
+				<div class="auth-field">
+					<label for="username">User ID</label>
+					<i class="far fa-user ic"></i>
+					<input type="text" class="form-control" name="userid" id="username" placeholder="Enter your user ID" autocomplete="username"/>
+				</div>
+				<div class="auth-field">
+					<label for="password">Password</label>
+					<i class="far fa-lock ic"></i>
+					<input [type]="showPass ? 'text' : 'password'" class="form-control" name="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+					<button type="button" class="eye" (click)="showPass = !showPass" [attr.aria-label]="showPass ? 'Hide password' : 'Show password'">
+						<i class="far" [ngClass]="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
+					</button>
+				</div>
+
+				<div class="auth-row"></div>
+
+				<button type="submit" id="loginBtn" class="btn btn-primary auth-btn">Login</button>
+			</form>
+
+			<div class="auth-secure"><i class="fas fa-shield-check"></i> Secured with encrypted sign-in</div>
+		</div>
+	</section>
 </main>

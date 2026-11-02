@@ -28,6 +28,8 @@ import { QuotationsComponent } from './quotations/quotations.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { AmcComponent } from './amc/amc.component';
+import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
+import { SafeUrlPipe } from './pdf-viewer/safe-url.pipe';
 
 
 
@@ -51,7 +53,9 @@ import { AmcComponent } from './amc/amc.component';
     TargetComponent,
     QuotationsComponent,
     ProjectsComponent,
-    AmcComponent
+    AmcComponent,
+    PdfViewerComponent,
+    SafeUrlPipe
   ],
   imports: [
     BrowserModule,

@@ -1,69 +1,106 @@
-<header class="top-bar mb-0">
-    <div class="action-group d-flex justify-content-between align-items-center">
-        <div class="group1 d-flex align-items-center gap-3">
-            <nav class="navbar navbar-expand-lg navbar-light ">
-                <div class="container-fluid p-0">
+<!-- ===== Sidebar ===== -->
+<aside class="erp-sidebar" aria-label="Main navigation">
+    <div class="sb-brand">
+        <a class="sb-logo" routerLink="/dashboard" title="Dashboard"><img src="assets/images/web-d-logo.jpg" alt="WebD IT Solutions"></a>
+        <a class="sb-logo-mini" routerLink="/dashboard" title="Dashboard">W</a>
+    </div>
 
-                    <a class="navbar-brand" routerLink="/dashboard" style="width:120px"><img src="assets/images/web-d-logo.jpg" class="img-fluid"></a>
+    <div class="sb-scroll">
+        <div class="sb-section">Overview</div>
+        <a class="sb-link" routerLink="/dashboard" routerLinkActive="active" (click)="closeMobile()" title="Dashboard">
+            <i class="fal fa-th-large"></i><span>Dashboard</span>
+        </a>
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
-                    </button>
+        <ng-container *ngIf="userType=='Admin'">
+            <div class="sb-section">Billing</div>
+            <a class="sb-link" routerLink="/invoices" routerLinkActive="active" (click)="closeMobile()" title="Invoices">
+                <i class="fal fa-file-invoice-dollar"></i><span>Invoices</span>
+            </a>
+            <a class="sb-link" routerLink="/quotations" routerLinkActive="active" (click)="closeMobile()" title="Quotations">
+                <i class="fal fa-file-signature"></i><span>Quotations</span>
+            </a>
 
-                    <div class="form-group has-search mb-0 me-5">
-                        <!-- <span class="far fa-search form-control-feedback"></span>
-                        <input type="text" name="Search" class="form-control" placeholder="Search..."> -->
-                    </div>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item d-menu me-3">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/dashboard" ><i class="fas fa-th-list text-main"></i> Dashboard</a>
-                            </li>
-                            <li *ngIf="userType=='Admin'" class="nav-item dropdown d-menu me-3">
-                                <a class="nav-link dropdown-toggle font-15 font-weight-400 active" href="javascript:;" data-bs-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle text-main"></i> Users</a>
-                                <ul class="dropdown-menu shadow">
-                                    
-                                    <li *ngIf="userType=='Admin'"><a class="dropdown-item font-13" routerLink="/users">Users</a></li>
-                                     <li *ngIf="userType=='Admin'"><a class="dropdown-item font-13" routerLink="/contacts">Clients</a></li> 
-                                </ul>
-                            </li>
-                            
-                            <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/invoices"><i class="fas fa-bars text-main"></i> Invoices</a>
-                            </li>
-                            <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/quotations"><i class="fas fa-bars text-main"></i> Quotations</a>
-                            </li>
-                            <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/projects"><i class="fas fa-bars text-main"></i> Projects</a>
-                            </li>
-                            <li *ngIf="userType=='Admin'" class="nav-item d-menu">
-                                <a class="nav-link font-15 font-weight-400 active" routerLink="/amc"><i class="fas fa-bars text-main"></i> AMC</a>
-                            </li>
-                            
-                           
-                            
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        <div class="group2 d-flex gap-2 align-items-center">
-            <!-- <a (click)="getAllUrsers()" class="btn btn-primary text-uppercase text-center font-12" data-bs-toggle="modal" data-bs-target="#createAccountTemplate" type="button"><i class="far fa-plus me-1"></i> Add Account</a> -->
-            <div class="dropdown ms-3">
-                <div id="dropdownMenuLink" class="user-profile dropdown-toggle border-radius-50 overflow-hidden" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="assets/images/profile-pic.png" class="img-fluid" alt="profile name" title="profile name">
-                </div>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="text-center text-main bg-lightblue pt-2 pb-2 display-md-block">
-                        <a href="javascript:;" class="dropdown-item font-13">Hi, <span class="font-weight-400">User Name</span></a>
-                    </li>
-                    <li><a class="dropdown-item font-13" routerLink="/profile"><i class="far fa-user me-2 text-main"></i> Profile</a></li>
-                    <li><a class="dropdown-item font-13" routerLink="/invoices"><i class="far fa-file-invoice me-2 text-main"></i> Invoice</a></li>
-                    <li><a class="dropdown-item font-13" (click)="logout()"><i class="far fa-sign-out me-2 text-main"></i> Logout</a></li>
-                </ul>
+            <div class="sb-section">Work</div>
+            <a class="sb-link" routerLink="/projects" routerLinkActive="active" (click)="closeMobile()" title="Projects">
+                <i class="fal fa-briefcase"></i><span>Projects</span>
+            </a>
+            <a class="sb-link" routerLink="/amc" routerLinkActive="active" (click)="closeMobile()" title="AMC">
+                <i class="fal fa-shield-check"></i><span>AMC</span>
+            </a>
+
+            <div class="sb-section">People</div>
+            <a class="sb-link" routerLink="/contacts" routerLinkActive="active" (click)="closeMobile()" title="Clients">
+                <i class="fal fa-address-book"></i><span>Clients</span>
+            </a>
+            <a class="sb-link" routerLink="/users" routerLinkActive="active" (click)="closeMobile()" title="Team">
+                <i class="fal fa-user-tie"></i><span>Team</span>
+            </a>
+        </ng-container>
+
+        <div class="sb-section">Account</div>
+        <a class="sb-link" routerLink="/profile" routerLinkActive="active" (click)="closeMobile()" title="Profile">
+            <i class="fal fa-user-circle"></i><span>My Profile</span>
+        </a>
+        <a class="sb-link" routerLink="/change-password" routerLinkActive="active" (click)="closeMobile()" title="Change Password">
+            <i class="fal fa-key"></i><span>Change Password</span>
+        </a>
+    </div>
+
+    <div class="sb-footer">
+        <div class="sb-user">
+            <span class="erp-avatar">
+                <img *ngIf="avatarUrl" [src]="avatarUrl" alt="">
+                <ng-container *ngIf="!avatarUrl">{{initial}}</ng-container>
+            </span>
+            <div class="meta">
+                <b>{{displayName}}</b>
+                <small>{{userType || 'User'}}</small>
             </div>
+            <a class="sb-logout" (click)="logout()" title="Logout"><i class="far fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+</aside>
+<div class="sb-backdrop" (click)="closeMobile()"></div>
+
+<!-- ===== Topbar ===== -->
+<header class="erp-topbar">
+    <button type="button" class="tb-icon d-lg-none" (click)="toggleMobile()" aria-label="Open menu"><i class="far fa-bars"></i></button>
+    <button type="button" class="tb-icon d-none d-lg-inline-flex" (click)="toggleCollapse()" [title]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"><i class="far" [ngClass]="collapsed ? 'fa-indent' : 'fa-outdent'"></i></button>
+
+    <div class="tb-title">
+        <small>WebD ERP<i class="fas fa-chevron-right"></i>{{pageSection}}</small>
+        <h1>{{pageTitle}}</h1>
+    </div>
+
+    <div class="ms-auto d-flex align-items-center gap-2">
+        <span class="tb-chip d-none d-md-inline-flex"><i class="far fa-calendar-alt"></i>{{today}}</span>
+        <button type="button" class="tb-icon" (click)="toggleTheme()" [title]="isDark ? 'Light mode' : 'Dark mode'" aria-label="Toggle theme">
+            <i class="far" [ngClass]="isDark ? 'fa-sun' : 'fa-moon'"></i>
+        </button>
+        <div class="dropdown">
+            <div id="dropdownMenuLink" class="tb-user" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                <span class="erp-avatar">
+                    <img *ngIf="avatarUrl" [src]="avatarUrl" alt="">
+                    <ng-container *ngIf="!avatarUrl">{{initial}}</ng-container>
+                </span>
+                <span class="meta"><b>{{displayName}}</b><small>{{userType || 'User'}}</small></span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                <li class="dropdown-header-user">
+                    <span class="erp-avatar">
+                        <img *ngIf="avatarUrl" [src]="avatarUrl" alt="">
+                        <ng-container *ngIf="!avatarUrl">{{initial}}</ng-container>
+                    </span>
+                    <span><b>{{displayName}}</b><small>{{userEmail}}</small></span>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" routerLink="/profile"><i class="far fa-user"></i> My Profile</a></li>
+                <li *ngIf="userType=='Admin'"><a class="dropdown-item" routerLink="/invoices"><i class="far fa-file-invoice"></i> Invoices</a></li>
+                <li><a class="dropdown-item" routerLink="/change-password"><i class="far fa-key"></i> Change Password</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" (click)="logout()"><i class="far fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
         </div>
     </div>
 </header>
-<!-- CreateTemplate Edit Modal Starts  -->
-

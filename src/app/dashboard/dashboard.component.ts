@@ -8,6 +8,15 @@ import Swal from 'sweetalert2';
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
+/* Aurora theme chart palette */
+const C_BRAND = '#1f5eff';
+const C_VIOLET = '#7c3aed';
+const C_GREEN = '#10b981';
+const C_ORANGE = '#ff6a1a';
+const C_AXIS = '#8a96b2';
+const C_GRID = 'rgba(138,150,178,0.18)';
+const C_FONT = "'Plus Jakarta Sans', system-ui, sans-serif";
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -34,6 +43,17 @@ export class DashboardComponent implements OnInit,OnDestroy {
   chart4:any;
   chart5:any;
 
+  /* KPI values (filled from the paid-unpaid API) */
+  paidINR: number = 0;
+  pendingINR: number = 0;
+  paidUSD: number = 0;
+  pendingUSD: number = 0;
+  collectionRate: number = 0;
+  greeting = '';
+  firstName = '';
+  today = '';
+  fyLabel = '';
+
   constructor(
     private appService: ServiceService,
     private router: Router,
@@ -49,6 +69,7 @@ export class DashboardComponent implements OnInit,OnDestroy {
     }else{
       this.router.navigateByUrl('/');
     }
+    this.setHeroText();
     this.GetProfile();
     this.yearwiseSaleChart();
     this.getYearwiseBusiness();
@@ -56,102 +77,109 @@ export class DashboardComponent implements OnInit,OnDestroy {
     this.getPaidUnpaid();
   }
 
+  setHeroText(){
+    const now = new Date();
+    const h = now.getHours();
+    this.greeting = h < 12 ? 'Good morning' : (h < 17 ? 'Good afternoon' : 'Good evening');
+    this.firstName = String(this.loginUsername || 'there').trim().split(' ')[0];
+    this.today = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+    const y = now.getFullYear();
+    const start = now.getMonth() >= 3 ? y : y - 1;
+    this.fyLabel = start + '-' + String(start + 1).slice(-2);
+  }
+
+  /* Indian number format, e.g. 12,34,567 */
+  fmt(n:any){
+    const v = Number(n) || 0;
+    return v.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+  }
+
+  private baseChart(){
+    return {
+      title: { text: "" },
+      theme: "light2",
+      backgroundColor: "transparent",
+      animationEnabled: true,
+      animationDuration: 900,
+      exportEnabled: true,
+      toolTip: { cornerRadius: 10, borderThickness: 0, fontFamily: C_FONT, fontColor: '#0f172a', backgroundColor: '#ffffff' },
+      axisX: { labelFontColor: C_AXIS, labelFontFamily: C_FONT, labelFontSize: 12, lineColor: C_GRID, tickLength: 0, gridThickness: 0 },
+      axisY: { includeZero: true, labelFontColor: C_AXIS, labelFontFamily: C_FONT, labelFontSize: 12, gridColor: C_GRID, gridDashType: "dash", lineThickness: 0, tickLength: 0 },
+    };
+  }
+
+  private donut(prefixFormat:string){
+    return {
+      backgroundColor: "transparent",
+      animationEnabled: true,
+      animationDuration: 900,
+      title: { text: "" },
+      legend: { fontFamily: C_FONT, fontColor: C_AXIS, fontSize: 13, fontWeight: "normal", verticalAlign: "top", horizontalAlign: "center", markerMargin: 6, itemSpacing: 12 },
+      toolTip: { cornerRadius: 10, borderThickness: 0, fontFamily: C_FONT, fontColor: '#0f172a', backgroundColor: '#ffffff' },
+      data: [{
+        type: "doughnut",
+        innerRadius: "72%",
+        radius: "88%",
+        startAngle: -90,
+        showInLegend: true,
+        legendText: "{name}",
+        indexLabel: "",
+        yValueFormatString: prefixFormat,
+        dataPoints: this.colorPaid([
+          { y: 0, name: "Paid Amount" },
+          { y: 0, name: "Pending Amount" }
+        ])
+      }]
+    };
+  }
+
+  private colorPaid(points:any[]){
+    return (points || []).map((p:any, i:number) => Object.assign({}, p, { color: i === 0 ? C_GREEN : C_ORANGE }));
+  }
 
 yearwiseSaleChart(){
-    this.chartOptions1 = {
-      title: {
-        text: ""
-      },
-      theme: "light2",
-      animationEnabled: true,
-      exportEnabled: true,
-      axisY: {
-      includeZero: true,
-      //valueFormatString: "$#,##0k"
-      },
+    this.chartOptions1 = Object.assign(this.baseChart(), {
+      dataPointWidth: 34,
       data: [{
-      type: "column", //change type to bar, line, area, pie, etc
-      yValueFormatString: "#,###.##' INR'",
-      color: "#0047bd",
+      type: "column",
+      yValueFormatString: "'₹'#,###.##",
+      color: C_BRAND,
       dataPoints: [
         { label: "2024", y: 0 },
         { label: "2025", y: 0 },
       ]
       }]
-    }
-    this.chartOptions3 = {
-      title: {
-        text: ""
-      },
-      theme: "light2",
-      animationEnabled: true,
-      exportEnabled: true,
-      axisY: {
-      includeZero: true,
-      //valueFormatString: "$#,##0k"
-      },
+    });
+    this.chartOptions3 = Object.assign(this.baseChart(), {
+      dataPointWidth: 34,
       data: [{
-      type: "column", //change type to bar, line, area, pie, etc
+      type: "column",
       yValueFormatString: "'$'#,###.##",
-      color: "#0047bd",
+      color: C_VIOLET,
       dataPoints: [
         { label: "2024", y: 0 },
         { label: "2025", y: 0 },
       ]
       }]
-    }
-    this.chartOptions5 = {
-      title: {
-        text: ""
-      },
-      theme: "light2",
-      animationEnabled: true,
-      exportEnabled: true,
-      axisY: {
-      includeZero: true,
-      //valueFormatString: "$#,##0k"
-      },
+    });
+    this.chartOptions5 = Object.assign(this.baseChart(), {
       data: [{
-      type: "column", //change type to bar, line, area, pie, etc
-      yValueFormatString:  "#,###.##' INR'",
-      color: "orange",
+      type: "splineArea",
+      yValueFormatString: "'₹'#,###.##",
+      color: C_BRAND,
+      fillOpacity: 0.12,
+      lineThickness: 3,
+      markerSize: 8,
+      markerColor: "#ffffff",
+      markerBorderColor: C_BRAND,
+      markerBorderThickness: 3,
       dataPoints: []
       }]
-    }
+    });
   }
   paidUnpaidChart(){
-    this.chartOptions2 = {
-      animationEnabled: true,
-	  title: {
-		text: ""
-	  },
-	  data: [{
-		type: "pie",
-		startAngle: -90,
-		indexLabel: "{name}: {y}",
-		yValueFormatString: "#,###.##' INR'",
-		dataPoints: [
-		  { y: 0, name: "Paid Amount" },
-		  { y: 0, name: "Pending Amount" }
-		]
-	  }]
-    }
-    this.chartOptions4 = {
-      animationEnabled: true,
-	  title: {
-		text: ""
-	  },
-	  data: [{
-		type: "pie",
-		startAngle: -90,
-		indexLabel: "{name}: {y}",
-		yValueFormatString: "'$'#,###.##",
-		dataPoints: [
-		  { y: 0, name: "Paid Amount" },
-		  { y: 0, name: "Pending Amount" }
-		]
-	  }]
-    }
+    this.chartOptions2 = this.donut("'₹'#,###.##");
+    this.chartOptions4 = this.donut("'$'#,###.##");
   }
 
 getChartInstance(chart: object) {
@@ -183,10 +211,10 @@ getChartInstance(chart: object) {
        this.chart3.render();
        this.chart5.render();
         }else{
-          
+
         }
       },error =>{
-       
+
       });
     }
     getPaidUnpaid(){
@@ -199,15 +227,21 @@ getChartInstance(chart: object) {
           this.topClients = r.result3;
           this.totalClients = r.totalClients;
           this.totalProjcts = r.totalProjects;
-          this.chartOptions2.data[0].dataPoints = r.result;
-          this.chartOptions4.data[0].dataPoints = r.result2;
+          this.chartOptions2.data[0].dataPoints = this.colorPaid(r.result);
+          this.chartOptions4.data[0].dataPoints = this.colorPaid(r.result2);
+          this.paidINR = Number(r.result?.[0]?.y) || 0;
+          this.pendingINR = Number(r.result?.[1]?.y) || 0;
+          this.paidUSD = Number(r.result2?.[0]?.y) || 0;
+          this.pendingUSD = Number(r.result2?.[1]?.y) || 0;
+          const tot = this.paidINR + this.pendingINR;
+          this.collectionRate = tot > 0 ? Math.round((this.paidINR / tot) * 100) : 0;
           this.chart2.render();
           this.chart4.render();
         }else{
-          
+
         }
       },error =>{
-       
+
       });
     }
   GetProfile(){
@@ -215,8 +249,11 @@ getChartInstance(chart: object) {
       var r:any=res;
       if(r.success){
         this.userData = r.user_date;
+        if(r.user_date?.name){
+          this.firstName = String(r.user_date.name).trim().split(' ')[0];
+        }
       }else{
-        
+
       }
     },error =>{
       Swal.fire(

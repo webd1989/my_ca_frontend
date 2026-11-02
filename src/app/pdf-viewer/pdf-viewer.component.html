@@ -1,0 +1,60 @@
+<div class="pdfv-overlay" *ngIf="visible" (click)="close()">
+    <div class="pdfv-sheet" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-label]="opts?.title">
+
+        <!-- Header -->
+        <div class="pdfv-head">
+            <span class="pdfv-file-ic"><i class="far fa-file-pdf"></i></span>
+            <div class="pdfv-title">
+                <b>{{opts?.title}}</b>
+                <small>{{opts?.subtitle}}<ng-container *ngIf="pageCount"> · {{pageCount}} {{pageCount == 1 ? 'page' : 'pages'}}</ng-container></small>
+            </div>
+            <div class="pdfv-zoom d-none d-sm-flex" *ngIf="ready && !fallbackFrame">
+                <button type="button" (click)="zoomOut()" [disabled]="rendering || zoom <= 0.5" title="Zoom out"><i class="far fa-search-minus"></i></button>
+                <button type="button" class="pct" (click)="zoomReset()" title="Reset zoom">{{zoom * 100 | number:'1.0-0'}}%</button>
+                <button type="button" (click)="zoomIn()" [disabled]="rendering || zoom >= 3" title="Zoom in"><i class="far fa-search-plus"></i></button>
+            </div>
+            <button type="button" class="pdfv-close" (click)="close()" aria-label="Close"><i class="far fa-times"></i></button>
+        </div>
+
+        <!-- Body -->
+        <div class="pdfv-body">
+            <div class="pdfv-state" *ngIf="loading">
+                <div class="pdfv-spinner"></div>
+                <b>Preparing PDF…</b>
+                <small>Generating the invoice, one moment</small>
+            </div>
+            <div class="pdfv-state error" *ngIf="error && !loading">
+                <i class="far fa-exclamation-triangle"></i>
+                <b>{{error}}</b>
+                <button type="button" class="btn btn-light btn-sm mt-2" *ngIf="downloadUrl" (click)="openTab()"><i class="far fa-external-link"></i> Open PDF</button>
+            </div>
+            <div class="pdfv-rendering" *ngIf="rendering && ready"><div class="pdfv-spinner sm"></div> Rendering…</div>
+            <div #pages class="pdfv-pages" [class.hidden]="!ready || fallbackFrame"></div>
+            <iframe *ngIf="fallbackFrame && blobUrl" class="pdfv-frame" [src]="blobUrl | safeUrl" title="PDF preview"></iframe>
+        </div>
+
+        <!-- Actions -->
+        <div class="pdfv-actions">
+            <button type="button" class="pdfv-act primary" (click)="share()" [disabled]="!ready">
+                <i class="far fa-share-alt"></i><span>Share</span>
+            </button>
+            <button type="button" class="pdfv-act" (click)="download()" [disabled]="!ready">
+                <i class="far fa-arrow-to-bottom"></i><span>Download</span>
+            </button>
+            <button type="button" class="pdfv-act wa" (click)="whatsapp(true)" [disabled]="!ready" [title]="waPhone ? 'Open WhatsApp chat with +' + waPhone : 'Send link on WhatsApp'">
+                <i class="fab fa-whatsapp"></i><span>{{waPhone ? 'WhatsApp client' : 'WhatsApp'}}</span>
+            </button>
+            <button type="button" class="pdfv-act" (click)="openTab()" [disabled]="!ready && !downloadUrl">
+                <i class="far fa-external-link"></i><span>Open</span>
+            </button>
+            <button type="button" class="pdfv-act d-none d-md-inline-flex" (click)="copyLink()" [disabled]="!downloadUrl">
+                <i class="far" [ngClass]="copied ? 'fa-check' : 'fa-link'"></i><span>{{copied ? 'Copied' : 'Copy link'}}</span>
+            </button>
+        </div>
+        <div class="pdfv-hint" *ngIf="ready">
+            <i class="far fa-info-circle"></i>
+            <span *ngIf="canShareFiles">Tap <b>Share</b> to send the PDF file on WhatsApp, Gmail or any app.</span>
+            <span *ngIf="!canShareFiles"><b>Share</b> sends a download link. On a phone it attaches the PDF file itself.</span>
+        </div>
+    </div>
+</div>

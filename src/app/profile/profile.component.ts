@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
     };
     this.appService.postData('profile/update',data).pipe(takeUntil(this.destroy$)).subscribe(res=>{
       var r:any=res;
-      $('#profileUpdateBtn').html('Update');
+      $('#profileUpdateBtn').html('Save Changes');
       if(r.success){
         this.toastr.success(r.message, 'Success');
       }else{
@@ -64,6 +64,8 @@ export class ProfileComponent implements OnInit,OnDestroy {
       var r:any=res;
       $('#uploadBtn').html('Upload');
       if(r.success){
+        this.profilePic = r.file_path;
+        if(this.userData){ this.userData.photo = this.userData.photo || 'uploaded'; }
         $('#profile_pic').attr('src',r.file_path);
         this.toastr.success(r.message, 'Success');
       }else{

@@ -1,116 +1,226 @@
 <main>
     <div class="main-wrapper">
-        <!-- Page Content :: Start  -->
         <div id="content">
             <app-header></app-header>
 
             <div class="mainTabss">
                 <app-tabs></app-tabs>
-            <!-- main Area :: Start -->
             <div class="main-area position-relative">
-                <div class="page-card-title align-items-center justify-content-between">
-                    <div class="row">
-                        <div class="col-lg-2 col-6 mb-2">
-                            <input type="text" name="bill_no" id="bill_no" class="form-control filter-p" placeholder="Bill No">
+
+                <!-- Overall (all-time) INR totals -->
+                <div class="stat-strip">
+                    <div class="stat-mini s-blue"><span class="ic"><i class="far fa-file-invoice-dollar"></i></span><div><div class="lbl">Total Billed <small class="text-muted">· all time</small></div><div class="val">₹ {{totalAmount}}</div></div></div>
+                    <div class="stat-mini s-green"><span class="ic"><i class="far fa-wallet"></i></span><div><div class="lbl">Received <small class="text-muted">· all time</small></div><div class="val">₹ {{paidAmount}}</div></div></div>
+                    <div class="stat-mini s-red"><span class="ic"><i class="far fa-hourglass-half"></i></span><div><div class="lbl">Outstanding <small class="text-muted">· all time</small></div><div class="val">₹ {{remainigAmount}}</div></div></div>
+                </div>
+
+                <!-- ===== Filter panel ===== -->
+                <div class="page-card-title inv-filters">
+                    <div class="erp-toolbar">
+                        <div class="erp-filter inv-search">
+                            <i class="far fa-search"></i>
+                            <input type="text" class="form-control" [(ngModel)]="f.keyword" (ngModelChange)="onFilterChange(true)" (keyup.enter)="applyFilters()" placeholder="Search bill no, customer, notes, item, HSN...">
                         </div>
-                        <div class="col-lg-2 col-6 mb-2">
-                        <select name="customer_name" id="customer_name" class="form-select">
-                        <option value="">Customer</option>
-                        <option *ngFor="let customer of customers" value="{{customer.id}}">{{customer.company}}</option>
-                        </select>
+                        <div class="erp-filter">
+                            <select class="form-select" [(ngModel)]="f.customer_name" (ngModelChange)="onFilterChange()" aria-label="Customer">
+                                <option value="">All Customers</option>
+                                <option *ngFor="let customer of customers" [value]="customer.id">{{customer.company}}</option>
+                            </select>
                         </div>
-                        <div class="col-lg-2 col-6 mb-2">
-<select name="invoive_status" id="invoive_status" class="form-select">
-                        <option value="">Status</option>
-                        <option value="1">Paid</option>
-                        <option value="2">Pending</option>
-                        </select>
+                        <div class="erp-filter">
+                            <select class="form-select" [(ngModel)]="f.invoive_status" (ngModelChange)="onFilterChange()" aria-label="Status">
+                                <option value="">All Status</option>
+                                <option value="1">Paid</option>
+                                <option value="2">Pending</option>
+                            </select>
                         </div>
-                        <div class="col-lg-2 col-6 mb-2">
-<a (click)="searchData();" id="" class="btn btn-warning btn-sm text-uppercase"><i class="fas fa-search"></i></a>
-                            <a (click)="reset();" style="margin-left: 10px;"  class="btn btn-primary btn-sm text-uppercase" title="Reset"><i class="fas fa-retweet"></i></a>
-                            <!-- <a (click)="generateInvoice();"style="margin-left: 10px;"  id="export_btn" class="btn btn-warning btn-sm text-uppercase" title="Export Data"><i class="fas fa-download"></i></a> -->
-                            <a href="javascript:;" (click)="setHeading()"  data-bs-toggle="modal" data-bs-target="#createTemplate"style="margin-left: 10px;"  class="btn btn-warning btn-sm text-uppercase" title="Create Invoice"><i class="fas fa-plus"></i></a>
+                        <div class="erp-filter">
+                            <select class="form-select" [(ngModel)]="datePreset" (ngModelChange)="setDatePreset($event)" aria-label="Date range">
+                                <option *ngFor="let d of datePresets" [value]="d.key">{{d.label}}</option>
+                            </select>
+                        </div>
+                        <div class="erp-actions">
+                            <button type="button" class="btn btn-light inv-more-btn" [class.active]="showAdvanced" (click)="showAdvanced = !showAdvanced" title="More filters">
+                                <i class="far fa-sliders-h"></i><span class="inv-more-label">Filters</span>
+                                <span class="inv-badge" *ngIf="advancedCount">{{advancedCount}}</span>
+                            </button>
+                            <button type="button" class="btn btn-light btn-icon" (click)="reset()" title="Reset all filters"><i class="far fa-redo"></i></button>
+                            <button type="button" class="btn btn-light btn-icon" [class.is-busy]="exporting" (click)="exportCsv()" title="Download filtered invoices (Excel / CSV)"><i class="far fa-file-download" *ngIf="!exporting"></i></button>
+                            <a href="javascript:;" (click)="setHeading()" data-bs-toggle="modal" data-bs-target="#createTemplate" class="btn btn-primary" title="Create Invoice"><i class="far fa-plus"></i> New Invoice</a>
                         </div>
                     </div>
-                    
-                  
+
+                    <!-- Advanced filters -->
+                    <div class="inv-advanced" [class.open]="showAdvanced">
+                        <div class="inv-adv-grid">
+                            <div>
+                                <label>Bill date from</label>
+                                <input type="date" class="form-control" [(ngModel)]="f.date_from" (ngModelChange)="datePreset='custom'; onFilterChange()">
+                            </div>
+                            <div>
+                                <label>Bill date to</label>
+                                <input type="date" class="form-control" [(ngModel)]="f.date_to" (ngModelChange)="datePreset='custom'; onFilterChange()">
+                            </div>
+                            <div>
+                                <label>Currency</label>
+                                <select class="form-select" [(ngModel)]="f.currency" (ngModelChange)="onFilterChange()">
+                                    <option value="">All currencies</option>
+                                    <option value="INR">₹ INR</option>
+                                    <option value="$">$ USD</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Amount (min – max)</label>
+                                <div class="inv-range">
+                                    <input type="number" min="0" class="form-control" [(ngModel)]="f.amount_min" (ngModelChange)="onFilterChange(true)" placeholder="Min">
+                                    <span>–</span>
+                                    <input type="number" min="0" class="form-control" [(ngModel)]="f.amount_max" (ngModelChange)="onFilterChange(true)" placeholder="Max">
+                                </div>
+                            </div>
+                            <div>
+                                <label>Bill no (from – to)</label>
+                                <div class="inv-range">
+                                    <input type="number" min="0" class="form-control" [(ngModel)]="f.bill_from" (ngModelChange)="onFilterChange(true)" placeholder="From">
+                                    <span>–</span>
+                                    <input type="number" min="0" class="form-control" [(ngModel)]="f.bill_to" (ngModelChange)="onFilterChange(true)" placeholder="To">
+                                </div>
+                            </div>
+                            <div>
+                                <label>Notes</label>
+                                <select class="form-select" [(ngModel)]="f.has_notes" (ngModelChange)="onFilterChange()">
+                                    <option value="">Any</option>
+                                    <option value="1">With notes</option>
+                                    <option value="2">Without notes</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Sort by</label>
+                                <select class="form-select" [(ngModel)]="f.sort" (ngModelChange)="onFilterChange()">
+                                    <option value="bill_no_desc">Bill no · newest first</option>
+                                    <option value="bill_no_asc">Bill no · oldest first</option>
+                                    <option value="date_desc">Bill date · latest first</option>
+                                    <option value="date_asc">Bill date · earliest first</option>
+                                    <option value="amount_desc">Amount · high to low</option>
+                                    <option value="amount_asc">Amount · low to high</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Rows per page</label>
+                                <select class="form-select" [(ngModel)]="f.per_page" (ngModelChange)="onFilterChange()">
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active filter chips -->
+                    <div class="inv-chips" *ngIf="chips.length">
+                        <span class="inv-chips-lbl">Active:</span>
+                        <button type="button" class="inv-chip" *ngFor="let c of chips" (click)="clearChip(c.key)" title="Remove filter">
+                            <b>{{c.label}}:</b> {{c.value}} <i class="far fa-times"></i>
+                        </button>
+                        <button type="button" class="inv-chip-clear" (click)="reset()">Clear all</button>
+                    </div>
                 </div>
-                <div class="page-card-body p-3">
+
+                <!-- ===== Filtered result summary ===== -->
+                <div class="inv-summary" [class.loading]="loading">
+                    <div class="inv-sum-head">
+                        <div class="inv-sum-count">
+                            <span class="ic"><i class="far fa-filter"></i></span>
+                            <div>
+                                <div class="lbl">{{chips.length ? 'Filtered result' : 'All invoices'}}</div>
+                                <div class="val">{{summary.count}} <small>{{summary.count == 1 ? 'record' : 'records'}}</small></div>
+                            </div>
+                        </div>
+                        <div class="inv-sum-note" *ngIf="datePreset !== 'all'"><i class="far fa-calendar-alt"></i> {{dateRangeLabel}}</div>
+                    </div>
+
+                    <div class="inv-sum-row" *ngFor="let cur of summaryRows">
+                        <div class="inv-sum-cur">{{cur.label}}</div>
+                        <div class="inv-sum-item total">
+                            <span>Total ({{cur.s.count}})</span>
+                            <b>{{cur.sym}} {{fmt(cur.s.total, cur.code)}}</b>
+                        </div>
+                        <div class="inv-sum-item paid">
+                            <span>Paid ({{cur.s.paid_count}})</span>
+                            <b>{{cur.sym}} {{fmt(cur.s.paid, cur.code)}}</b>
+                        </div>
+                        <div class="inv-sum-item pending">
+                            <span>Pending ({{cur.s.pending_count}})</span>
+                            <b>{{cur.sym}} {{fmt(cur.s.pending, cur.code)}}</b>
+                        </div>
+                        <div class="inv-sum-item">
+                            <span>Advance received</span>
+                            <b>{{cur.sym}} {{fmt(cur.s.advance, cur.code)}}</b>
+                        </div>
+                        <div class="inv-sum-bar" [title]="pct(cur.s.paid, cur.s.total) + '% collected'">
+                            <div class="bar"><i [style.width.%]="pct(cur.s.paid, cur.s.total)"></i></div>
+                            <small>{{pct(cur.s.paid, cur.s.total)}}% collected</small>
+                        </div>
+                    </div>
+                    <div class="inv-sum-empty" *ngIf="!summaryRows.length && !loading">No invoices match these filters.</div>
+                </div>
+
+                <div class="page-card-body p-3" [class.inv-loading]="loading">
                     <div class="table-responsive">
-                            <table class="table table-bordered table-striped position-relative">
-                                <thead>
-                                    <tr>
-                                        <th class="text-uppercase whitespace-nowrap"></th>
-                                        <th class="text-uppercase whitespace-nowrap"></th>
-                                        <th class="text-uppercase whitespace-nowrap"><span style="color:blue">Total: {{totalAmount}}</span></th>
-                                        <th class="text-uppercase whitespace-nowrap"><span style="color:green">Paid: {{paidAmount}}</span></th>
-                                        <th class="text-uppercase whitespace-nowrap"><span style="color:red">Remaining: {{remainigAmount}}</span></th>
-                                        <th class="text-uppercase whitespace-nowrap"></th>
-                                        <!-- <th class="text-uppercase whitespace-nowrap"></th>
-                                        <th class="text-uppercase whitespace-nowrap"></th> -->
-                                        <!-- <th class="text-uppercase whitespace-nowrap">Created Date</th> -->
-                                        <th class="text-uppercase whitespace-nowrap"></th>
-                                    </tr>
-                                </thead>
+                            <table class="table table-cards position-relative">
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase whitespace-nowrap">S.NO</th>
                                         <th class="text-uppercase whitespace-nowrap">Bill No.</th>
                                         <th class="text-uppercase whitespace-nowrap">Customer Name</th>
-                                        <!-- <th class="text-uppercase whitespace-nowrap">Sub Total</th>
-                                        <th class="text-uppercase whitespace-nowrap">Advance</th> -->
                                         <th class="text-uppercase whitespace-nowrap">Total</th>
                                         <th class="text-uppercase whitespace-nowrap">Bill Date</th>
                                         <th class="text-uppercase whitespace-nowrap">Status</th>
-                                        <!-- <th class="text-uppercase whitespace-nowrap">Created Date</th> -->
                                         <th class="text-uppercase whitespace-nowrap">ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: 50, currentPage: p, totalItems: total }; index as i">
-                                        <td class="whitespace-nowrap">{{i+1}}</td>
-                                      
-                                
+                                    <tr *ngFor="let user of users | paginate: { itemsPerPage: perPageNum, currentPage: p, totalItems: total }; index as i">
+                                        <td class="whitespace-nowrap">{{(p - 1) * perPageNum + i + 1}}</td>
                                         <td class="whitespace-nowrap">{{user.bill_no}}</td>
                                         <td class="whitespace-nowrap"><a title="{{user.company_full}}">{{user.company}}</a></td>
-                                        <!-- <td class="whitespace-nowrap">{{user.amount}}</td>
-                                        <td class="whitespace-nowrap">{{user.advance}}</td> -->
                                         <td class="whitespace-nowrap">{{user.total_amount}} <a *ngIf="user.notes" data-bs-toggle="modal" data-bs-target="#bookingNotesModel" (click)="setBookingNote(user)" title="Notes"><i class="fas fa-info-circle"></i></a></td>
                                         <td class="whitespace-nowrap">{{user.display_date2}}</td>
                                         <td>
                                             <a style="cursor:pointer" (click)="updateStatus(user.id,'2')" *ngIf="user.status == 1" class="btn btn-sm btn-outline-success text-uppercase text-center font-12 me-2">Paid</a>
                                             <a style="cursor:pointer" (click)="updateStatus(user.id,'1')" *ngIf="user.status == 2" class="btn btn-sm btn-outline-danger text-uppercase text-center font-12 me-2">Pending</a>
                                         </td>
-                                        <!-- <td class="text-capitalize whitespace-nowrap">{{user.display_date}}</td> -->
                                         <td class="text-capitalize whitespace-nowrap">
-                                            <a (click)="generateInvoicePDF(user.id)" class="text-capitalize font-12 text-info me-3">
+                                            <a href="javascript:;" (click)="generateInvoicePDF(user.id)" class="text-capitalize font-12 text-info me-3" title="View / Share / Download PDF">
                                                 <i class="far fa-download"></i>
                                             </a>
-                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3">
+                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#createTemplate" (click)="getUser(user.id)" class="text-capitalize font-12 text-info me-3" title="Edit">
                                                 <i class="far fa-edit"></i>
                                             </a>
-                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" data-bs-toggle="modal" data-bs-target="#deleteTemplate">
+                                            <a href="javascript:;" (click)="Delete(user.id)" class="text-capitalize font-12 text-red" title="Delete">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                    <tr><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
-
-                                    
+                                    <tr *ngIf="!loading && users && users.length == 0" class="inv-empty-row">
+                                        <td colspan="7">
+                                            <div class="empty-state"><i class="fal fa-search"></i>No invoices found for these filters. <a (click)="reset()" class="text-main">Clear filters</a></div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="total > perPageNum"><td colspan="10"><div class="pagiation"><pagination-controls (pageChange)="pageChangeEvent($event)"></pagination-controls></div></td></tr>
                                 </tbody>
                             </table>
                         </div>
                 </div>
             </div>
-            <!-- main Area :: End -->
             </div>
-
-            <!--Footer :: Start-->
         </div>
         <app-footer></app-footer>
     </div>
 </main>
+<!-- In-app PDF viewer (preview / share / download) -->
+<app-pdf-viewer #pdfViewer></app-pdf-viewer>
+
 <!-- CreateTemplate Edit Modal Starts  -->
 <div class="modal fade"  data-backdrop="static" data-keyboard="false" id="bookingNotesModel">
     <div class="modal-dialog modal-dialog-centered">
@@ -118,7 +228,7 @@
             <!-- Modal Header -->
             <div class="modal-header border-0 text-bg-light align-items-center">
                 <div class="d-flex justify-content-between w-100 me-3">
-                    <h4 class="modal-title font-16">Inoice Notes | {{invoiceData?.cust_data?.company}} | {{invoiceData?.bill_no}}</h4>
+                    <h4 class="modal-title font-16">Invoice Notes | {{invoiceData?.cust_data?.company}} | {{invoiceData?.bill_no}}</h4>
                 </div>
                 <button type="button" id="closeBtn2" class="btn-close font12" data-bs-dismiss="modal"></button>
             </div>

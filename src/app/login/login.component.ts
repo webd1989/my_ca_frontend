@@ -14,6 +14,9 @@ import Swal from 'sweetalert2';
 export class LoginComponent implements OnInit,OnDestroy {
 
   destroy$ = new Subject();
+  showPass = false;
+  isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  year = new Date().getFullYear();
 
   constructor(
     private appService: ServiceService,
@@ -24,6 +27,13 @@ export class LoginComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    document.body.classList.remove('sb-open');
+  }
+  toggleTheme(){
+    this.isDark = !this.isDark;
+    const theme = this.isDark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    localStorage.setItem('erp-theme', theme);
   }
   Login(){
     const data = {
