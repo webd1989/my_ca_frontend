@@ -18,6 +18,7 @@ import { QuotationsComponent } from './quotations/quotations.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { AmcComponent } from './amc/amc.component';
 import { TodosComponent } from './todos/todos.component';
+import { WebsitesComponent } from './websites/websites.component';
 
 const routes: Routes = [
   {
@@ -64,6 +65,9 @@ const routes: Routes = [
   },
   {
     path:'todos',component:TodosComponent
+  },
+  {
+    path:'websites',component:WebsitesComponent
   }
 ];
 

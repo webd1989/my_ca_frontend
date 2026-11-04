@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 /*
@@ -61,8 +61,12 @@ export class PdfViewerComponent implements OnDestroy {
     this.close();
   }
 
-  @HostListener('document:keydown.escape')
-  onEsc(){ if(this.visible){ this.close(); } }
+  /* pop-up closes only with the cross button: outside click just "bumps" it */
+  nudging = false;
+  nudge(){
+    this.nudging = false;
+    setTimeout(() => { this.nudging = true; setTimeout(() => this.nudging = false, 300); }, 10);
+  }
 
   /* ---------------- open / close ---------------- */
   open(opts: PdfViewerOptions){

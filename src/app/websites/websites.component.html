@@ -1,0 +1,304 @@
+<main>
+    <div class="main-wrapper">
+        <div id="content">
+            <app-header></app-header>
+            <div class="mainTabss">
+                <app-tabs></app-tabs>
+                <div class="main-area position-relative">
+
+                    <!-- ===== Summary (click to filter) ===== -->
+                    <div class="ws-stats">
+                        <button type="button" class="ws-stat s-red" [class.on]="windowFilter === 'expired'" (click)="setWindow('expired')">
+                            <span class="ic"><i class="far fa-exclamation-triangle"></i></span>
+                            <span class="txt"><b>{{summary.expired}}</b><small>Expired</small></span>
+                        </button>
+                        <button type="button" class="ws-stat s-orange" [class.on]="windowFilter === '7'" (click)="setWindow('7')">
+                            <span class="ic"><i class="far fa-hourglass-half"></i></span>
+                            <span class="txt"><b>{{summary.due7}}</b><small>Expiring in 7 days</small></span>
+                        </button>
+                        <button type="button" class="ws-stat s-yellow" [class.on]="windowFilter === '30'" (click)="setWindow('30')">
+                            <span class="ic"><i class="far fa-calendar-alt"></i></span>
+                            <span class="txt"><b>{{summary.due30}}</b><small>Expiring in 30 days</small></span>
+                        </button>
+                        <div class="ws-stat s-green static">
+                            <span class="ic"><i class="far fa-rupee-sign"></i></span>
+                            <span class="txt"><b>₹ {{money(summary.amount30)}}</b><small>Renewals due in 30 days</small></span>
+                        </div>
+                        <button type="button" class="ws-stat s-blue" [class.on]="!windowFilter" (click)="windowFilter = ''; load()">
+                            <span class="ic"><i class="far fa-globe"></i></span>
+                            <span class="txt"><b>{{summary.total}}</b><small>Active websites</small></span>
+                        </button>
+                    </div>
+
+                    <!-- ===== Toolbar ===== -->
+                    <div class="page-card-title ws-toolbar">
+                        <div class="erp-toolbar">
+                            <div class="erp-filter ws-search"><i class="far fa-search"></i>
+                                <input type="text" class="form-control" [(ngModel)]="search" (ngModelChange)="onSearch()" placeholder="Search website, client, registrar, hosting...">
+                            </div>
+                            <div class="erp-filter">
+                                <select class="form-select" [(ngModel)]="customerFilter" (ngModelChange)="load()" aria-label="Client">
+                                    <option value="">All clients</option>
+                                    <option *ngFor="let c of customers" [value]="c.id">{{c.company}}</option>
+                                </select>
+                            </div>
+                            <div class="erp-filter">
+                                <select class="form-select" [(ngModel)]="itemFilter" (ngModelChange)="load()" aria-label="Type">
+                                    <option value="">Domain + Hosting + SSL</option>
+                                    <option value="domain">Only domain</option>
+                                    <option value="hosting">Only hosting</option>
+                                    <option value="ssl">Only SSL</option>
+                                </select>
+                            </div>
+                            <div class="erp-filter">
+                                <select class="form-select" [(ngModel)]="windowFilter" (ngModelChange)="load()" aria-label="Expiry">
+                                    <option value="">Any expiry date</option>
+                                    <option value="expired">Already expired</option>
+                                    <option value="7">Expiring in 7 days</option>
+                                    <option value="15">Expiring in 15 days</option>
+                                    <option value="30">Expiring in 30 days</option>
+                                    <option value="60">Expiring in 60 days</option>
+                                    <option value="90">Expiring in 90 days</option>
+                                </select>
+                            </div>
+                            <div class="erp-filter ws-status">
+                                <select class="form-select" [(ngModel)]="statusFilter" (ngModelChange)="load()" aria-label="Status">
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                    <option value="all">All</option>
+                                </select>
+                            </div>
+                            <div class="erp-actions">
+                                <button type="button" class="btn btn-light btn-icon" *ngIf="hasFilters" (click)="clearFilters()" title="Clear filters"><i class="far fa-redo"></i></button>
+                                <button type="button" class="btn btn-light btn-icon" (click)="exportCsv()" title="Download list (Excel / CSV)"><i class="far fa-file-download"></i></button>
+                                <button type="button" class="btn btn-primary" (click)="openEditor()"><i class="far fa-plus"></i> Add Website</button>
+                            </div>
+                        </div>
+                        <div class="ws-sortbar">
+                            <span>Sort:</span>
+                            <button type="button" [class.on]="sortKey === 'next'" (click)="sortBy('next')">
+                                Expiry date · {{sortKey === 'next' && sortDir === 'desc' ? 'farthest first' : 'nearest first'}} <i class="fas" [ngClass]="sortIcon('next')"></i>
+                            </button>
+                            <small>Tip: click Domain / Hosting / SSL column headings to sort by that date.</small>
+                        </div>
+                    </div>
+
+                    <!-- ===== Table (stays a table on mobile too, scrolls sideways) ===== -->
+                    <div class="ws-card" [class.ws-loading]="loading && !firstLoad">
+                        <div class="ws-table-wrap">
+                            <table class="ws-table">
+                                <thead>
+                                    <tr>
+                                        <th class="c-no">#</th>
+                                        <th class="sortable" (click)="sortBy('website')">Website / Client <i class="fas" [ngClass]="sortIcon('website')"></i></th>
+                                        <th class="sortable" (click)="sortBy('domain')" [class.active]="sortKey === 'domain'"><i class="far fa-globe"></i> Domain <i class="fas" [ngClass]="sortIcon('domain')"></i></th>
+                                        <th class="sortable" (click)="sortBy('hosting')" [class.active]="sortKey === 'hosting'"><i class="far fa-server"></i> Hosting <i class="fas" [ngClass]="sortIcon('hosting')"></i></th>
+                                        <th class="sortable" (click)="sortBy('ssl')" [class.active]="sortKey === 'ssl'"><i class="far fa-lock"></i> SSL <i class="fas" [ngClass]="sortIcon('ssl')"></i></th>
+                                        <th class="c-act">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="firstLoad"><td colspan="6" class="ws-empty"><span class="ws-spin"></span> Loading websites…</td></tr>
+                                    <tr *ngFor="let s of rows; index as i; trackBy: trackById" [class.inactive]="s.status == 2">
+                                        <td class="c-no">{{i + 1}}</td>
+                                        <td class="c-site">
+                                            <a [href]="siteUrl(s)" target="_blank" rel="noopener" class="ws-domain" title="Open website">{{s.website}} <i class="far fa-external-link"></i></a>
+                                            <small *ngIf="s.customer_name">{{s.customer_name}}</small>
+                                            <small *ngIf="s.status == 2" class="ws-inactive">Inactive</small>
+                                        </td>
+                                        <td *ngFor="let it of ['domain','hosting','ssl']" class="c-exp" [ngClass]="'st-' + state(s[it + '_expiry'])">
+                                            <ng-container *ngIf="s[it + '_expiry']; else noDate">
+                                                <div class="ws-date">{{fmtDate(s[it + '_expiry'])}}</div>
+                                                <span class="ws-pill">{{leftText(s[it + '_expiry'])}}</span>
+                                                <small class="ws-prov">
+                                                    <ng-container *ngIf="it === 'domain'">{{s.registrar}}</ng-container>
+                                                    <ng-container *ngIf="it === 'hosting'">{{s.hosting_provider}}<ng-container *ngIf="s.hosting_plan"> · {{s.hosting_plan}}</ng-container></ng-container>
+                                                    <ng-container *ngIf="it === 'ssl'">{{s.ssl_issuer || s.ssl_type}}<ng-container *ngIf="s.ssl_auto_renew == 1"> · auto</ng-container></ng-container>
+                                                    <ng-container *ngIf="s[it + '_amount'] > 0"> · ₹{{money(s[it + '_amount'])}}</ng-container>
+                                                </small>
+                                                <button type="button" class="ws-renew-mini" (click)="openRenew(s, $any(it))" [title]="'Renew ' + itemLabels[it]"><i class="far fa-sync-alt"></i> Renew</button>
+                                            </ng-container>
+                                            <ng-template #noDate><button type="button" class="ws-add-date" (click)="openEditor(s)">+ Add date</button></ng-template>
+                                        </td>
+                                        <td class="c-act">
+                                            <button type="button" class="ws-act" (click)="checkNow(s)" [disabled]="checking[s.id]" [class.is-busy]="checking[s.id]" title="Check SSL & domain expiry online now"><i class="far fa-satellite-dish" *ngIf="!checking[s.id]"></i></button>
+                                            <button type="button" class="ws-act" (click)="openEditor(s)" title="Edit"><i class="far fa-pen"></i></button>
+                                            <button type="button" class="ws-act danger" (click)="remove(s)" [disabled]="busy[s.id]" title="Remove"><i class="far fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="!firstLoad && !rows.length">
+                                        <td colspan="6" class="ws-empty">
+                                            <i class="far fa-globe"></i>
+                                            <b>{{hasFilters ? 'No websites match these filters' : 'No websites added yet'}}</b>
+                                            <span *ngIf="!hasFilters">Add your first client website to start tracking domain, hosting and SSL expiry.</span>
+                                            <button type="button" class="btn btn-light btn-sm" *ngIf="hasFilters" (click)="clearFilters()">Clear filters</button>
+                                            <button type="button" class="btn btn-primary btn-sm" *ngIf="!hasFilters" (click)="openEditor()"><i class="far fa-plus"></i> Add Website</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="ws-legend">
+                            <span class="st-expired"><i></i> Expired</span>
+                            <span class="st-urgent"><i></i> 7 days or less</span>
+                            <span class="st-soon"><i></i> 8–30 days</span>
+                            <span class="st-watch"><i></i> 31–60 days</span>
+                            <span class="st-ok"><i></i> More than 60 days</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <app-footer></app-footer>
+    </div>
+</main>
+
+<!-- ===== Add / Edit website ===== -->
+<div class="ws-overlay" *ngIf="editorOpen" (click)="nudge()">
+    <div class="ws-sheet" [class.nudge]="nudging" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+        <div class="ws-sheet-head">
+            <span class="ic"><i class="far fa-globe"></i></span>
+            <h3>{{form.id ? 'Edit website' : 'Add website'}}</h3>
+            <button type="button" class="ws-x" (click)="closeEditor()" aria-label="Close"><i class="far fa-times"></i></button>
+        </div>
+        <div class="ws-sheet-body">
+            <div class="ws-grid2">
+                <div>
+                    <label class="ws-lbl">Website / domain <span class="text-danger">*</span></label>
+                    <div class="ws-detect-row">
+                        <input type="text" class="form-control" [(ngModel)]="form.website" placeholder="e.g. mrcoconut.in" autocapitalize="off" spellcheck="false">
+                        <button type="button" class="btn btn-warning" (click)="detect()" [disabled]="detecting" [class.is-busy]="detecting" title="Fill SSL & domain expiry from the internet">
+                            <i class="far fa-magic" *ngIf="!detecting"></i> Auto-detect
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="ws-lbl">Client</label>
+                    <select class="form-select" [(ngModel)]="form.customer_id">
+                        <option value="">No client</option>
+                        <option *ngFor="let c of customers" [value]="c.id">{{c.company}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ws-detect-msg" *ngIf="detectMsg"><i class="far fa-info-circle"></i> {{detectMsg}}</div>
+
+            <div class="ws-section">
+                <div class="ws-sec-head"><i class="far fa-globe"></i> Domain</div>
+                <div class="ws-grid3">
+                    <div><label class="ws-lbl">Registrar (bought from)</label>
+                        <input type="text" class="form-control" [(ngModel)]="form.registrar" list="wsRegistrars" placeholder="GoDaddy, Hostinger, BigRock...">
+                        <datalist id="wsRegistrars"><option *ngFor="let r of registrars" [value]="r"></option><option value="GoDaddy"></option><option value="Hostinger"></option><option value="BigRock"></option><option value="Namecheap"></option><option value="ResellerClub"></option></datalist>
+                    </div>
+                    <div><label class="ws-lbl">Expiry date</label><input type="date" class="form-control" [(ngModel)]="form.domain_expiry"></div>
+                    <div><label class="ws-lbl">Renewal charge (₹)</label><input type="text" inputmode="decimal" class="form-control" [(ngModel)]="form.domain_amount" placeholder="0"></div>
+                </div>
+            </div>
+
+            <div class="ws-section">
+                <div class="ws-sec-head"><i class="far fa-server"></i> Hosting</div>
+                <div class="ws-grid3">
+                    <div><label class="ws-lbl">Hosting provider</label>
+                        <input type="text" class="form-control" [(ngModel)]="form.hosting_provider" list="wsHosting" placeholder="Hostinger, AWS, DigitalOcean...">
+                        <datalist id="wsHosting"><option *ngFor="let h of hostingProviders" [value]="h"></option><option value="Hostinger"></option><option value="GoDaddy"></option><option value="AWS"></option><option value="DigitalOcean"></option><option value="Own server"></option></datalist>
+                    </div>
+                    <div><label class="ws-lbl">Expiry date</label><input type="date" class="form-control" [(ngModel)]="form.hosting_expiry"></div>
+                    <div><label class="ws-lbl">Renewal charge (₹)</label><input type="text" inputmode="decimal" class="form-control" [(ngModel)]="form.hosting_amount" placeholder="0"></div>
+                </div>
+                <div class="ws-grid2 mt-2">
+                    <div><label class="ws-lbl">Plan</label><input type="text" class="form-control" [(ngModel)]="form.hosting_plan" placeholder="e.g. Business shared, VPS 2GB"></div>
+                    <div><label class="ws-lbl">Panel / login URL</label><input type="text" class="form-control" [(ngModel)]="form.panel_url" placeholder="e.g. hpanel.hostinger.com"></div>
+                </div>
+            </div>
+
+            <div class="ws-section">
+                <div class="ws-sec-head"><i class="far fa-lock"></i> SSL certificate</div>
+                <div class="ws-grid3">
+                    <div><label class="ws-lbl">SSL type</label>
+                        <select class="form-select" [(ngModel)]="form.ssl_type">
+                            <option value="">Select</option>
+                            <option *ngFor="let t of sslTypes" [value]="t">{{t}}</option>
+                        </select>
+                    </div>
+                    <div><label class="ws-lbl">Expiry date</label><input type="date" class="form-control" [(ngModel)]="form.ssl_expiry"></div>
+                    <div><label class="ws-lbl">Renewal charge (₹)</label><input type="text" inputmode="decimal" class="form-control" [(ngModel)]="form.ssl_amount" placeholder="0"></div>
+                </div>
+                <label class="ws-check"><input type="checkbox" [(ngModel)]="form.ssl_auto_renew"> SSL renews automatically (alerts only if it actually expires)</label>
+                <small class="ws-hint" *ngIf="form.ssl_issuer">Issued by: {{form.ssl_issuer}}</small>
+            </div>
+
+            <div class="ws-grid2">
+                <div>
+                    <label class="ws-lbl"><i class="far fa-bell"></i> Start alerts before expiry</label>
+                    <select class="form-select" [(ngModel)]="form.notify_days">
+                        <option value="7">7 days before</option>
+                        <option value="15">15 days before</option>
+                        <option value="30">30 days before</option>
+                        <option value="45">45 days before</option>
+                        <option value="60">60 days before</option>
+                        <option value="90">90 days before</option>
+                    </select>
+                    <small class="ws-hint">Pop-up on that day, then at 15, 7, 3, 1 days and on the expiry day; daily after expiry.</small>
+                </div>
+                <div>
+                    <label class="ws-lbl">Status</label>
+                    <select class="form-select" [(ngModel)]="form.status">
+                        <option value="1">Active (track & alert)</option>
+                        <option value="2">Inactive (client left, no alerts)</option>
+                    </select>
+                </div>
+            </div>
+            <label class="ws-lbl">Notes</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="form.notes" placeholder="Anything useful: who pays, email used, etc."></textarea>
+
+            <div class="ws-history" *ngIf="history.length">
+                <div class="ws-sec-head"><i class="far fa-history"></i> Renewal history</div>
+                <div class="ws-hist-row" *ngFor="let h of history">
+                    <b>{{itemLabels[h.item]}}</b>
+                    <span>{{fmtDate(h.old_expiry) || 'No date'}} → {{fmtDate(h.new_expiry)}}</span>
+                    <span *ngIf="h.amount">₹{{money(h.amount)}}</span>
+                    <small>renewed {{fmtDate(h.renewed_on)}}</small>
+                </div>
+            </div>
+        </div>
+        <div class="ws-sheet-foot">
+            <button type="button" class="btn btn-light" (click)="closeEditor()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving" [class.is-busy]="saving">{{form.id ? 'Save changes' : 'Add website'}}</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Renew ===== -->
+<div class="ws-overlay" *ngIf="renewOpen" (click)="nudge()">
+    <div class="ws-sheet small" [class.nudge]="nudging" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+        <div class="ws-sheet-head">
+            <span class="ic green"><i class="far fa-sync-alt"></i></span>
+            <h3>Renew · {{renew.site?.website}}</h3>
+            <button type="button" class="ws-x" (click)="closeRenew()" aria-label="Close"><i class="far fa-times"></i></button>
+        </div>
+        <div class="ws-sheet-body">
+            <label class="ws-lbl">What did you renew?</label>
+            <div class="ws-seg">
+                <button type="button" *ngFor="let it of ['domain','hosting','ssl']" [class.on]="renew.item === it" (click)="setRenewItem($any(it))">{{itemLabels[it]}}</button>
+            </div>
+            <div class="ws-cur">Current expiry: <b>{{fmtDate(currentRenewExpiry) || 'Not set'}}</b></div>
+
+            <label class="ws-lbl">Renewed for</label>
+            <div class="ws-seg">
+                <button type="button" *ngFor="let y of [1,2,3,5]" [class.on]="renew.mode === 'years' && renew.years == y" (click)="renew.mode = 'years'; renew.years = y">{{y}} {{y == 1 ? 'year' : 'years'}}</button>
+                <button type="button" [class.on]="renew.mode === 'date'" (click)="renew.mode = 'date'">Pick date</button>
+            </div>
+            <input *ngIf="renew.mode === 'date'" type="date" class="form-control mt-2" [(ngModel)]="renew.new_expiry">
+            <div class="ws-new" *ngIf="renewPreview"><i class="far fa-calendar-check"></i> New expiry: <b>{{renewPreview}}</b></div>
+
+            <div class="ws-grid2">
+                <div><label class="ws-lbl">Charge to client (₹)</label><input type="text" inputmode="decimal" class="form-control" [(ngModel)]="renew.amount" placeholder="0"></div>
+                <div><label class="ws-lbl">Note (optional)</label><input type="text" class="form-control" [(ngModel)]="renew.notes" maxlength="255" placeholder="e.g. paid via UPI"></div>
+            </div>
+        </div>
+        <div class="ws-sheet-foot">
+            <button type="button" class="btn btn-light" (click)="closeRenew()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="doRenew()" [disabled]="renewing" [class.is-busy]="renewing">Save renewal</button>
+        </div>
+    </div>
+</div>

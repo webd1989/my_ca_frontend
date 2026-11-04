@@ -17,6 +17,7 @@ export class ReminderPopupComponent implements OnInit, OnDestroy {
   popups: any[] = [];
   busy: { [id: number]: boolean } = {};
   snoozeOpen: number | null = null;
+  expanded = false;   // more than 2 pop-ups: show 2 and a "+N more" button
   private sub?: Subscription;
 
   dueLabel = dueLabel;
@@ -30,7 +31,7 @@ export class ReminderPopupComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.sub = this.reminders.popups$.subscribe(p => this.popups = p);
+    this.sub = this.reminders.popups$.subscribe(p => { this.popups = p; if (p.length <= 2) { this.expanded = false; } });
   }
   ngOnDestroy(): void {
     if (this.sub) { this.sub.unsubscribe(); }
@@ -76,6 +77,18 @@ export class ReminderPopupComponent implements OnInit, OnDestroy {
   }
 
   close(item: any) { this.reminders.dismiss(item.id); }
+
+  renewWhen(a: any): string {
+    if (a.days < 0) { const n = Math.abs(a.days); return 'Expired ' + (n === 1 ? 'yesterday' : n + ' days ago'); }
+    if (a.days === 0) { return 'Expires today'; }
+    if (a.days === 1) { return 'Expires tomorrow'; }
+    return 'Expires in ' + a.days + ' days';
+  }
+
+  openRenewal(a: any, renew: boolean) {
+    this.reminders.dismiss(a.id);
+    this.router.navigate(['/websites'], { queryParams: renew ? { renew: a.website_id, item: a.item } : {} });
+  }
 
   dismissAll() { this.popups.slice().forEach(p => this.reminders.dismiss(p.id)); }
 }

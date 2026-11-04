@@ -32,6 +32,7 @@ import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
 import { SafeUrlPipe } from './pdf-viewer/safe-url.pipe';
 import { TodosComponent } from './todos/todos.component';
 import { ReminderPopupComponent } from './reminder-popup/reminder-popup.component';
+import { WebsitesComponent } from './websites/websites.component';
 
 
 
@@ -59,7 +60,8 @@ import { ReminderPopupComponent } from './reminder-popup/reminder-popup.componen
     PdfViewerComponent,
     SafeUrlPipe,
     TodosComponent,
-    ReminderPopupComponent
+    ReminderPopupComponent,
+    WebsitesComponent
   ],
   imports: [
     BrowserModule,

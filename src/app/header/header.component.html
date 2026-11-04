@@ -31,6 +31,10 @@
             <a class="sb-link" routerLink="/amc" routerLinkActive="active" (click)="closeMobile()" title="AMC">
                 <i class="fal fa-shield-check"></i><span>AMC</span>
             </a>
+            <a class="sb-link" routerLink="/websites" routerLinkActive="active" (click)="closeMobile()" title="Websites & Renewals">
+                <i class="fal fa-globe"></i><span>Websites</span>
+                <span class="sb-badge" *ngIf="renewCounts.upcoming" [class.hot]="renewCounts.urgent">{{renewCounts.upcoming}}</span>
+            </a>
 
             <div class="sb-section">People</div>
             <a class="sb-link" routerLink="/contacts" routerLinkActive="active" (click)="closeMobile()" title="Clients">
@@ -81,7 +85,7 @@
         <div class="dropdown">
             <button type="button" class="tb-icon tb-bell" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" title="To-Do reminders" aria-label="To-Do reminders">
                 <i class="far fa-bell"></i>
-                <span class="tb-dot" *ngIf="todoBadge" [class.hot]="todoCounts.overdue">{{todoBadge > 99 ? '99+' : todoBadge}}</span>
+                <span class="tb-dot" *ngIf="bellBadge" [class.hot]="todoCounts.overdue || renewCounts.urgent">{{bellBadge > 99 ? '99+' : bellBadge}}</span>
             </button>
             <div class="dropdown-menu dropdown-menu-end tb-todo-menu">
                 <div class="tb-todo-head">
@@ -94,6 +98,18 @@
                 </a>
                 <div class="tb-todo-empty" *ngIf="!todoUpNext.length"><i class="far fa-calendar-check"></i> Nothing due today</div>
                 <a class="tb-todo-all" routerLink="/todos"><i class="far fa-plus"></i> Add task / open list</a>
+
+                <ng-container *ngIf="renewals.length">
+                    <div class="tb-todo-head tb-renew-head">
+                        <b>Renewals</b>
+                        <span><em class="over" *ngIf="renewCounts.urgent">{{renewCounts.urgent}} urgent</em> <em>{{renewCounts.upcoming}} upcoming</em></span>
+                    </div>
+                    <a class="tb-todo-item" *ngFor="let r of renewals.slice(0, 5)" routerLink="/websites">
+                        <i class="far" [ngClass]="(r.item === 'ssl' ? 'fa-lock' : (r.item === 'hosting' ? 'fa-server' : 'fa-globe')) + (r.days <= 7 ? ' over' : '')"></i>
+                        <span><b>{{r.website}} · {{r.label}}</b><small [class.over]="r.days <= 7">{{renewText(r)}}</small></span>
+                    </a>
+                    <a class="tb-todo-all" routerLink="/websites"><i class="far fa-globe"></i> Open websites & renewals</a>
+                </ng-container>
             </div>
         </div>
         <button type="button" class="tb-icon" (click)="toggleTheme()" [title]="isDark ? 'Light mode' : 'Dark mode'" aria-label="Toggle theme">

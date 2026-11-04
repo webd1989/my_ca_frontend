@@ -13,6 +13,10 @@ export class ReminderService {
   counts$ = new BehaviorSubject<any>({ pending: 0, today: 0, overdue: 0, upcoming: 0, nodate: 0, completed: 0, all: 0 });
   upNext$ = new BehaviorSubject<any[]>([]);
   popups$ = new BehaviorSubject<any[]>([]);
+  /* website renewals (domain / hosting / SSL) */
+  renewals$ = new BehaviorSubject<any[]>([]);
+  renewalCounts$ = new BehaviorSubject<any>({ upcoming: 0, urgent: 0 });
+  private shownRenewals = new Set<string>();
 
   private timer: any = null;
   private shown = new Set<number>();
@@ -39,6 +43,7 @@ export class ReminderService {
     clearInterval(this.timer);
     this.timer = null;
     this.shown.clear();
+    this.shownRenewals.clear();
     this.popups$.next([]);
   }
 
@@ -60,6 +65,42 @@ export class ReminderService {
         this.api.postData('todo/reminded', { ids: fresh.map((d: any) => d.id) }).subscribe(() => { }, () => { });
       }
     }, () => { /* offline / server error: try again next minute */ });
+    this.checkRenewals();
+  }
+
+  /* domain / hosting / SSL expiry alerts (30, 15, 7, 3, 1, 0 days before, daily after expiry) */
+  private checkRenewals() {
+    if (localStorage.getItem('user_type') !== 'Admin') { return; }
+    this.api.postData('website/alerts', {}).subscribe((r: any) => {
+      if (!r || !r.success) { return; }
+      this.renewals$.next(r.upcoming || []);
+      this.renewalCounts$.next(r.counts || { upcoming: 0, urgent: 0 });
+      const fresh = (r.due || []).filter((a: any) => !this.shownRenewals.has(a.key + ':' + a.days));
+      if (fresh.length) {
+        fresh.forEach((a: any) => this.shownRenewals.add(a.key + ':' + a.days));
+        const cards = fresh.map((a: any) => Object.assign({ kind: 'renewal', id: 'r-' + a.key }, a));
+        this.popups$.next([...this.popups$.value, ...cards]);
+        this.notifyRenewals(fresh);
+        this.chime();
+      }
+    }, () => { /* module not installed yet or offline */ });
+  }
+
+  /* refresh renewals list/badge right away (after save / renew on the Websites page) */
+  refreshRenewals() { this.checkRenewals(); }
+
+  private notifyRenewals(items: any[]) {
+    if (this.notifyPermission !== 'granted') { return; }
+    items.slice(0, 3).forEach(a => {
+      try {
+        const when = a.days < 0 ? 'expired ' + Math.abs(a.days) + ' day(s) ago' : (a.days === 0 ? 'expires today' : 'expires in ' + a.days + ' day(s)');
+        const n = new (window as any).Notification('🌐 ' + a.label + ' ' + when, {
+          body: a.website + (a.customer_name ? ' · ' + a.customer_name : ''), tag: 'renewal-' + a.key,
+          icon: 'assets/images/favicon.png', requireInteraction: true
+        });
+        n.onclick = () => { window.focus(); window.location.hash = '#/websites'; n.close(); };
+      } catch (e) { /* notifications not allowed outside a service worker on this browser */ }
+    });
   }
 
   dismiss(id: number) {

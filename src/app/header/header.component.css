@@ -31,3 +31,6 @@
 .tb-todo-all:hover { background: var(--brand); color: #fff; }
 @keyframes hdPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(239,68,68,.25); } 50% { box-shadow: 0 0 0 6px rgba(239,68,68,.08); } }
 @keyframes hdRing { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(14deg); } 80% { transform: rotate(-12deg); } 85% { transform: rotate(8deg); } 90% { transform: rotate(-5deg); } }
+
+.tb-renew-head { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 12px; }
+.tb-todo-menu { max-height: min(80vh, 640px); overflow-y: auto; }

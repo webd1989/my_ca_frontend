@@ -18,6 +18,7 @@ const PAGE_TITLES: {[key: string]: [string, string]} = {
   '/quotations': ['Billing', 'Quotations'],
   '/projects': ['Work', 'Projects'],
   '/amc': ['Work', 'Annual Maintenance (AMC)'],
+  '/websites': ['Work', 'Websites & Renewals'],
   '/contacts': ['People', 'Clients'],
   '/users': ['People', 'Team'],
   '/profile': ['Account', 'My Profile'],
@@ -66,6 +67,14 @@ export class HeaderComponent implements OnInit,OnDestroy {
   todoBadge = 0;
   todoUpNext: any[] = [];
   todoDue = dueLabel;
+  renewals: any[] = [];
+  renewCounts: any = { upcoming: 0, urgent: 0 };
+  get bellBadge(): number { return (Number(this.todoBadge) || 0) + (Number(this.renewCounts.urgent) || 0); }
+  renewText(r: any): string {
+    if (r.days < 0) { return 'Expired ' + Math.abs(r.days) + (Math.abs(r.days) === 1 ? ' day' : ' days') + ' ago'; }
+    if (r.days === 0) { return 'Expires today'; }
+    return 'Expires in ' + r.days + (r.days === 1 ? ' day' : ' days');
+  }
   isTodoOverdue = isOverdue;
 
   constructor(
@@ -91,6 +100,8 @@ export class HeaderComponent implements OnInit,OnDestroy {
       this.todoBadge = Number(this.todoCounts.attention) || 0;
     });
     this.reminders.upNext$.pipe(takeUntil(this.destroy$)).subscribe(l => this.todoUpNext = l || []);
+    this.reminders.renewals$.pipe(takeUntil(this.destroy$)).subscribe(l => this.renewals = l || []);
+    this.reminders.renewalCounts$.pipe(takeUntil(this.destroy$)).subscribe(c => this.renewCounts = c || { upcoming: 0, urgent: 0 });
     this.reminders.start();
     this.loginTimer = setInterval(() => {
       this.checkLoginTime(); 

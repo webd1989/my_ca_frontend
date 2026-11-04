@@ -145,8 +145,8 @@
 </main>
 
 <!-- ===== Task editor ===== -->
-<div class="td-overlay" *ngIf="editorOpen" (click)="closeEditor()">
-    <div class="td-sheet" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+<div class="td-overlay" *ngIf="editorOpen" (click)="nudge()">
+    <div class="td-sheet" [class.nudge]="nudging" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
         <div class="td-sheet-head">
             <span class="ic"><i class="far" [ngClass]="form.id ? 'fa-pen' : 'fa-plus'"></i></span>
             <h3>{{form.id ? 'Edit task' : 'New task'}}</h3>

@@ -96,7 +96,7 @@ export class TodosComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   onKey(e: KeyboardEvent) {
     if (e.key === 'Escape') {
-      if (this.editorOpen) { this.closeEditor(); }
+      // Esc closes only the small "more" menu; the task editor closes with its cross / Cancel button
       this.menuFor = null;
       return;
     }
@@ -281,6 +281,13 @@ export class TodosComponent implements OnInit, OnDestroy {
     this.editorOpen = true;
     document.body.style.overflow = 'hidden';
     setTimeout(() => this.titleInput && this.titleInput.nativeElement.focus(), 80);
+  }
+
+  /* editor closes only with the cross / Cancel button: outside click just "bumps" it */
+  nudging = false;
+  nudge() {
+    this.nudging = false;
+    setTimeout(() => { this.nudging = true; setTimeout(() => this.nudging = false, 300); }, 10);
   }
 
   closeEditor() {

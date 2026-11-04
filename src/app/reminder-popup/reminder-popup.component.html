@@ -3,7 +3,30 @@
         <span><i class="far fa-bell"></i> {{popups.length}} reminders</span>
         <button type="button" (click)="dismissAll()">Dismiss all</button>
     </div>
-    <div class="rp-card" *ngFor="let item of popups" [class.p-high]="item.priority == 3" role="alertdialog" [attr.aria-label]="'Reminder: ' + item.title">
+    <ng-container *ngFor="let item of (expanded ? popups : popups.slice(0, 2))">
+    <!-- website renewal alert -->
+    <div class="rp-card rp-renew" *ngIf="item.kind === 'renewal'" [class.p-high]="item.days <= 7" role="alertdialog" [attr.aria-label]="item.label + ' renewal: ' + item.website">
+        <div class="rp-top">
+            <span class="rp-ic renew"><i class="far" [ngClass]="item.item === 'ssl' ? 'fa-lock' : (item.item === 'hosting' ? 'fa-server' : 'fa-globe')"></i></span>
+            <div class="rp-meta">
+                <span class="rp-tag">{{item.label}} renewal</span>
+                <span class="rp-due" [class.over]="item.days <= 7"><i class="far fa-clock"></i> {{renewWhen(item)}}</span>
+            </div>
+            <button type="button" class="rp-x" (click)="close(item)" aria-label="Dismiss"><i class="far fa-times"></i></button>
+        </div>
+        <div class="rp-title">{{item.website}}</div>
+        <div class="rp-desc">{{item.label}} expiry: <b>{{item.expiry | date:'d MMM y'}}</b><ng-container *ngIf="item.provider"> · {{item.provider}}</ng-container></div>
+        <div class="rp-chips">
+            <span class="rp-chip" *ngIf="item.customer_name"><i class="far fa-building"></i> {{item.customer_name}}</span>
+            <span class="rp-chip" *ngIf="item.amount"><i class="far fa-rupee-sign"></i> {{item.amount | number:'1.0-0'}}</span>
+        </div>
+        <div class="rp-actions">
+            <button type="button" class="rp-btn done" (click)="openRenewal(item, true)"><i class="far fa-sync-alt"></i> Renew</button>
+            <button type="button" class="rp-btn ghost" (click)="openRenewal(item, false)">Open list</button>
+        </div>
+    </div>
+
+    <div class="rp-card" *ngIf="item.kind !== 'renewal'" [class.p-high]="item.priority == 3" role="alertdialog" [attr.aria-label]="'Reminder: ' + item.title">
         <div class="rp-top">
             <span class="rp-ic"><i class="far fa-alarm-clock"></i></span>
             <div class="rp-meta">
@@ -34,4 +57,8 @@
             <button type="button" class="rp-btn ghost" (click)="open(item)">Open</button>
         </div>
     </div>
+    </ng-container>
+    <button type="button" class="rp-more" *ngIf="!expanded && popups.length > 2" (click)="expanded = true">
+        <i class="far fa-layer-group"></i> +{{popups.length - 2}} more {{popups.length - 2 == 1 ? 'reminder' : 'reminders'}} · Show all
+    </button>
 </div>

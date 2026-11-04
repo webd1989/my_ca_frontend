@@ -144,7 +144,7 @@ kbd { background: var(--surface-3); color: var(--text-2); border: 1px solid var(
 
 /* editor sheet */
 .td-overlay { position: fixed; inset: 0; z-index: 1980; background: rgba(2, 6, 23, .55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; animation: tdFade .2s ease both; }
-.td-sheet { width: min(620px, 100%); max-height: calc(100vh - 40px); display: flex; flex-direction: column; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 22px; box-shadow: var(--shadow-lg); overflow: hidden; animation: tdUp .35s var(--ease) both; }
+.td-sheet { width: min(620px, 100%); max-height: calc(100vh - 40px); display: flex; flex-direction: column; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 22px; box-shadow: var(--shadow-lg); overflow: hidden; animation: tdUp .35s var(--ease) backwards; transition: transform .15s ease-out; }
 .td-sheet-head { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
 .td-sheet-head::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, var(--brand), #7a5cff, var(--accent)); }
 .td-sheet-head .ic { width: 38px; height: 38px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: var(--brand-50); color: var(--brand); }
@@ -161,6 +161,8 @@ kbd { background: var(--surface-3); color: var(--text-2); border: 1px solid var(
 .td-sheet-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--border); background: var(--surface-2); }
 .td-sheet-foot .btn { min-width: 120px; }
 
+/* outside click: bump instead of close */
+.td-sheet.nudge { transform: scale(1.015); }
 @keyframes tdPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
 @keyframes tdShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @keyframes tdFade { from { opacity: 0; } to { opacity: 1; } }

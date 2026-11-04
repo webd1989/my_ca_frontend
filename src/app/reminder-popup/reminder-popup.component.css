@@ -49,3 +49,13 @@
 @media (max-width: 575.98px) {
   .rp-stack { left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); width: auto; max-width: none; }
 }
+
+.rp-ic.renew { background: linear-gradient(135deg, #1f5eff, #7a5cff); animation-name: rpRing; }
+.rp-renew .rp-tag { color: var(--brand, #1f5eff); }
+.rp-renew::before { background: var(--brand, #1f5eff); }
+.rp-renew.p-high::before { background: #ef4444; }
+.rp-renew .rp-desc b { color: var(--text, #0f172a); }
+
+.rp-more { border: 1px solid var(--border, #e6eaf2); background: var(--surface, #fff); color: var(--brand, #1f5eff); border-radius: 14px; padding: 10px 12px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 24px -12px rgba(15,23,42,.35); animation: rpIn .3s ease both; }
+.rp-more:hover { background: var(--brand-50, #eef3ff); }
+.rp-more i { margin-right: 4px; }

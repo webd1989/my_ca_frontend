@@ -24,7 +24,8 @@
 			<i class="far" [ngClass]="isDark ? 'fa-sun' : 'fa-moon'"></i>
 		</button>
 
-		<div class="auth-card">
+		<!-- Step 1: user id + password -->
+		<div class="auth-card" *ngIf="step === 'login'">
 			<div class="mobile-logo"><img src="assets/images/web-d-logo.jpg" alt="WebD IT Solutions"></div>
 			<h2>Welcome back</h2>
 			<p class="sub">Sign in to continue to your ERP workspace.</p>
@@ -46,10 +47,37 @@
 
 				<div class="auth-row"></div>
 
-				<button type="submit" id="loginBtn" class="btn btn-primary auth-btn">Login</button>
+				<button type="submit" id="loginBtn" class="btn btn-primary auth-btn" [disabled]="loggingIn" [class.is-busy]="loggingIn">{{loggingIn ? 'Checking...' : 'Login'}}</button>
 			</form>
 
-			<div class="auth-secure"><i class="fas fa-shield-check"></i> Secured with encrypted sign-in</div>
+			<div class="auth-secure"><i class="fas fa-shield-check"></i> Protected with 2-step verification</div>
+		</div>
+
+		<!-- Step 2: security code (OTP) -->
+		<div class="auth-card otp-card" *ngIf="step === 'otp'">
+			<div class="mobile-logo"><img src="assets/images/web-d-logo.jpg" alt="WebD IT Solutions"></div>
+			<div class="otp-badge"><i class="far fa-shield-check"></i></div>
+			<h2>Verify it's you</h2>
+			<p class="sub">Enter the 6-digit security code to open the ERP for <b>{{pendingUser}}</b>.</p>
+
+			<form (submit)="$event.preventDefault(); verifyOtp()" autocomplete="off">
+				<div class="otp-boxes" [class.shake]="shake" [class.has-error]="otpError" (paste)="onOtpPaste($event)">
+					<input #otpBox *ngFor="let d of otp; let i = index; trackBy: trackIdx"
+						type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6"
+						[attr.autocomplete]="i === 0 ? 'one-time-code' : 'off'"
+						[attr.aria-label]="'Digit ' + (i + 1)"
+						[value]="otp[i]" [class.filled]="otp[i]" [disabled]="otpLocked || verifying"
+						(input)="onOtpInput(i, $event)" (keydown)="onOtpKey(i, $event)" (focus)="$any($event.target).select()">
+				</div>
+				<div class="otp-error" *ngIf="otpError"><i class="far fa-exclamation-circle"></i> {{otpError}}</div>
+
+				<button type="submit" class="btn btn-primary auth-btn mt-3" [disabled]="verifying || otpLocked || otp.join('').length < 6" [class.is-busy]="verifying">
+					{{verifying ? 'Verifying...' : 'Verify & continue'}}
+				</button>
+			</form>
+
+			<button type="button" class="otp-back" (click)="backToLogin()"><i class="far fa-arrow-left"></i> Use a different account</button>
+			<div class="auth-secure"><i class="fas fa-lock"></i> 5 wrong codes lock the login for 10 minutes</div>
 		</div>
 	</section>
 </main>

@@ -615,6 +615,43 @@ input[type="file"].form-control::file-selector-button {
 }
 .error_validation { border-color: var(--danger) !important; box-shadow: 0 0 0 4px rgba(239, 68, 68, .12) !important; }
 
+/* Date / time fields
+   Old style.css stretched the (invisible) calendar button with position:absolute, so it covered
+   the nearest positioned parent: clicking anywhere in a filter bar / modal opened the date picker
+   and "outside" clicks re-opened it. The button now stays inside its own field. */
+input[type="date"], input[type="time"], input[type="datetime-local"], input[type="month"], input[type="week"] {
+  position: relative;
+  cursor: pointer;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator,
+input[type="week"]::-webkit-calendar-picker-indicator {
+  position: static !important;
+  inset: auto !important;
+  top: auto !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 0 0 6px;
+  padding: 0;
+  color: inherit !important;
+  opacity: .55;
+  cursor: pointer;
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='3'/%3e%3cpath d='M16 2v4M8 2v4M3 10h18'/%3e%3c/svg%3e") center / 16px no-repeat !important;
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3ccircle cx='12' cy='12' r='9'/%3e%3cpath d='M12 7v5l3 2'/%3e%3c/svg%3e") !important;
+}
+input[type="date"]:hover::-webkit-calendar-picker-indicator,
+input[type="time"]:hover::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]:hover::-webkit-calendar-picker-indicator { opacity: 1; }
+input[type="date"]:disabled, input[type="time"]:disabled { cursor: not-allowed; }
+[data-bs-theme="dark"] input[type="date"], [data-bs-theme="dark"] input[type="time"], [data-bs-theme="dark"] input[type="datetime-local"] { color-scheme: dark; }
+
+/* static pop-up feedback: outside click gently "bumps" the pop-up instead of closing it */
+.modal.modal-static .modal-dialog { transform: scale(1.015) !important; transition: transform .15s ease-out; }
+
 /* ---------- 7. Tables ---------- */
 .table-responsive { border-radius: 14px; }
 .table {

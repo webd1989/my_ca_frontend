@@ -1,5 +1,5 @@
-<div class="pdfv-overlay" *ngIf="visible" (click)="close()">
-    <div class="pdfv-sheet" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-label]="opts?.title">
+<div class="pdfv-overlay" *ngIf="visible" (click)="nudge()">
+    <div class="pdfv-sheet" [class.nudge]="nudging" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-label]="opts?.title">
 
         <!-- Header -->
         <div class="pdfv-head">

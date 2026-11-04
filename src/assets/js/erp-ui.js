@@ -1,4 +1,7 @@
 /* WebD ERP — UI helpers for the Aurora theme
+   0) Pop-ups (Bootstrap modals) close only with the cross / Close button:
+      clicking outside or pressing Esc does not close them.
+   0b) Date / time fields: clicking inside the field opens the picker (only that field).
    1) Busy-lock: any button/link whose text becomes "Processing..." / "Uploading..."
       is disabled until the server responds (text changes back). Safety unlock after 30s.
    2) Mobile card tables: copies <th> text into each <td data-label="..."> so
@@ -49,6 +52,8 @@
   var queued = false;
   function scan() {
     queued = false;
+    lockModalDefaults();
+    lockModals(document);
     var tables = document.querySelectorAll('table.table-cards');
     for (var i = 0; i < tables.length; i++) labelTable(tables[i]);
   }
@@ -70,7 +75,40 @@
     queueScan();
   }
 
+  /* ---------- 0) modals: no close on outside click / Esc ---------- */
+  function lockModalDefaults() {
+    var bs = window.bootstrap;
+    if (bs && bs.Modal && bs.Modal.Default) {
+      bs.Modal.Default.backdrop = 'static';
+      bs.Modal.Default.keyboard = false;
+    }
+  }
+  function lockModals(root) {
+    var list = (root || document).querySelectorAll('.modal:not([data-erp-locked])');
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      m.setAttribute('data-bs-backdrop', 'static');
+      m.setAttribute('data-bs-keyboard', 'false');
+      m.setAttribute('data-erp-locked', '1');
+      var inst = window.bootstrap && window.bootstrap.Modal && window.bootstrap.Modal.getInstance(m);
+      if (inst && inst._config) { inst._config.backdrop = 'static'; inst._config.keyboard = false; }
+    }
+  }
+
+  /* ---------- 0b) date / time fields ---------- */
+  var PICKER_TYPES = { date: 1, time: 1, 'datetime-local': 1, month: 1, week: 1 };
+  function onFieldClick(e) {
+    var el = e.target;
+    if (!el || el.tagName !== 'INPUT' || !PICKER_TYPES[el.type] || el.disabled || el.readOnly) return;
+    if (typeof el.showPicker === 'function') {
+      try { el.showPicker(); } catch (err) { /* already open or not allowed: browser default */ }
+    }
+  }
+
   function start() {
+    lockModalDefaults();
+    lockModals(document);
+    document.addEventListener('click', onFieldClick, false);
     var obs = new MutationObserver(onMutations);
     obs.observe(document.body, { childList: true, subtree: true, characterData: true });
     queueScan();
